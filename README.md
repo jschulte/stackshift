@@ -181,12 +181,10 @@ reverse-engineering-toolkit/
 │   │   └── implementation-status-template.md
 │   └── scripts/
 │       └── state-manager.js           ← Progress tracking
-├── prompts/                           ← Original prompts (for manual use)
-│   ├── 01-initial-analysis.md
-│   ├── 02-reverse-engineer.md
-│   └── ...
-└── examples/
-    └── fishfan/                       ← Real example
+└── prompts/                           ← Original prompts (for manual use)
+    ├── 01-initial-analysis.md
+    ├── 02-reverse-engineer.md
+    └── ...
 ```
 
 ### Plugin Benefits
@@ -353,30 +351,6 @@ specs/gap-analysis.md
 - Production-ready codebase
 
 **Prompt:** `prompts/06-implement-from-spec.md`
-
----
-
-## 🎨 Example: fishfan Application
-
-This repository contains a **real-world example** of the toolkit in action:
-
-### Before Transformation
-- Backend: 100% complete (17 Lambda functions)
-- Frontend: ~60% complete (placeholder pages)
-- Documentation: Basic README, setup guides
-- Specification: None
-
-### After Transformation
-- **8 comprehensive docs** in `docs/reverse-engineering/`
-- **Formal specifications** in `specs/`
-- **Implementation status** clearly marked
-- **Gap analysis** identifying missing 40%
-- **Complete specification** ready for implementation
-
-### See the Results
-- **Before**: Check `examples/fishfan/before/`
-- **Generated Docs**: See `docs/reverse-engineering/`
-- **After**: Coming soon (after Step 6 implementation)
 
 ---
 
