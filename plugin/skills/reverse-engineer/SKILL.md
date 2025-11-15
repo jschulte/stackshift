@@ -85,7 +85,7 @@ This skill performs deep codebase analysis and generates **8 comprehensive docum
 - **Brownfield** → Use `prompts/brownfield/02-reverse-engineer-full-stack.md`
 
 Or for manual users:
-- Check `.re-toolkit-state.json` for `path` field
+- Check `.stackshift-state.json` for `path` field
 - Follow corresponding prompt file
 
 ---

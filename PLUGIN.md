@@ -105,7 +105,7 @@ The plugin automatically tracks your progress through the 6 steps.
 
 ### State File
 
-Created in project root as `.re-toolkit-state.json`:
+Created in project root as `.stackshift-state.json`:
 
 ```json
 {

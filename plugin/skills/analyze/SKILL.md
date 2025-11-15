@@ -98,7 +98,7 @@ B) Brownfield: Manage this app with Spec Kit
    → Focus: WHAT it does + HOW it's implemented
 ```
 
-Your choice will be stored in `.re-toolkit-state.json` and guide all subsequent steps.
+Your choice will be stored in `.stackshift-state.json` and guide all subsequent steps.
 
 ---
 

@@ -54,7 +54,7 @@ Each of the 6 steps is now an interactive skill:
 **Created:**
 - `plugin/scripts/state-manager.js` - Full state tracking system
   - Initialize, start, complete, status, progress, reset
-  - JSON state file (`.re-toolkit-state.json`)
+  - JSON state file (`.stackshift-state.json`)
   - CLI interface for manual control
   - Auto-tracking integration for skills
 

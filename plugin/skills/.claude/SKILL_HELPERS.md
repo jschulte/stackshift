@@ -28,7 +28,7 @@ exec('node ${CLAUDE_PLUGIN_ROOT}/scripts/state-manager.js status', (err, stdout)
 
 ### State File Location
 
-State is stored in project root as `.re-toolkit-state.json`:
+State is stored in project root as `.stackshift-state.json`:
 
 ```json
 {

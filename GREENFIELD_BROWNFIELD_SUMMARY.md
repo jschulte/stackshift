@@ -212,7 +212,7 @@ model User {
 
 ## State Tracking
 
-Path choice stored in `.re-toolkit-state.json`:
+Path choice stored in `.stackshift-state.json`:
 
 ```json
 {
