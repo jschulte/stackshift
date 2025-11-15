@@ -35,8 +35,15 @@ export async function createSpecsToolHandler(args: CreateSpecsArgs) {
 Run:
 \`\`\`bash
 uv tool install specify-cli --from git+https://github.com/github/spec-kit.git
-specify init <project-name>
+
+# Non-interactive mode (use --ai claude flag)
+specify init --here --ai claude --force
+
+# Or with project name
+specify init <project-name> --ai claude
 \`\`\`
+
+**Important:** The \`--ai claude\` flag prevents interactive prompts.
 
 ### Step 2: Generate Constitution
 
