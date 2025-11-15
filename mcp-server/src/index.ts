@@ -22,6 +22,7 @@ import { createSpecsToolHandler } from './tools/create-specs.js';
 import { gapAnalysisToolHandler } from './tools/gap-analysis.js';
 import { completeSpecToolHandler } from './tools/complete-spec.js';
 import { implementToolHandler } from './tools/implement.js';
+import { cruiseControlToolHandler } from './tools/cruise-control.js';
 import { getStateResource, getProgressResource, getRouteResource } from './resources/index.js';
 
 const server = new Server(
@@ -141,6 +142,35 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
           },
         },
       },
+      {
+        name: 'stackshift_cruise_control',
+        description: 'Cruise Control: Automatic mode - shift through all 6 gears sequentially without stopping',
+        inputSchema: {
+          type: 'object',
+          properties: {
+            directory: {
+              type: 'string',
+              description: 'Path to project directory',
+            },
+            route: {
+              type: 'string',
+              enum: ['greenfield', 'brownfield'],
+              description: 'Route choice (required)',
+            },
+            clarifications_strategy: {
+              type: 'string',
+              enum: ['defer', 'prompt', 'skip'],
+              description: 'How to handle clarifications (default: defer)',
+            },
+            implementation_scope: {
+              type: 'string',
+              enum: ['none', 'p0', 'p0_p1', 'all'],
+              description: 'What to implement in Gear 6 (default: none)',
+            },
+          },
+          required: ['route'],
+        },
+      },
     ],
   };
 });
@@ -198,6 +228,9 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
 
       case 'stackshift_implement':
         return await implementToolHandler(args || {});
+
+      case 'stackshift_cruise_control':
+        return await cruiseControlToolHandler(args as any || {});
 
       default:
         throw new Error(`Unknown tool: ${name}`);

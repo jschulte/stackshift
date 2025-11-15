@@ -42,11 +42,17 @@ class StateManager {
         created: new Date().toISOString(),
         updated: new Date().toISOString(),
         path: null, // 'greenfield' or 'brownfield'
+        auto_mode: false, // cruise control mode
         currentStep: null,
         completedSteps: [],
         metadata: {
           projectName: path.basename(this.cwd),
           projectPath: this.cwd
+        },
+        auto_config: {
+          clarifications_strategy: 'defer', // 'defer', 'prompt', 'skip'
+          implementation_scope: 'none', // 'none', 'p0', 'p0_p1', 'all'
+          pause_between_gears: false
         },
         stepDetails: {}
       };
@@ -82,6 +88,44 @@ class StateManager {
   getPath() {
     const state = this.loadState();
     return state ? state.path : null;
+  }
+
+  /**
+   * Enable cruise control (auto mode)
+   */
+  enableCruiseControl(config = {}) {
+    const state = this.loadState() || this.init();
+
+    state.auto_mode = true;
+    state.auto_config = {
+      clarifications_strategy: config.clarifications_strategy || 'defer',
+      implementation_scope: config.implementation_scope || 'none',
+      pause_between_gears: config.pause_between_gears || false,
+      ...config
+    };
+
+    this.saveState(state);
+    return true;
+  }
+
+  /**
+   * Disable cruise control (switch to manual)
+   */
+  disableCruiseControl() {
+    const state = this.loadState();
+    if (!state) return false;
+
+    state.auto_mode = false;
+    this.saveState(state);
+    return true;
+  }
+
+  /**
+   * Check if in cruise control mode
+   */
+  isAutoMode() {
+    const state = this.loadState();
+    return state ? state.auto_mode : false;
   }
 
   /**
@@ -323,6 +367,29 @@ if (require.main === module) {
       }
       break;
 
+    case 'cruise':
+    case 'enable-cruise':
+      const config = {};
+      if (process.argv[3]) config.clarifications_strategy = process.argv[3];
+      if (process.argv[4]) config.implementation_scope = process.argv[4];
+      if (manager.enableCruiseControl(config)) {
+        console.log('🚗 Cruise control enabled!');
+        console.log(JSON.stringify(manager.getStatus(), null, 2));
+      }
+      break;
+
+    case 'manual':
+    case 'disable-cruise':
+      if (manager.disableCruiseControl()) {
+        console.log('🎛️  Switched to manual mode');
+        console.log(JSON.stringify(manager.getStatus(), null, 2));
+      }
+      break;
+
+    case 'is-auto':
+      console.log(manager.isAutoMode() ? 'Cruise control: ON 🚗' : 'Manual mode 🎛️');
+      break;
+
     default:
       console.log(`
 StackShift - State Manager
@@ -331,6 +398,9 @@ Usage:
   node state-manager.js init                       Initialize state tracking
   node state-manager.js set-path <path>            Set path (greenfield|brownfield)
   node state-manager.js get-path                   Get current path
+  node state-manager.js cruise [strategy] [scope]  Enable cruise control (auto mode)
+  node state-manager.js manual                     Disable cruise control
+  node state-manager.js is-auto                    Check if cruise control is on
   node state-manager.js start <step-id>            Start a step
   node state-manager.js complete <step-id>         Complete a step
   node state-manager.js status                     Show current status
@@ -341,7 +411,11 @@ Paths:
   greenfield   - Build new app from business logic (tech-agnostic)
   brownfield   - Manage existing app with Spec Kit (tech-prescriptive)
 
-Steps:
+Cruise Control:
+  strategy     - defer|prompt|skip (how to handle clarifications)
+  scope        - none|p0|p0_p1|all (what to implement in Gear 6)
+
+Gears:
   1. analyze           - Initial Analysis
   2. reverse-engineer  - Reverse Engineer
   3. create-specs      - Create Specifications
