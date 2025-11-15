@@ -1,10 +1,27 @@
+<div align="center">
+
+<img src="public/stackshift-logo.png" alt="StackShift" width="400">
+
 # StackShift
 
 **A reverse engineering toolkit that lets you shift gears in your codebase.**
 
 Transform any application into a fully-specified, spec-driven project with complete control - whether you're shifting to a new tech stack or taking the wheel on existing code.
 
+</div>
+
 > Like a stick shift gives you manual control, StackShift gives you complete control over your codebase transformation. Start in reverse (engineering), shift through 6 gears, and cruise into spec-driven development.
+
+---
+
+## 📚 Documentation
+
+- **[Quick Start](QUICKSTART.md)** - Get started in 5 minutes!
+- **[Installation Guide](docs/guides/INSTALLATION.md)** - Detailed installation for all platforms
+- **[Plugin Guide](docs/guides/PLUGIN_GUIDE.md)** - Claude Code plugin usage
+- **[MCP Guide](mcp-server/README.md)** - MCP server for VSCode/Copilot
+- **[Web Guide](web/README.md)** - Using in Claude Code Web (browser)
+- **[Batch Processing](scripts/BATCH_PROCESSING_GUIDE.md)** - Process multiple projects efficiently
 
 ---
 
