@@ -1,0 +1,479 @@
+# Reverse Engineering to Spec-Driven Development Toolkit
+
+**Transform any partially-complete application into a fully-specified, enterprise-grade, spec-driven codebase.**
+
+---
+
+## 🎯 What This Toolkit Does
+
+This toolkit provides a **systematic, repeatable process** to:
+
+1. **Reverse-engineer** existing codebases (even incomplete ones)
+2. **Generate comprehensive documentation** automatically
+3. **Transform into formal specifications** (GitHub Spec Kit format)
+4. **Identify feature gaps** clearly
+5. **Complete missing implementations** systematically
+6. **Establish spec-driven development** going forward
+
+**Result**: A fully-documented, specification-driven application ready for enterprise development.
+
+---
+
+## 📊 Process Overview
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                    6-Step Process                            │
+├─────────────────────────────────────────────────────────────┤
+│                                                              │
+│  Step 1: Initial Analysis                                   │
+│  ├─ Detect technology stack                                 │
+│  ├─ Identify application type                               │
+│  └─ Map directory structure                                 │
+│         │                                                    │
+│         ▼                                                    │
+│  Step 2: Reverse Engineer                                   │
+│  ├─ Extract data models                                     │
+│  ├─ Document API endpoints                                  │
+│  ├─ Analyze configuration                                   │
+│  └─ Generate 8 comprehensive docs                           │
+│         │                                                    │
+│         ▼                                                    │
+│  Step 3: Create Specifications                              │
+│  ├─ Transform docs → formal specs                           │
+│  ├─ Mark implementation status                              │
+│  ├─ Create feature specs (F001-F0XX)                        │
+│  └─ Generate OpenAPI/JSON Schema                            │
+│         │                                                    │
+│         ▼                                                    │
+│  Step 4: Gap Analysis                                       │
+│  ├─ Identify missing features                               │
+│  ├─ Find incomplete implementations                         │
+│  ├─ List technical debt                                     │
+│  └─ Create [NEEDS CLARIFICATION] markers                    │
+│         │                                                    │
+│         ▼                                                    │
+│  Step 5: Complete Specification                             │
+│  ├─ Collaborative refinement session                        │
+│  ├─ Answer clarifications                                   │
+│  ├─ Define missing UX/UI details                            │
+│  └─ Prioritize implementation order                         │
+│         │                                                    │
+│         ▼                                                    │
+│  Step 6: Implement from Spec                                │
+│  ├─ Systematically build missing pieces                     │
+│  ├─ Check off completed items                               │
+│  ├─ Validate against specification                          │
+│  └─ Achieve 100% completion                                 │
+│                                                              │
+└─────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## 🚀 Quick Start
+
+### Prerequisites
+
+- Claude Code (or compatible AI coding agent)
+- Git repository with existing codebase
+- ~2-4 hours total time for complete process
+
+### Run the Process
+
+```bash
+# 1. Clone this toolkit into your repo (or copy prompts folder)
+cp -r reverse-engineering-toolkit /path/to/your/project/
+
+# 2. Open Claude Code in your project
+cd /path/to/your/project
+
+# 3. Run prompts in order (copy-paste into Claude Code)
+# Each prompt is in: reverse-engineering-toolkit/prompts/
+
+# Step 1: Initial Analysis (~5 minutes)
+cat reverse-engineering-toolkit/prompts/01-initial-analysis.md
+# Copy and paste into Claude Code
+
+# Step 2: Reverse Engineer (~30 minutes)
+cat reverse-engineering-toolkit/prompts/02-reverse-engineer.md
+# Copy and paste into Claude Code
+
+# Step 3: Create Specifications (~30 minutes)
+cat reverse-engineering-toolkit/prompts/03-create-specifications.md
+# Copy and paste into Claude Code
+
+# Step 4: Gap Analysis (~15 minutes)
+cat reverse-engineering-toolkit/prompts/04-gap-analysis.md
+# Copy and paste into Claude Code
+
+# Step 5: Complete Specification (~30-60 minutes, interactive)
+cat reverse-engineering-toolkit/prompts/05-complete-specification.md
+# Copy and paste into Claude Code
+# THIS IS INTERACTIVE - answer questions about your app
+
+# Step 6: Implement from Spec (~hours to days, depends on gaps)
+cat reverse-engineering-toolkit/prompts/06-implement-from-spec.md
+# Copy and paste into Claude Code
+```
+
+---
+
+## 📁 Toolkit Structure
+
+```
+reverse-engineering-toolkit/
+├── README.md                           ← You are here
+├── prompts/
+│   ├── 01-initial-analysis.md         ← Detect tech stack and structure
+│   ├── 02-reverse-engineer.md         ← Generate comprehensive docs
+│   ├── 03-create-specifications.md    ← Transform to formal specs
+│   ├── 04-gap-analysis.md             ← Identify what's missing
+│   ├── 05-complete-specification.md   ← Interactive refinement
+│   └── 06-implement-from-spec.md      ← Build missing pieces
+├── templates/
+│   ├── feature-spec-template.md       ← Template for feature specs
+│   ├── implementation-status-template.md
+│   ├── constitution-template.md       ← Spec Kit constitution
+│   └── gap-analysis-template.md
+├── examples/
+│   └── fishfan/                       ← Real example (this repo)
+│       ├── before/                    ← Initial state
+│       ├── after/                     ← After transformation
+│       └── generated/                 ← All generated artifacts
+└── tools/
+    └── validation-scripts/            ← Optional automation
+```
+
+---
+
+## 📖 Detailed Process Guide
+
+### Step 1: Initial Analysis (5 minutes)
+
+**What it does:**
+- Detects programming language and framework
+- Identifies application type (web, mobile, API, etc.)
+- Maps directory structure
+- Finds configuration files
+- Estimates codebase size and completeness
+
+**Output:**
+- `analysis-report.md` with tech stack summary
+- Quick assessment of what exists
+
+**Prompt:** `prompts/01-initial-analysis.md`
+
+---
+
+### Step 2: Reverse Engineer (30 minutes)
+
+**What it does:**
+- Deep codebase analysis using specialized agents
+- Extracts all data models, API endpoints, components
+- Documents configuration, infrastructure, operations
+- Analyzes technical debt and test coverage
+- Generates 8 comprehensive documents
+
+**Output:**
+```
+docs/reverse-engineering/
+├── functional-specification.md     (Business logic, requirements)
+├── configuration-reference.md      (All config options)
+├── data-architecture.md            (Data models, API contracts)
+├── operations-guide.md             (Deployment, infrastructure)
+├── technical-debt-analysis.md      (Issues, improvements)
+├── observability-requirements.md   (Monitoring, logging)
+├── visual-design-system.md         (UI/UX patterns)
+└── test-documentation.md           (Testing requirements)
+```
+
+**Prompt:** `prompts/02-reverse-engineer.md`
+
+---
+
+### Step 3: Create Specifications (30 minutes)
+
+**What it does:**
+- Transforms reverse-eng docs into formal specifications
+- Creates feature specs (F001-F0XX format)
+- Marks implementation status (✅ COMPLETE, ⚠️ PARTIAL, ❌ MISSING)
+- Generates OpenAPI specification for APIs
+- Creates JSON Schemas for data models
+- Sets up GitHub Spec Kit structure
+
+**Output:**
+```
+specs/
+├── features/
+│   ├── F001-user-authentication.md     (✅ COMPLETE)
+│   ├── F002-data-management.md         (⚠️ PARTIAL)
+│   ├── F003-advanced-features.md       (❌ MISSING)
+│   └── ...
+├── api/
+│   └── openapi.yaml                    (Complete API spec)
+├── data/
+│   └── schemas/                        (JSON Schemas)
+├── implementation-status.md            (Gap summary)
+└── constitution.md                     (Project principles)
+```
+
+**Prompt:** `prompts/03-create-specifications.md`
+
+---
+
+### Step 4: Gap Analysis (15 minutes)
+
+**What it does:**
+- Compares specifications against implementation
+- Identifies incomplete features
+- Lists missing UI components
+- Highlights technical debt
+- Creates `[NEEDS CLARIFICATION]` markers for ambiguities
+- Generates prioritized gap list
+
+**Output:**
+```
+specs/gap-analysis.md
+├── Missing Features (not started)
+├── Partial Features (backend done, UI missing)
+├── Technical Debt (needs improvement)
+├── Clarifications Needed (ambiguous requirements)
+└── Prioritized Implementation Plan
+```
+
+**Prompt:** `prompts/04-gap-analysis.md`
+
+---
+
+### Step 5: Complete Specification (30-60 minutes, INTERACTIVE)
+
+**What it does:**
+- **Interactive conversation** to fill specification gaps
+- Claude asks clarifying questions about missing features
+- You provide details on UX, UI, behavior, priorities
+- Specifications updated with your answers
+- `[NEEDS CLARIFICATION]` markers resolved
+- Final, complete specification created
+
+**Example Questions:**
+- "Analytics dashboard is missing - what charts do you want?"
+- "Should offline sync be priority P0 or P2?"
+- "For photo upload, drag-drop or click to browse?"
+- "Species input: free-text or autocomplete dropdown?"
+
+**Output:**
+- Complete, unambiguous specifications
+- No `[NEEDS CLARIFICATION]` markers remaining
+- Clear implementation roadmap
+- Prioritized feature list
+
+**Prompt:** `prompts/05-complete-specification.md`
+
+---
+
+### Step 6: Implement from Spec (Hours to Days)
+
+**What it does:**
+- Systematically implements missing features from specs
+- Works through prioritized list (P0 → P1 → P2)
+- Checks off items as completed
+- Validates implementation against specification
+- Achieves 100% completion
+
+**Approach:**
+```bash
+# For each missing feature:
+1. Review specification
+2. Implement according to spec
+3. Test against acceptance criteria
+4. Mark as complete
+5. Move to next feature
+```
+
+**Output:**
+- Fully implemented application
+- All specs marked ✅ COMPLETE
+- Test coverage at target levels
+- Production-ready codebase
+
+**Prompt:** `prompts/06-implement-from-spec.md`
+
+---
+
+## 🎨 Example: fishfan Application
+
+This repository contains a **real-world example** of the toolkit in action:
+
+### Before Transformation
+- Backend: 100% complete (17 Lambda functions)
+- Frontend: ~60% complete (placeholder pages)
+- Documentation: Basic README, setup guides
+- Specification: None
+
+### After Transformation
+- **8 comprehensive docs** in `docs/reverse-engineering/`
+- **Formal specifications** in `specs/`
+- **Implementation status** clearly marked
+- **Gap analysis** identifying missing 40%
+- **Complete specification** ready for implementation
+
+### See the Results
+- **Before**: Check `examples/fishfan/before/`
+- **Generated Docs**: See `docs/reverse-engineering/`
+- **After**: Coming soon (after Step 6 implementation)
+
+---
+
+## 🔄 Adapting for Different Application Types
+
+This toolkit works for:
+
+### Web Applications
+- Frontend frameworks: React, Vue, Angular, Svelte
+- Backend: Node.js, Python, Ruby, Go, Java
+- Databases: SQL, NoSQL, any data store
+
+### Mobile Applications
+- React Native, Flutter, Swift, Kotlin
+- Adapts documentation to mobile-specific patterns
+
+### APIs / Microservices
+- REST, GraphQL, gRPC
+- Generates OpenAPI/AsyncAPI specs
+- Documents service contracts
+
+### Monoliths
+- Breaks into logical modules
+- Creates specifications per domain
+- Identifies bounded contexts
+
+### Legacy Systems
+- Works even with minimal documentation
+- Infers behavior from code
+- Creates modernization roadmap
+
+---
+
+## 📋 Checklist: Is This Toolkit Right for You?
+
+Use this toolkit if:
+
+- ✅ You have an existing codebase (partial or complete)
+- ✅ Documentation is lacking or outdated
+- ✅ You want to establish spec-driven development
+- ✅ You need to understand what's implemented vs. missing
+- ✅ You want a systematic approach to completion
+- ✅ You're using AI coding agents (Claude Code, Copilot, etc.)
+
+**This toolkit is NOT for:**
+
+- ❌ Brand new projects (use GitHub Spec Kit from the start)
+- ❌ Throwaway prototypes
+- ❌ Applications you plan to completely rewrite
+
+---
+
+## 💡 Best Practices
+
+### Before Starting
+
+1. **Commit current state** - Create a clean git state
+2. **Create a branch** - Don't work on main
+3. **Set aside time** - Steps 1-5 take ~2-4 hours
+4. **Have context ready** - Know your app's purpose and users
+
+### During Process
+
+1. **Follow prompts in order** - Each step builds on previous
+2. **Don't skip Step 5** - The interactive refinement is crucial
+3. **Be thorough with clarifications** - Vague specs = buggy implementations
+4. **Review generated specs** - Validate accuracy before implementing
+
+### After Completion
+
+1. **Keep specs updated** - Update specs when adding features
+2. **Use spec-driven workflow** - New features start with specs
+3. **Run periodically** - Re-run on major refactors or after acquisitions
+
+---
+
+## 🛠️ Troubleshooting
+
+### "Claude can't find my configuration files"
+- Make sure you're in the project root directory
+- Check that config files aren't gitignored
+- Explicitly mention unusual config locations
+
+### "Generated specs are inaccurate"
+- Step 5 is where you correct inaccuracies
+- Use `[NEEDS CLARIFICATION]` to mark uncertain areas
+- Review and refine before implementing
+
+### "Too much output, can't process"
+- Break large monoliths into modules
+- Run toolkit per module/microservice
+- Increase context window (use Claude Sonnet 4.5)
+
+### "Missing important features in gap analysis"
+- Manually add to `specs/features/`
+- Use templates in `templates/` folder
+- Re-run Step 4 with hints about what's missing
+
+---
+
+## 📈 Success Metrics
+
+After running this toolkit, you should have:
+
+- ✅ **100% documentation coverage** - Every feature documented
+- ✅ **Clear implementation status** - Know exactly what exists
+- ✅ **Formal specifications** - Unambiguous feature definitions
+- ✅ **Identified gaps** - Complete list of missing pieces
+- ✅ **Implementation roadmap** - Prioritized plan to completion
+- ✅ **Spec-driven workflow** - Established for future development
+
+---
+
+## 🤝 Contributing
+
+This toolkit is designed to be:
+- **Generic** - Works for any application
+- **Extensible** - Add your own prompts/templates
+- **Shareable** - Use across teams and organizations
+
+Improvements welcome:
+1. Fork this toolkit
+2. Add/improve prompts or templates
+3. Share back with community
+4. Help others achieve spec-driven development
+
+---
+
+## 📚 Additional Resources
+
+- [GitHub Spec Kit](https://github.com/github/spec-kit) - Official spec-driven development toolkit
+- [OpenAPI Specification](https://swagger.io/specification/) - API specification standard
+- [JSON Schema](https://json-schema.org/) - Data validation standard
+- [Architecture Decision Records](https://adr.github.io/) - Document key decisions
+
+---
+
+## 📝 License
+
+This toolkit is provided as-is for use in any project. Adapt and modify as needed for your organization.
+
+---
+
+## ❓ Questions?
+
+This toolkit was created to solve a real problem: **transforming 50+ partially-complete applications into fully-specified, enterprise-grade codebases**.
+
+If you encounter issues or have suggestions, document them as you go. The toolkit improves with real-world usage.
+
+---
+
+**Happy Reverse Engineering! 🚀**
+
+*Transform chaos into clarity, one specification at a time.*
+# reverse-engineering-toolkit
