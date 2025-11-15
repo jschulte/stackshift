@@ -1,0 +1,18 @@
+{
+  "name": "reverse-engineering-toolkit",
+  "owner": {
+    "name": "Jonah Schulte"
+  },
+  "metadata": {
+    "description": "Systematic toolkit for transforming incomplete applications into spec-driven codebases",
+    "homepage": "https://github.com/jonahschulte/reverse-engineering-toolkit"
+  },
+  "plugins": [
+    {
+      "name": "reverse-engineering-toolkit",
+      "version": "1.0.0",
+      "source": "./plugin",
+      "description": "Transform any partially-complete application into a fully-specified, enterprise-grade, spec-driven codebase using a systematic 6-step process"
+    }
+  ]
+}

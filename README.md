@@ -73,77 +73,132 @@ This toolkit provides a **systematic, repeatable process** to:
 
 ## 🚀 Quick Start
 
+### Installation (Claude Code Plugin)
+
+**Recommended Method:**
+
+Install as a Claude Code plugin for the best experience with interactive skills and workflow tracking:
+
+```bash
+# In Claude Code
+> /plugin marketplace add jonahschulte/reverse-engineering-toolkit
+> /plugin install reverse-engineering-toolkit
+```
+
+Restart Claude Code. Skills will now be available:
+- `analyze` - Initial Analysis
+- `reverse-engineer` - Reverse Engineer
+- `create-specs` - Create Specifications
+- `gap-analysis` - Gap Analysis
+- `complete-spec` - Complete Specification
+- `implement` - Implement from Spec
+
+**Usage:**
+
+Skills auto-activate based on context, or invoke explicitly:
+
+```
+# Auto-activation
+User: "I need to reverse engineer this codebase"
+Claude: [analyze skill activates automatically]
+
+# Explicit invocation
+Just ask naturally: "Run initial analysis" or "Analyze this codebase"
+```
+
 ### Prerequisites
 
-- Claude Code (or compatible AI coding agent)
+- Claude Code with plugin support
 - Git repository with existing codebase
+- Node.js 18+ (for state management scripts)
 - ~2-4 hours total time for complete process
 
 ### Run the Process
 
-```bash
-# 1. Clone this toolkit into your repo (or copy prompts folder)
-cp -r reverse-engineering-toolkit /path/to/your/project/
+**With Plugin (Recommended):**
 
-# 2. Open Claude Code in your project
+```bash
+# Navigate to your project
 cd /path/to/your/project
 
-# 3. Run prompts in order (copy-paste into Claude Code)
-# Each prompt is in: reverse-engineering-toolkit/prompts/
+# Start Claude Code
+# Skills will guide you through the process automatically
+```
 
-# Step 1: Initial Analysis (~5 minutes)
-cat reverse-engineering-toolkit/prompts/01-initial-analysis.md
-# Copy and paste into Claude Code
+Simply say: "I want to reverse engineer this application" and Claude will guide you through all 6 steps.
 
-# Step 2: Reverse Engineer (~30 minutes)
-cat reverse-engineering-toolkit/prompts/02-reverse-engineer.md
-# Copy and paste into Claude Code
+**Workflow Progress Tracking:**
 
-# Step 3: Create Specifications (~30 minutes)
-cat reverse-engineering-toolkit/prompts/03-create-specifications.md
-# Copy and paste into Claude Code
+The plugin automatically tracks your progress:
+```bash
+# Check progress anytime
+node ~/.claude/plugins/reverse-engineering-toolkit/plugin/scripts/state-manager.js progress
+```
 
-# Step 4: Gap Analysis (~15 minutes)
-cat reverse-engineering-toolkit/prompts/04-gap-analysis.md
-# Copy and paste into Claude Code
+**Without Plugin (Manual):**
 
-# Step 5: Complete Specification (~30-60 minutes, interactive)
-cat reverse-engineering-toolkit/prompts/05-complete-specification.md
-# Copy and paste into Claude Code
-# THIS IS INTERACTIVE - answer questions about your app
+If not using the plugin, you can still use the prompts directly:
 
-# Step 6: Implement from Spec (~hours to days, depends on gaps)
-cat reverse-engineering-toolkit/prompts/06-implement-from-spec.md
-# Copy and paste into Claude Code
+```bash
+# 1. Clone this toolkit
+git clone https://github.com/jonahschulte/reverse-engineering-toolkit.git
+
+# 2. Copy prompts to your project
+cp -r reverse-engineering-toolkit/prompts /path/to/your/project/
+
+# 3. Run each prompt in order (copy-paste into Claude Code)
+cat prompts/01-initial-analysis.md  # Step 1
+cat prompts/02-reverse-engineer.md  # Step 2
+# ... etc
 ```
 
 ---
 
 ## 📁 Toolkit Structure
 
+### Plugin Structure (Recommended)
+
 ```
 reverse-engineering-toolkit/
 ├── README.md                           ← You are here
-├── prompts/
-│   ├── 01-initial-analysis.md         ← Detect tech stack and structure
-│   ├── 02-reverse-engineer.md         ← Generate comprehensive docs
-│   ├── 03-create-specifications.md    ← Transform to formal specs
-│   ├── 04-gap-analysis.md             ← Identify what's missing
-│   ├── 05-complete-specification.md   ← Interactive refinement
-│   └── 06-implement-from-spec.md      ← Build missing pieces
-├── templates/
-│   ├── feature-spec-template.md       ← Template for feature specs
-│   ├── implementation-status-template.md
-│   ├── constitution-template.md       ← Spec Kit constitution
-│   └── gap-analysis-template.md
-├── examples/
-│   └── fishfan/                       ← Real example (this repo)
-│       ├── before/                    ← Initial state
-│       ├── after/                     ← After transformation
-│       └── generated/                 ← All generated artifacts
-└── tools/
-    └── validation-scripts/            ← Optional automation
+├── .claude-plugin/
+│   └── marketplace.json               ← Plugin marketplace config
+├── plugin/
+│   ├── .claude-plugin/
+│   │   └── plugin.json                ← Plugin metadata
+│   ├── skills/
+│   │   ├── analyze/                   ← Step 1: Initial Analysis
+│   │   │   ├── SKILL.md               ← Skill definition
+│   │   │   └── operations/            ← Sub-operations
+│   │   ├── reverse-engineer/          ← Step 2: Reverse Engineer
+│   │   ├── create-specs/              ← Step 3: Create Specifications
+│   │   ├── gap-analysis/              ← Step 4: Gap Analysis
+│   │   ├── complete-spec/             ← Step 5: Complete Specification
+│   │   └── implement/                 ← Step 6: Implement from Spec
+│   ├── templates/                     ← Spec templates
+│   │   ├── feature-spec-template.md
+│   │   ├── constitution-template.md
+│   │   └── implementation-status-template.md
+│   └── scripts/
+│       └── state-manager.js           ← Progress tracking
+├── prompts/                           ← Original prompts (for manual use)
+│   ├── 01-initial-analysis.md
+│   ├── 02-reverse-engineer.md
+│   └── ...
+└── examples/
+    └── fishfan/                       ← Real example
 ```
+
+### Plugin Benefits
+
+**Why use the plugin over manual prompts?**
+
+✅ **Auto-activation** - Skills activate based on context, no copy-paste needed
+✅ **Progress tracking** - State management tracks where you are in the workflow
+✅ **Resume capability** - Pick up where you left off if interrupted
+✅ **Guided experience** - Claude knows the full context and next steps
+✅ **Templates included** - Access all templates without file operations
+✅ **Updates** - Get improvements via plugin updates
 
 ---
 

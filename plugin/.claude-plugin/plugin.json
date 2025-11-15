@@ -1,0 +1,21 @@
+{
+  "name": "reverse-engineering-toolkit",
+  "version": "1.0.0",
+  "description": "Transform any partially-complete application into a fully-specified, enterprise-grade, spec-driven codebase. Provides systematic 6-step process: Initial Analysis → Reverse Engineer → Create Specifications → Gap Analysis → Complete Specification → Implement from Spec",
+  "author": {
+    "name": "Jonah Schulte"
+  },
+  "repository": "https://github.com/jonahschulte/reverse-engineering-toolkit",
+  "license": "MIT",
+  "keywords": [
+    "reverse-engineering",
+    "specifications",
+    "documentation",
+    "spec-driven",
+    "github-spec-kit",
+    "openapi",
+    "json-schema",
+    "technical-debt",
+    "gap-analysis"
+  ]
+}

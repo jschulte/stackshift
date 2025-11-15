@@ -1,0 +1,41 @@
+{
+  "name": "reverse-engineering-toolkit",
+  "version": "1.0.0",
+  "description": "Transform any partially-complete application into a fully-specified, enterprise-grade, spec-driven codebase",
+  "keywords": [
+    "claude",
+    "claude-code",
+    "claude-plugin",
+    "reverse-engineering",
+    "specifications",
+    "documentation",
+    "spec-driven",
+    "github-spec-kit",
+    "openapi",
+    "json-schema"
+  ],
+  "author": "Jonah Schulte",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jonahschulte/reverse-engineering-toolkit.git"
+  },
+  "homepage": "https://github.com/jonahschulte/reverse-engineering-toolkit#readme",
+  "bugs": {
+    "url": "https://github.com/jonahschulte/reverse-engineering-toolkit/issues"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "scripts": {
+    "test": "echo \"No tests yet\" && exit 0"
+  },
+  "files": [
+    "plugin/",
+    ".claude-plugin/",
+    ".claude/",
+    "templates/",
+    "README.md",
+    "LICENSE"
+  ]
+}
