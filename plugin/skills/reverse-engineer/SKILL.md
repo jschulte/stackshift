@@ -1,52 +1,100 @@
 ---
 name: reverse-engineer
-description: Deep codebase analysis to generate 8 comprehensive documentation files covering functional specs, data architecture, configuration, operations, technical debt, observability, design system, and testing. This is Step 2 of 6 in the reverse engineering process. Uses specialized explore agents to systematically extract all business logic, API endpoints, data models, infrastructure, and testing patterns.
+description: Deep codebase analysis to generate 8 comprehensive documentation files. Adapts based on path choice - Greenfield extracts business logic only (tech-agnostic), Brownfield extracts business logic + technical implementation (tech-prescriptive). This is Step 2 of 6 in the reverse engineering process.
 ---
 
-# Reverse Engineer
+# Reverse Engineer (Path-Aware)
 
 **Step 2 of 6** in the Reverse Engineering to Spec-Driven Development process.
 
-**Estimated Time:** 30 minutes
-**Prerequisites:** Step 1 completed (`analysis-report.md` exists)
+**Estimated Time:** 30-45 minutes
+**Prerequisites:** Step 1 completed (`analysis-report.md` and path selection)
 **Output:** 8 comprehensive documentation files in `docs/reverse-engineering/`
+
+**Path-Dependent Behavior:**
+- **Greenfield:** Extract business logic only (framework-agnostic)
+- **Brownfield:** Extract business logic + technical implementation details
 
 ---
 
 ## When to Use This Skill
 
 Use this skill when:
-- You've completed Step 1 (Initial Analysis)
+- You've completed Step 1 (Initial Analysis) with path selection
 - Ready to extract comprehensive documentation from code
-- Need to understand all business logic, APIs, data models
+- Path has been chosen (greenfield or brownfield)
 - Preparing to create formal specifications
 
 **Trigger Phrases:**
 - "Reverse engineer the codebase"
 - "Generate comprehensive documentation"
-- "Extract all API endpoints and data models"
-- "Document the entire application"
+- "Extract business logic" (greenfield)
+- "Document the full implementation" (brownfield)
 
 ---
 
 ## What This Skill Does
 
-This skill performs deep codebase analysis and generates **8 comprehensive documentation files**:
+This skill performs deep codebase analysis and generates **8 comprehensive documentation files**.
 
-1. **functional-specification.md** - Business logic, requirements, user stories
-2. **configuration-reference.md** - All config options, environment variables
-3. **data-architecture.md** - Data models, API contracts, schemas
-4. **operations-guide.md** - Deployment, infrastructure, runbooks
-5. **technical-debt-analysis.md** - Issues, improvements, refactoring needs
-6. **observability-requirements.md** - Monitoring, logging, alerting
-7. **visual-design-system.md** - UI/UX patterns, component library
-8. **test-documentation.md** - Testing requirements, coverage, patterns
+**Content adapts based on your path:**
+
+### Path A: Greenfield (Business Logic Only)
+- Focus on WHAT the system does
+- Avoid framework/technology specifics
+- Extract user stories, business rules, workflows
+- Framework-agnostic functional requirements
+- Can be implemented in any tech stack
+
+### Path B: Brownfield (Business Logic + Technical)
+- Focus on WHAT and HOW
+- Document exact frameworks, libraries, versions
+- Extract file paths, configurations, schemas
+- Prescriptive technical requirements
+- Enables `/speckit.analyze` validation
+
+**8 Documentation Files Generated:**
+
+1. **functional-specification.md** - Business logic, requirements, user stories (+ tech details for brownfield)
+2. **configuration-reference.md** - Config options (business-level for greenfield, all details for brownfield)
+3. **data-architecture.md** - Data models, API contracts (abstract for greenfield, schemas for brownfield)
+4. **operations-guide.md** - Operational needs (requirements for greenfield, current setup for brownfield)
+5. **technical-debt-analysis.md** - Issues and improvements
+6. **observability-requirements.md** - Monitoring needs (goals for greenfield, current state for brownfield)
+7. **visual-design-system.md** - UI/UX patterns (requirements for greenfield, implementation for brownfield)
+8. **test-documentation.md** - Testing requirements (targets for greenfield, current state for brownfield)
+
+---
+
+## Path Detection
+
+**FIRST:** Check which path was selected in Step 1:
+
+```javascript
+// State file will contain:
+{
+  "path": "greenfield" | "brownfield",
+  "metadata": {
+    "pathDescription": "..."
+  }
+}
+```
+
+**Based on path:**
+- **Greenfield** → Use `prompts/greenfield/02-reverse-engineer-business-logic.md`
+- **Brownfield** → Use `prompts/brownfield/02-reverse-engineer-full-stack.md`
+
+Or for manual users:
+- Check `.re-toolkit-state.json` for `path` field
+- Follow corresponding prompt file
 
 ---
 
 ## Process Overview
 
 ### Phase 1: Deep Codebase Analysis
+
+**Approach depends on path:**
 
 Use the Task tool with `subagent_type=Explore` to analyze:
 

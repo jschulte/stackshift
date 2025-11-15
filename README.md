@@ -15,6 +15,30 @@ This toolkit provides a **systematic, repeatable process** to:
 5. **Complete missing implementations** systematically
 6. **Establish spec-driven development** going forward
 
+**Two Paths Available:**
+
+### Path A: Greenfield (Build New App from Business Logic)
+**Use when:** Rebuilding in a different tech stack or platform
+
+**Approach:** Extract business logic ONLY (tech-agnostic)
+- Focus on WHAT the system does, not HOW
+- Framework-agnostic specifications
+- Can implement in any technology
+- Perfect for platform migrations
+
+**Example:** "Extract business logic from Rails app to rebuild in Next.js"
+
+### Path B: Brownfield (Manage Existing with Spec Kit)
+**Use when:** Managing existing codebase with GitHub Spec Kit
+
+**Approach:** Extract business logic + technical implementation (tech-prescriptive)
+- Document both WHAT and HOW
+- Capture exact tech stack, versions, file paths
+- Enables `/speckit.analyze` validation
+- Perfect for ongoing spec-driven development
+
+**Example:** "Add GitHub Spec Kit to existing Next.js app for spec-driven management"
+
 **Result**: A fully-documented, specification-driven application ready for enterprise development.
 
 ---
@@ -26,44 +50,50 @@ This toolkit provides a **systematic, repeatable process** to:
 │                    6-Step Process                            │
 ├─────────────────────────────────────────────────────────────┤
 │                                                              │
-│  Step 1: Initial Analysis                                   │
+│  Step 1: Initial Analysis + Path Selection                  │
 │  ├─ Detect technology stack                                 │
 │  ├─ Identify application type                               │
-│  └─ Map directory structure                                 │
+│  ├─ Map directory structure                                 │
+│  └─ Choose: Greenfield or Brownfield? ◄─── NEW!             │
 │         │                                                    │
-│         ▼                                                    │
+│         ├─────────────────┬────────────────────┐            │
+│         │                 │                    │            │
+│    Greenfield         Brownfield               │            │
+│  (Tech-Agnostic)   (Tech-Prescriptive)         │            │
+│         │                 │                    │            │
+│         ▼                 ▼                    │            │
 │  Step 2: Reverse Engineer                                   │
-│  ├─ Extract data models                                     │
-│  ├─ Document API endpoints                                  │
-│  ├─ Analyze configuration                                   │
+│  ├─ Extract business logic ONLY ◄── Greenfield              │
+│  ├─ OR business logic + tech details ◄── Brownfield         │
 │  └─ Generate 8 comprehensive docs                           │
 │         │                                                    │
 │         ▼                                                    │
 │  Step 3: Create Specifications                              │
-│  ├─ Transform docs → formal specs                           │
-│  ├─ Mark implementation status                              │
-│  ├─ Create feature specs (F001-F0XX)                        │
-│  └─ Generate OpenAPI/JSON Schema                            │
+│  ├─ Initialize .specify/ (GitHub Spec Kit)                  │
+│  ├─ Agnostic constitution ◄── Greenfield                    │
+│  ├─ OR prescriptive constitution ◄── Brownfield             │
+│  └─ Generate feature specs, plans                           │
 │         │                                                    │
 │         ▼                                                    │
 │  Step 4: Gap Analysis                                       │
+│  ├─ Run /speckit.analyze                                    │
 │  ├─ Identify missing features                               │
-│  ├─ Find incomplete implementations                         │
-│  ├─ List technical debt                                     │
-│  └─ Create [NEEDS CLARIFICATION] markers                    │
+│  ├─ Brownfield: ~100% match initially                       │
+│  └─ Greenfield: All features marked MISSING                 │
 │         │                                                    │
 │         ▼                                                    │
 │  Step 5: Complete Specification                             │
-│  ├─ Collaborative refinement session                        │
+│  ├─ Use /speckit.clarify                                    │
 │  ├─ Answer clarifications                                   │
-│  ├─ Define missing UX/UI details                            │
-│  └─ Prioritize implementation order                         │
+│  ├─ Define missing details                                  │
+│  └─ Prioritize implementation                               │
 │         │                                                    │
 │         ▼                                                    │
 │  Step 6: Implement from Spec                                │
-│  ├─ Systematically build missing pieces                     │
-│  ├─ Check off completed items                               │
-│  ├─ Validate against specification                          │
+│  ├─ Use /speckit.tasks & /speckit.implement                 │
+│  ├─ Greenfield: Build in new stack                          │
+│  ├─ Brownfield: Fill gaps in existing                       │
+│  ├─ Validate with /speckit.analyze                          │
 │  └─ Achieve 100% completion                                 │
 │                                                              │
 └─────────────────────────────────────────────────────────────┘
@@ -146,11 +176,73 @@ git clone https://github.com/jonahschulte/reverse-engineering-toolkit.git
 # 2. Copy prompts to your project
 cp -r reverse-engineering-toolkit/prompts /path/to/your/project/
 
-# 3. Run each prompt in order (copy-paste into Claude Code)
-cat prompts/01-initial-analysis.md  # Step 1
-cat prompts/02-reverse-engineer.md  # Step 2
-# ... etc
+# 3. Choose your path
+# Greenfield (business logic only):
+cat prompts/greenfield/02-reverse-engineer-business-logic.md
+
+# Brownfield (business + technical):
+cat prompts/brownfield/02-reverse-engineer-full-stack.md
 ```
+
+---
+
+## 🔀 Choosing Your Path
+
+**The toolkit asks this question in Step 1:**
+
+> Which path best aligns with your goals?
+>
+> **A) Greenfield:** Build new app based on business logic
+>    - Extract business requirements only (tech-agnostic)
+>    - Can implement in any stack
+>    - Focus: WHAT the system does
+>
+> **B) Brownfield:** Manage this app with Spec Kit
+>    - Extract business logic + technical details (prescriptive)
+>    - Manage existing codebase with specs
+>    - Focus: WHAT it does + HOW it's implemented
+
+### When to Choose Greenfield (Path A)
+
+**Perfect for:**
+- 🔄 **Platform migrations** - Rails → Next.js, PHP → Python, Monolith → Microservices
+- 🏗️ **Technology modernization** - Rebuild with modern stack
+- 📱 **Cross-platform** - Web app → Mobile app using same business logic
+- ♻️ **Clean slate** - Start fresh with better architecture
+- 🎯 **Team flexibility** - Let new team choose their preferred stack
+
+**Results in:**
+- Specifications that describe business requirements only
+- No framework or library mentions
+- Can be implemented in ANY technology
+- Example: "User authentication with email/password" (not "JWT via passport.js")
+
+### When to Choose Brownfield (Path B)
+
+**Perfect for:**
+- 📋 **Spec-driven management** - Add GitHub Spec Kit to existing codebase
+- 🔍 **Validation** - Use `/speckit.analyze` to ensure specs match code
+- ⬆️ **Planned upgrades** - Manage framework/dependency upgrades via specs
+- 🔧 **Gradual refactoring** - Spec-driven modernization of existing app
+- 👥 **Team onboarding** - Use prescriptive specs as documentation
+
+**Results in:**
+- Specifications that describe business requirements + exact implementation
+- Framework, library, version details included
+- `/speckit.analyze` validates code matches specs
+- Example: "User authentication using JWT via jose 5.1.0, bcrypt 5.1.1, stored in httpOnly cookies"
+
+### Path Comparison
+
+| Aspect | Greenfield (A) | Brownfield (B) |
+|--------|----------------|----------------|
+| **Focus** | WHAT only | WHAT + HOW |
+| **Tech Stack** | Any (your choice) | Current (documented) |
+| **Specifications** | Agnostic | Prescriptive |
+| **Implementation** | Build new | Manage existing |
+| **Flexibility** | High | Constrained to current stack |
+| **Validation** | Manual | `/speckit.analyze` automated |
+| **Use Case** | Platform migration | Ongoing development |
 
 ---
 

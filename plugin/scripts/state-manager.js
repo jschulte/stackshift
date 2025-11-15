@@ -41,6 +41,7 @@ class StateManager {
         version: '1.0.0',
         created: new Date().toISOString(),
         updated: new Date().toISOString(),
+        path: null, // 'greenfield' or 'brownfield'
         currentStep: null,
         completedSteps: [],
         metadata: {
@@ -53,6 +54,34 @@ class StateManager {
       return initialState;
     }
     return this.loadState();
+  }
+
+  /**
+   * Set the path (greenfield or brownfield)
+   */
+  setPath(pathChoice) {
+    const state = this.loadState() || this.init();
+
+    if (pathChoice !== 'greenfield' && pathChoice !== 'brownfield') {
+      console.error(`Invalid path: ${pathChoice}. Must be 'greenfield' or 'brownfield'`);
+      return false;
+    }
+
+    state.path = pathChoice;
+    state.metadata.pathDescription = pathChoice === 'greenfield'
+      ? 'Build new app from business logic (tech-agnostic)'
+      : 'Manage existing app with Spec Kit (tech-prescriptive)';
+
+    this.saveState(state);
+    return true;
+  }
+
+  /**
+   * Get the current path
+   */
+  getPath() {
+    const state = this.loadState();
+    return state ? state.path : null;
   }
 
   /**
@@ -274,17 +303,43 @@ if (require.main === module) {
       }
       break;
 
+    case 'set-path':
+      if (!arg || (arg !== 'greenfield' && arg !== 'brownfield')) {
+        console.error('Usage: node state-manager.js set-path <greenfield|brownfield>');
+        process.exit(1);
+      }
+      if (manager.setPath(arg)) {
+        console.log(`Path set to: ${arg}`);
+        console.log(JSON.stringify(manager.getStatus(), null, 2));
+      }
+      break;
+
+    case 'get-path':
+      const currentPath = manager.getPath();
+      if (currentPath) {
+        console.log(`Current path: ${currentPath}`);
+      } else {
+        console.log('Path not set. Run: node state-manager.js set-path <greenfield|brownfield>');
+      }
+      break;
+
     default:
       console.log(`
 Reverse Engineering Toolkit - State Manager
 
 Usage:
-  node state-manager.js init                 Initialize state tracking
-  node state-manager.js start <step-id>      Start a step
-  node state-manager.js complete <step-id>   Complete a step
-  node state-manager.js status               Show current status
-  node state-manager.js progress             Show detailed progress
-  node state-manager.js reset                Reset state (start over)
+  node state-manager.js init                       Initialize state tracking
+  node state-manager.js set-path <path>            Set path (greenfield|brownfield)
+  node state-manager.js get-path                   Get current path
+  node state-manager.js start <step-id>            Start a step
+  node state-manager.js complete <step-id>         Complete a step
+  node state-manager.js status                     Show current status
+  node state-manager.js progress                   Show detailed progress
+  node state-manager.js reset                      Reset state (start over)
+
+Paths:
+  greenfield   - Build new app from business logic (tech-agnostic)
+  brownfield   - Manage existing app with Spec Kit (tech-prescriptive)
 
 Steps:
   1. analyze           - Initial Analysis

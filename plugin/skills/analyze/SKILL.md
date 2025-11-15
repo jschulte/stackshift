@@ -34,11 +34,71 @@ Use this skill when:
 
 This skill performs comprehensive initial analysis by:
 
-1. **Auto-detecting application context** - Identifies programming languages, frameworks, and build systems
-2. **Analyzing directory structure** - Maps architecture patterns and key components
-3. **Scanning existing documentation** - Assesses current documentation quality
-4. **Estimating completeness** - Evaluates how complete the implementation is
-5. **Generating analysis report** - Creates `analysis-report.md` with all findings
+1. **Asking which path you want** - Greenfield (new app) or Brownfield (manage existing)
+2. **Auto-detecting application context** - Identifies programming languages, frameworks, and build systems
+3. **Analyzing directory structure** - Maps architecture patterns and key components
+4. **Scanning existing documentation** - Assesses current documentation quality
+5. **Estimating completeness** - Evaluates how complete the implementation is
+6. **Generating analysis report** - Creates `analysis-report.md` with all findings
+7. **Storing path choice** - Saves your selection to guide subsequent steps
+
+---
+
+## Choose Your Path
+
+**FIRST:** Determine which path aligns with your goals.
+
+### Path A: Greenfield (Build New App from Business Logic)
+
+**Use when:**
+- Building a new application based on existing app's business logic
+- Migrating to a different tech stack
+- Want flexibility in implementation choices
+- Need platform-agnostic specifications
+
+**Result:**
+- Specifications focus on WHAT, not HOW
+- Business requirements only
+- Can implement in any technology
+- Tech-stack agnostic
+
+**Example:** "Extract the business logic from this Rails app so we can rebuild it in Next.js"
+
+### Path B: Brownfield (Manage Existing with Spec Kit)
+
+**Use when:**
+- Managing an existing codebase with GitHub Spec Kit
+- Want spec-code validation with `/speckit.analyze`
+- Planning upgrades or refactoring
+- Need specs that match current implementation exactly
+
+**Result:**
+- Specifications include both WHAT and HOW
+- Business logic + technical implementation
+- Tech-stack prescriptive
+- `/speckit.analyze` can validate alignment
+
+**Example:** "Add GitHub Spec Kit to this Next.js app so we can manage it with specs going forward"
+
+### Selection Question
+
+At the start of analysis, you'll be asked:
+
+```
+Which path best aligns with your goals?
+
+A) Greenfield: Build new app based on business logic
+   → Extract business requirements only (tech-agnostic)
+   → Can implement in any stack
+   → Focus: WHAT the system does
+
+B) Brownfield: Manage this app with Spec Kit
+   → Extract business logic + technical details (prescriptive)
+   → Manage existing codebase with specs
+   → Focus: WHAT it does + HOW it's implemented
+```
+
+Your choice will be stored in `.re-toolkit-state.json` and guide all subsequent steps.
 
 ---
 
