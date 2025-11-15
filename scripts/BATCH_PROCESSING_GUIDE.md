@@ -212,16 +212,19 @@ Always use **defer** strategy:
 ### During Execution (Web)
 
 - [ ] Open Claude Code Web (https://claude.ai/code)
-- [ ] Load first branch
+- [ ] Load first branch (e.g., stackshift-web/project-1-...)
 - [ ] Say: "Resume StackShift cruise control from the beginning"
+- [ ] StackShift runs and commits all changes to the branch
 - [ ] Open additional tabs for parallel processing
-- [ ] Monitor progress occasionally
+- [ ] Monitor progress occasionally (check commit history)
 
 ### After Completion (Local)
 
-- [ ] Download .specify/ and docs/ from each project
-- [ ] Commit specs to main branch
-- [ ] Delete stackshift-web/* branches (cleanup)
+- [ ] Pull branches: `git fetch origin`
+- [ ] Review changes: `git checkout stackshift-web/project-1-...`
+- [ ] Merge to main: `git checkout main && git merge stackshift-web/project-1-...`
+- [ ] Or create PR for review
+- [ ] Delete remote branches (cleanup): `git push origin --delete stackshift-web/project-1-...`
 - [ ] Review deferred clarifications
 - [ ] Run /speckit.clarify locally (free!)
 

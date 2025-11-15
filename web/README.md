@@ -91,26 +91,41 @@ Claude sees: "You're in Gear 4, completed Gears 1-3, ready to continue!"
 
 ---
 
-## Saving Your Work
+## How It Works with GitHub
 
-### After StackShift Completes
+### Claude Code Web + GitHub Integration
 
-**Download these files:**
-- `.stackshift-state.json` - Your configuration and progress
-- `docs/reverse-engineering/` - 8 documentation files
-- `.specify/` - GitHub Spec Kit specifications
-- `analysis-report.md` - Initial analysis
-- `docs/gap-analysis-report.md` - Gap analysis
+Claude Code Web works directly with your GitHub repository:
 
-**Then:**
+1. **Loads your repo/branch** from GitHub
+2. **Makes changes** (creates files, edits code)
+3. **Commits changes** back to the branch
+4. **You review locally** by pulling the branch
+
+**No downloading needed!** Everything stays in git.
+
+### Workflow
+
 ```bash
-# On your local machine
-git add .stackshift-state.json docs/ .specify/
-git commit -m "docs: add StackShift specifications"
-git push
+# Local: Prepare branch
+./scripts/prepare-web-batch.sh my-app brownfield cruise p0_p1
+# → Creates branch: stackshift-web/my-app-timestamp
+# → Pushes to GitHub
+
+# Web: Run StackShift
+# → Load branch in Claude Code Web
+# → Say: "Resume StackShift cruise control"
+# → StackShift commits all changes to the branch
+
+# Local: Review and merge
+git fetch origin
+git checkout stackshift-web/my-app-timestamp
+git log  # See StackShift's commits
+git checkout main
+git merge stackshift-web/my-app-timestamp
 ```
 
-Now your specs are in version control!
+Your specifications are in version control automatically!
 
 ---
 
