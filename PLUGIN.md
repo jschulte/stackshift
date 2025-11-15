@@ -14,7 +14,7 @@ StackShift transforms reverse engineering into an interactive, guided experience
 
 ```bash
 # In Claude Code
-> /plugin marketplace add jonahschulte/stackshift
+> /plugin marketplace add jschulte/stackshift
 > /plugin install stackshift
 ```
 
@@ -24,7 +24,7 @@ Restart Claude Code. Shift into gear!
 
 ```bash
 # Clone the repository
-git clone https://github.com/jonahschulte/stackshift.git
+git clone https://github.com/jschulte/stackshift.git
 cd stackshift
 
 # Link to local plugin directory for testing
@@ -367,8 +367,8 @@ MIT
 
 ## Support
 
-- **Repository:** https://github.com/jonahschulte/stackshift
-- **Issues:** https://github.com/jonahschulte/stackshift/issues
+- **Repository:** https://github.com/jschulte/stackshift
+- **Issues:** https://github.com/jschulte/stackshift/issues
 - **Documentation:** See README.md and individual SKILL.md files
 
 ---

@@ -150,7 +150,7 @@ chmod +x plugin/scripts/state-manager.js
 
 ```bash
 # Once published to marketplace
-> /plugin marketplace add jonahschulte/reverse-engineering-toolkit
+> /plugin marketplace add jschulte/reverse-engineering-toolkit
 > /plugin install reverse-engineering-toolkit
 ```
 

@@ -115,7 +115,7 @@ Install as a Claude Code plugin for the best experience with interactive skills 
 
 ```bash
 # In Claude Code
-> /plugin marketplace add jonahschulte/stackshift
+> /plugin marketplace add jschulte/stackshift
 > /plugin install stackshift
 ```
 
@@ -175,7 +175,7 @@ If not using the plugin, you can still use the prompts directly:
 
 ```bash
 # 1. Clone StackShift
-git clone https://github.com/jonahschulte/stackshift.git
+git clone https://github.com/jschulte/stackshift.git
 
 # 2. Copy prompts to your project
 cp -r stackshift/prompts /path/to/your/project/
