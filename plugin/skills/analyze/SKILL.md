@@ -165,10 +165,11 @@ Examples:
 ```
 Where should the new application be built?
 
-A) Subfolder: greenfield/ (recommended for Web)
+A) Subfolder (recommended for Web)
+   → Default: greenfield/
+   → Custom: Specify your own folder name (e.g., v2/, new-app/, rebuilt/)
    → Keeps old and new in same repo
    → Easy comparison and reference
-   → Works perfectly in Claude Code Web
 
 B) Separate repo (requires additional setup)
    → Clean separation
@@ -178,6 +179,16 @@ B) Separate repo (requires additional setup)
 C) Replace in place (destructive)
    → Removes old code as new is built
    → Not recommended (can't compare)
+```
+
+**If subfolder chosen, ask for folder name:**
+```
+What folder name for the new application?
+
+Default: greenfield/
+Examples: v2/, new-app/, nextjs-version/, rebuilt/
+
+Your choice: [specify or press enter for greenfield/]
 ```
 
 All answers are stored in `.stackshift-state.json` and guide the entire workflow.
@@ -223,7 +234,30 @@ AskUserQuestion({
   ]
 });
 
-// Then based on answers, ask follow-up questions if cruise control chosen
+// Then based on answers, ask follow-up questions conditionally:
+// - If cruise control: Ask clarifications strategy, implementation scope
+// - If greenfield + implementing: Ask target stack
+// - If greenfield subfolder: Ask folder name (or accept default: greenfield/)
+```
+
+**For custom folder name:** Use free-text input or accept default.
+
+**Example:**
+```
+StackShift: "What folder name for the new application? (default: greenfield/)"
+
+User: "v2/"  (or just press enter for greenfield/)
+
+StackShift: "✅ New app will be built in: v2/"
+```
+
+Stored in state as:
+```json
+{
+  "config": {
+    "greenfield_location": "v2/"
+  }
+}
 ```
 
 ---
