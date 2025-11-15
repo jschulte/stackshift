@@ -69,7 +69,7 @@ After resolving all clarifications:
 
 ## Next Gear
 
-Ready to **Gear 6: Implement from Spec** 🚀
+Ready to shift into **6th gear: Implement from Spec** 🚀
 
 Use tool: \`stackshift_implement\`
 

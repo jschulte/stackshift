@@ -103,7 +103,7 @@ For PARTIAL and MISSING features, create plans in \`.specify/memory/plans/\`
 
 ## Next Gear
 
-Ready to shift into **Gear 4: Gap Analysis**
+Ready to shift into **4th gear: Gap Analysis**
 
 Use tool: \`stackshift_gap_analysis\`
 

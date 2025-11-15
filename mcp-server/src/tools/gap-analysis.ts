@@ -70,7 +70,7 @@ Generate \`docs/gap-analysis-report.md\` with:
 
 ## Next Gear
 
-Ready to shift into **Gear 5: Complete Specification**
+Ready to shift into **5th gear: Complete Specification**
 
 Use tool: \`stackshift_complete_spec\`
 

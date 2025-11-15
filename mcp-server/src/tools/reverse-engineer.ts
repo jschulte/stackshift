@@ -77,7 +77,7 @@ The following files should be created in \`docs/reverse-engineering/\`:
 
 ## Next Gear
 
-Ready to shift into **Gear 3: Create Specifications**
+Ready to shift into **3rd gear: Create Specifications**
 
 Use tool: \`stackshift_create_specs\`
 

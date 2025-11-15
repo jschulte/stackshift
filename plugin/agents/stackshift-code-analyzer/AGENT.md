@@ -273,7 +273,7 @@ Created 8 comprehensive files in `docs/reverse-engineering/`:
 
 ### Next Steps
 
-Documentation ready for Gear 3: Create Specifications
+Ready to shift into 3rd gear: Create Specifications
 
 The extracted documentation will be transformed into GitHub Spec Kit format.
 ```

@@ -103,7 +103,7 @@ Call again with route parameter to set your path.
 
 ## Next Gear
 
-Ready to shift into **Gear 2: Reverse Engineer**
+Ready to shift into **2nd gear: Reverse Engineer**
 
 Use tool: \`stackshift_reverse_engineer\`
 
