@@ -104,6 +104,8 @@ See [operations/generate-constitution.md](operations/generate-constitution.md)
 
 Transform `docs/reverse-engineering/functional-specification.md` into individual feature specs in `.specify/memory/specifications/`:
 
+**Recommended:** Use the Task tool with `subagent_type=stackshift:technical-writer` for efficient, parallel spec generation.
+
 **Format (per GitHub Spec Kit conventions):**
 
 ```markdown
@@ -386,6 +388,8 @@ Once specifications are created in Spec Kit format, proceed to:
 - `/speckit` commands are slash commands in Claude Code, not CLI
 - Constitution is a living document, update as project evolves
 - Keep reverse-engineering docs as comprehensive reference
+- Use `stackshift:technical-writer` agent for efficient parallel spec generation
+- Always use `--ai claude` flag with `specify init` for non-interactive mode
 
 ---
 

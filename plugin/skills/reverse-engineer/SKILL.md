@@ -96,7 +96,7 @@ Or for manual users:
 
 **Approach depends on path:**
 
-Use the Task tool with `subagent_type=Explore` to analyze:
+Use the Task tool with `subagent_type=stackshift:code-analyzer` (or `Explore` as fallback) to analyze:
 
 #### 1.1 Backend Analysis
 - All API endpoints (method, path, auth, params, purpose)
@@ -269,10 +269,12 @@ Each document must be:
 
 ## Technical Notes
 
-- Use Task tool with `subagent_type=Explore` for comprehensive searches
+- Use Task tool with `subagent_type=stackshift:code-analyzer` for path-aware extraction
+- Fallback to `subagent_type=Explore` if StackShift agent not available
 - Parallel analysis: Run backend, frontend, infrastructure analysis concurrently
 - Use multiple rounds of exploration for complex codebases
 - Cross-reference findings across different parts of the codebase
+- The `stackshift:code-analyzer` agent understands greenfield vs brownfield routes automatically
 
 ---
 
