@@ -640,11 +640,17 @@ This toolkit is provided as-is for use in any project. Adapt and modify as neede
 
 ---
 
-## ❓ Questions?
+## ❓ Questions & Feedback
 
 This toolkit was created to solve a real problem: **transforming partially-complete applications into fully-specified, enterprise-grade codebases**.
 
-If you encounter issues or have suggestions, document them as you go. The toolkit improves with real-world usage.
+**Encountered an issue or have a suggestion?**
+
+- 🐛 **Found a bug?** [Open an issue](https://github.com/jschulte/stackshift/issues/new)
+- 💡 **Have an idea?** [Start a discussion](https://github.com/jschulte/stackshift/discussions)
+- 🔧 **Want to contribute?** [Submit a pull request](https://github.com/jschulte/stackshift/pulls)
+
+The toolkit improves with real-world usage and community feedback!
 
 ---
 
