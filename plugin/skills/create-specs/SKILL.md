@@ -1,15 +1,15 @@
 ---
 name: create-specs
-description: Transform reverse-engineering documentation into formal GitHub Spec Kit specifications. Creates feature specs (F001-F0XX), marks implementation status (COMPLETE/PARTIAL/MISSING), generates OpenAPI specs, JSON Schemas, and sets up spec-driven development structure. This is Step 3 of 6 in the reverse engineering process.
+description: Transform reverse-engineering documentation into GitHub Spec Kit format. Initializes .specify/ directory, creates constitution.md, generates specifications from reverse-engineered docs, and sets up for /speckit slash commands. This is Step 3 of 6 in the reverse engineering process.
 ---
 
-# Create Specifications
+# Create Specifications (GitHub Spec Kit Integration)
 
 **Step 3 of 6** in the Reverse Engineering to Spec-Driven Development process.
 
 **Estimated Time:** 30 minutes
 **Prerequisites:** Step 2 completed (`docs/reverse-engineering/` exists with 8 files)
-**Output:** `specs/` directory with GitHub Spec Kit structure
+**Output:** `.specify/` directory with GitHub Spec Kit structure
 
 ---
 
@@ -18,164 +18,311 @@ description: Transform reverse-engineering documentation into formal GitHub Spec
 Use this skill when:
 - You've completed Step 2 (Reverse Engineer)
 - Have comprehensive documentation in `docs/reverse-engineering/`
-- Ready to create formal specifications
-- Want to establish spec-driven development
+- Ready to create formal specifications in GitHub Spec Kit format
+- Want to leverage `/speckit` slash commands for implementation
 
 **Trigger Phrases:**
 - "Create specifications from documentation"
-- "Transform docs into formal specs"
+- "Transform docs into Spec Kit format"
 - "Set up GitHub Spec Kit"
-- "Generate feature specs"
+- "Initialize Spec Kit for this project"
 
 ---
 
 ## What This Skill Does
 
-Transforms reverse-engineering documentation into **formal specifications**:
+Transforms reverse-engineering documentation into **GitHub Spec Kit format**:
 
-1. **Feature Specs** - F001-F0XX format with implementation status
-2. **OpenAPI Specification** - Complete API documentation
-3. **JSON Schemas** - Data model validation schemas
-4. **Implementation Status** - Gap summary and completion tracking
-5. **Constitution** - Project principles and technical decisions
+1. **Initialize Spec Kit** - Run `specify init` to create `.specify/` structure
+2. **Constitution** - Create `.specify/memory/constitution.md` from project analysis
+3. **Specifications** - Generate feature specs in `.specify/memory/specifications/`
+4. **Implementation Plans** - Create initial plans for missing features
+5. **Enable Slash Commands** - Make `/speckit.*` commands available
+
+**Result:** Your reverse-engineered codebase is now in GitHub Spec Kit format, ready for `/speckit.implement`, `/speckit.analyze`, and ongoing spec-driven development.
 
 ---
 
 ## Process Overview
 
-### Step 1: Create Spec Directory Structure
+### Step 1: Initialize GitHub Spec Kit
 
+First, initialize Spec Kit in the project:
+
+```bash
+# Install Spec Kit CLI (if not already installed)
+uv tool install specify-cli --from git+https://github.com/github/spec-kit.git
+
+# Initialize in your project
+specify init <project-name>
+
+# Verify installation
+specify check
 ```
-specs/
-├── features/           # Feature specifications
-├── api/               # OpenAPI specifications
-├── data/              # JSON Schemas
-├── constitution.md    # Project principles
-└── implementation-status.md
+
+This creates:
+```
+.specify/
+├── memory/
+│   ├── constitution.md       # Project principles (will be generated)
+│   ├── specifications/       # Feature specs (will be generated)
+│   └── plans/               # Implementation plans (will be generated)
+├── templates/               # AI agent configs
+└── scripts/                 # Automation utilities
 ```
 
-### Step 2: Generate Feature Specs
+See [operations/init-speckit.md](operations/init-speckit.md)
 
-From `functional-specification.md`, create feature specs:
+### Step 2: Generate Constitution
 
-- **F001-F0XX** - One spec per major feature
-- **Status markers:**
-  - ✅ **COMPLETE** - Fully implemented and tested
-  - ⚠️ **PARTIAL** - Partially implemented
-  - ❌ **MISSING** - Not started
+From `docs/reverse-engineering/functional-specification.md`, create `.specify/memory/constitution.md`:
 
-Each spec includes:
-- Overview and purpose
-- Acceptance criteria
-- Implementation status
-- API endpoints (if applicable)
-- Data models (if applicable)
-- UI components (if applicable)
-- Test requirements
+**Constitution includes:**
+- **Purpose & Values** - Why this project exists, core principles
+- **Technical Decisions** - Architecture choices with rationale
+- **Development Standards** - Code style, testing requirements, review process
+- **Quality Standards** - Performance, security, reliability requirements
+- **Governance** - How decisions are made
 
-See [operations/feature-spec-generation.md](operations/feature-spec-generation.md)
+**Use `/speckit.constitution` command:**
+```
+After generating initial constitution, user can run:
+> /speckit.constitution
 
-### Step 3: Generate OpenAPI Specification
+To refine and update the constitution interactively
+```
 
-From `data-architecture.md`, create:
-- Complete OpenAPI 3.0 spec
-- All endpoints documented
-- Request/response schemas
-- Authentication methods
-- Error responses
+See [operations/generate-constitution.md](operations/generate-constitution.md)
 
-See [operations/openapi-generation.md](operations/openapi-generation.md)
+### Step 3: Generate Specifications
 
-### Step 4: Generate JSON Schemas
+Transform `docs/reverse-engineering/functional-specification.md` into individual feature specs in `.specify/memory/specifications/`:
 
-From data models in `data-architecture.md`:
-- JSON Schema for each data model
-- Validation rules
-- Type definitions
-- Relationships
+**Format (per GitHub Spec Kit conventions):**
 
-See [operations/json-schema-generation.md](operations/json-schema-generation.md)
+```markdown
+# Feature: User Authentication
 
-### Step 5: Create Implementation Status Document
+## Status
+⚠️ **PARTIAL** - Backend complete, frontend missing login UI
 
-Summary of:
-- Overall completion percentage
-- Feature-by-feature status
-- Gap categories (Missing, Partial, Complete)
-- Prioritized implementation plan
+## Overview
+[Description of what this feature does]
 
-### Step 6: Create Constitution
+## User Stories
+- As a user, I want to register an account so that I can save my data
+- As a user, I want to log in so that I can access my dashboard
 
-From `functional-specification.md` and analysis:
-- Project purpose and values
-- Technical decisions and rationale
-- Architecture principles
-- Development standards
+## Acceptance Criteria
+- [ ] User can register with email and password
+- [x] User can log in with credentials
+- [ ] User can reset forgotten password
+- [x] JWT tokens issued on successful login
+
+## Technical Requirements
+- Authentication method: JWT
+- Password hashing: bcrypt
+- Session duration: 24 hours
+- API endpoints:
+  - POST /api/auth/register
+  - POST /api/auth/login
+  - POST /api/auth/reset-password
+
+## Implementation Status
+**Completed:**
+- ✅ Backend API endpoints (all 3)
+- ✅ Database user model
+- ✅ JWT token generation
+
+**Missing:**
+- ❌ Frontend login page
+- ❌ Frontend registration page
+- ❌ Password reset UI
+- ❌ Token refresh mechanism
+
+## Dependencies
+None
+
+## Related Specifications
+- user-profile.md (depends on authentication)
+- authorization.md (extends authentication)
+```
+
+**Use `/speckit.specify` command:**
+```
+After generating initial specs, user can run:
+> /speckit.specify
+
+To create additional specifications or refine existing ones
+```
+
+See [operations/generate-specifications.md](operations/generate-specifications.md)
+
+### Step 4: Generate Implementation Plans
+
+For each **PARTIAL** or **MISSING** feature, create an implementation plan in `.specify/memory/plans/`:
+
+**Format:**
+
+```markdown
+# Implementation Plan: User Authentication Frontend
+
+## Goal
+Complete the frontend UI for user authentication (login, registration, password reset)
+
+## Current State
+- Backend API fully functional
+- No frontend UI components exist
+- User lands on placeholder page
+
+## Target State
+- Complete login page with form validation
+- Registration page with email verification
+- Password reset flow (email + new password)
+- Responsive design for mobile/desktop
+
+## Technical Approach
+1. Create React components using existing UI library
+2. Integrate with backend API endpoints
+3. Add form validation with Zod
+4. Implement JWT token storage (localStorage)
+5. Add route protection for authenticated pages
+
+## Tasks
+- [ ] Create LoginPage component
+- [ ] Create RegistrationPage component
+- [ ] Create PasswordResetPage component
+- [ ] Add form validation
+- [ ] Integrate with API endpoints
+- [ ] Add loading and error states
+- [ ] Write component tests
+- [ ] Update routing configuration
+
+## Risks & Mitigations
+- Risk: Token storage in localStorage (XSS vulnerability)
+  - Mitigation: Consider httpOnly cookies instead
+- Risk: No rate limiting on frontend
+  - Mitigation: Add rate limiting to API endpoints
+
+## Testing Strategy
+- Unit tests for form validation logic
+- Integration tests for API calls
+- E2E tests for complete auth flow
+
+## Success Criteria
+- All acceptance criteria from specification met
+- No security vulnerabilities
+- Pass all tests
+- UI matches design system
+```
+
+**Use `/speckit.plan` command:**
+```
+After generating initial plans, user can run:
+> /speckit.plan
+
+To create or refine implementation plans
+```
+
+See [operations/generate-plans.md](operations/generate-plans.md)
+
+### Step 5: Mark Implementation Status
+
+In each specification, clearly mark what's implemented vs missing:
+
+- ✅ **COMPLETE** - Fully implemented and tested
+- ⚠️ **PARTIAL** - Partially implemented (note what exists vs what's missing)
+- ❌ **MISSING** - Not started
+
+This allows `/speckit.analyze` to verify consistency.
+
+---
+
+## GitHub Spec Kit Slash Commands
+
+After setting up specs, these commands become available:
+
+### Validation & Analysis
+
+```bash
+# Check consistency between specs and implementation
+> /speckit.analyze
+
+# Identifies:
+# - Specs marked COMPLETE but implementation missing
+# - Implementation exists but not in spec
+# - Inconsistencies between related specs
+```
+
+### Implementation
+
+```bash
+# Generate tasks from implementation plan
+> /speckit.tasks
+
+# Implement a specific feature
+> /speckit.implement <specification-name>
+
+# Runs through implementation plan step-by-step
+# Updates implementation status as it progresses
+```
+
+### Clarification
+
+```bash
+# Resolve underspecified areas
+> /speckit.clarify
+
+# Interactive Q&A to fill in missing details
+# Similar to our complete-spec skill
+```
 
 ---
 
 ## Output Structure
 
-### specs/features/
+After this skill completes:
 
-Example feature specs:
 ```
-F001-user-authentication.md     ✅ COMPLETE
-F002-fish-management.md         ⚠️ PARTIAL
-F003-analytics-dashboard.md     ❌ MISSING
-F004-photo-upload.md           ⚠️ PARTIAL
-F005-social-features.md        ❌ MISSING
-```
+.specify/
+├── memory/
+│   ├── constitution.md                    # Project principles
+│   ├── specifications/
+│   │   ├── user-authentication.md        ⚠️ PARTIAL
+│   │   ├── fish-management.md            ⚠️ PARTIAL
+│   │   ├── analytics-dashboard.md        ❌ MISSING
+│   │   ├── photo-upload.md               ⚠️ PARTIAL
+│   │   └── ...
+│   └── plans/
+│       ├── user-authentication-frontend.md
+│       ├── analytics-dashboard-impl.md
+│       └── ...
+├── templates/
+└── scripts/
 
-### specs/api/openapi.yaml
-
-Complete OpenAPI 3.0 specification with all endpoints.
-
-### specs/data/schemas/
-
-JSON Schema for each model:
-```
-user.schema.json
-fish.schema.json
-tank.schema.json
-reading.schema.json
-```
-
-### specs/implementation-status.md
-
-Gap summary and roadmap:
-```markdown
-# Implementation Status
-
-## Overall: ~66% Complete
-
-### ✅ Complete Features (3)
-- F001: User Authentication
-- ...
-
-### ⚠️ Partial Features (4)
-- F002: Fish Management (backend done, UI missing profile page)
-- ...
-
-### ❌ Missing Features (2)
-- F003: Analytics Dashboard
-- ...
+docs/reverse-engineering/  # Keep original docs for reference
+├── functional-specification.md
+├── data-architecture.md
+└── ...
 ```
 
-### specs/constitution.md
+---
 
-Project principles and decisions:
-```markdown
-# Project Constitution
+## Integration with Original Toolkit
 
-## Purpose
-[Why this project exists]
+**Reverse-Engineered Docs → Spec Kit Artifacts:**
 
-## Technical Decisions
-- Architecture: Serverless (AWS Lambda)
-- Database: PostgreSQL (scalability, ACID compliance)
-- ...
-```
+| Original Doc | Spec Kit Artifact | Location |
+|-------------|------------------|----------|
+| functional-specification.md | constitution.md | `.specify/memory/` |
+| functional-specification.md | Individual feature specs | `.specify/memory/specifications/` |
+| data-architecture.md | Technical details in specs | Embedded in specifications |
+| operations-guide.md | Operational notes in constitution | `.specify/memory/constitution.md` |
+| technical-debt-analysis.md | Implementation plans | `.specify/memory/plans/` |
+
+**Keep both:**
+- `docs/reverse-engineering/` - Comprehensive reference docs
+- `.specify/memory/` - Spec Kit format for `/speckit` commands
 
 ---
 
@@ -183,31 +330,57 @@ Project principles and decisions:
 
 After running this skill, you should have:
 
-- ✅ `specs/` directory with GitHub Spec Kit structure
-- ✅ Feature specs (F001-F0XX) with status markers
-- ✅ OpenAPI specification for all APIs
-- ✅ JSON Schemas for all data models
-- ✅ Implementation status document
-- ✅ Constitution document
-- ✅ Ready to proceed to Step 4 (Gap Analysis)
+- ✅ `.specify/` directory initialized
+- ✅ `constitution.md` created with project principles
+- ✅ Individual feature specifications in `.specify/memory/specifications/`
+- ✅ Implementation plans for PARTIAL/MISSING features
+- ✅ Implementation status clearly marked (✅/⚠️/❌)
+- ✅ `/speckit.*` slash commands available
+- ✅ Ready to use `/speckit.analyze` to validate
+- ✅ Ready to use `/speckit.implement` to fill gaps
 
 ---
 
 ## Next Step
 
-Once specifications are created and reviewed, proceed to:
+Once specifications are created in Spec Kit format, proceed to:
 
-**Step 4: Gap Analysis** - Use the `gap-analysis` skill to identify missing and incomplete features.
+**Step 4: Gap Analysis** - Use `/speckit.analyze` to identify inconsistencies and the `gap-analysis` skill to create prioritized implementation plan.
+
+---
+
+## Example Workflow
+
+```bash
+# This skill runs
+1. specify init my-app
+2. Generate constitution.md from functional-specification.md
+3. Create individual feature specs from functional requirements
+4. Mark implementation status (✅/⚠️/❌)
+5. Generate implementation plans for gaps
+
+# User can then run
+> /speckit.analyze
+# Shows: "5 PARTIAL features, 3 MISSING features, 2 inconsistencies"
+
+> /speckit.implement user-authentication
+# Walks through implementation plan step-by-step
+
+> /speckit.specify
+# Add new features as needed
+```
 
 ---
 
 ## Technical Notes
 
-- Use templates from `plugin/templates/` for consistent formatting
-- Cross-reference with actual code to mark implementation status accurately
-- OpenAPI spec should be valid (test with Swagger UI or Redoc)
-- JSON Schemas should validate against actual data
+- Spec Kit uses `.specify/` directory (not `specs/`)
+- Specifications are markdown files, not JSON/YAML
+- Implementation status uses emoji markers: ✅ ⚠️ ❌
+- `/speckit` commands are slash commands in Claude Code, not CLI
+- Constitution is a living document, update as project evolves
+- Keep reverse-engineering docs as comprehensive reference
 
 ---
 
-**Remember:** This is Step 3 of 6. After creating specs, you'll analyze gaps, complete ambiguities, and implement missing features.
+**Remember:** This integrates your reverse-engineered codebase with GitHub Spec Kit, enabling the full `/speckit.*` workflow for ongoing development.

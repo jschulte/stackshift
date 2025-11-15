@@ -1,15 +1,15 @@
 ---
 name: complete-spec
-description: Interactive conversation to resolve [NEEDS CLARIFICATION] markers and complete specifications. Claude asks questions about missing features, UX/UI details, behavior, and priorities. Updates specs with answers to create complete, unambiguous documentation. This is Step 5 of 6 in the reverse engineering process.
+description: Interactive conversation to resolve [NEEDS CLARIFICATION] markers using /speckit.clarify command. Claude asks questions about missing features, UX/UI details, behavior, and priorities. Updates specs in .specify/memory/ with answers to create complete, unambiguous documentation. This is Step 5 of 6 in the reverse engineering process.
 ---
 
-# Complete Specification
+# Complete Specification (with GitHub Spec Kit)
 
 **Step 5 of 6** in the Reverse Engineering to Spec-Driven Development process.
 
 **Estimated Time:** 30-60 minutes (interactive)
-**Prerequisites:** Step 4 completed (`specs/gap-analysis.md` exists)
-**Output:** Updated specs with all `[NEEDS CLARIFICATION]` markers resolved
+**Prerequisites:** Step 4 completed (`docs/gap-analysis-report.md` exists with clarifications list)
+**Output:** Updated specs in `.specify/memory/specifications/` with all `[NEEDS CLARIFICATION]` markers resolved
 
 ---
 
@@ -17,28 +17,30 @@ description: Interactive conversation to resolve [NEEDS CLARIFICATION] markers a
 
 Use this skill when:
 - You've completed Step 4 (Gap Analysis)
-- Have `[NEEDS CLARIFICATION]` markers in specs
-- Ready for interactive clarification session
+- Have `[NEEDS CLARIFICATION]` markers in specifications
+- Ready for interactive clarification session using `/speckit.clarify`
 - Want to finalize specifications before implementation
 
 **Trigger Phrases:**
 - "Complete the specification"
-- "Resolve clarification markers"
+- "Resolve clarifications"
+- "Run speckit clarify"
 - "Let's clarify the missing details"
-- "Answer specification questions"
 
 ---
 
 ## What This Skill Does
 
-**Interactive conversation** to fill specification gaps:
+Uses `/speckit.clarify` and **interactive conversation** to fill specification gaps:
 
-1. **Identify Clarifications** - Collect all `[NEEDS CLARIFICATION]` markers
-2. **Ask Questions** - Interactive Q&A about missing features and details
-3. **Update Specifications** - Add answers to feature specs
+1. **Use /speckit.clarify** - GitHub Spec Kit's built-in clarification tool
+2. **Interactive Q&A** - Ask questions about missing features and details
+3. **Update Specifications** - Add answers to specs in `.specify/memory/specifications/`
 4. **Resolve Ambiguities** - Remove all `[NEEDS CLARIFICATION]` markers
-5. **Prioritize Features** - Confirm P0/P1/P2/P3 priorities
-6. **Create Implementation Roadmap** - Finalized plan for Step 6
+5. **Update Implementation Plans** - Refine plans in `.specify/memory/plans/`
+6. **Finalize for Implementation** - Ready for `/speckit.tasks` and `/speckit.implement`
+
+**Note:** `/speckit.clarify` provides structured clarification workflow. This skill can also supplement with custom Q&A for project-specific needs.
 
 ---
 

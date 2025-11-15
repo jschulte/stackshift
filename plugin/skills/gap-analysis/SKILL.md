@@ -1,15 +1,15 @@
 ---
 name: gap-analysis
-description: Compare specifications against implementation to identify incomplete features, missing UI components, technical debt, and ambiguous requirements. Generates prioritized gap list with [NEEDS CLARIFICATION] markers. This is Step 4 of 6 in the reverse engineering process.
+description: Use /speckit.analyze to compare specifications against implementation, then create prioritized gap list. Identifies incomplete features, missing UI components, technical debt, and inconsistencies between specs and code. This is Step 4 of 6 in the reverse engineering process.
 ---
 
-# Gap Analysis
+# Gap Analysis (with GitHub Spec Kit)
 
 **Step 4 of 6** in the Reverse Engineering to Spec-Driven Development process.
 
 **Estimated Time:** 15 minutes
-**Prerequisites:** Step 3 completed (`specs/` directory exists)
-**Output:** `specs/gap-analysis.md`
+**Prerequisites:** Step 3 completed (`.specify/` directory exists with specifications)
+**Output:** Prioritized gap analysis and implementation roadmap
 
 ---
 
@@ -17,130 +17,237 @@ description: Compare specifications against implementation to identify incomplet
 
 Use this skill when:
 - You've completed Step 3 (Create Specifications)
-- Have formal specifications in `specs/`
+- Have specifications in `.specify/memory/specifications/`
 - Ready to identify what's missing or incomplete
-- Preparing to complete the specification
+- Want to validate specs against actual implementation
 
 **Trigger Phrases:**
 - "Analyze gaps in implementation"
 - "What's missing from the application?"
-- "Identify incomplete features"
+- "Run speckit analyze"
 - "Compare specs to code"
 
 ---
 
 ## What This Skill Does
 
-Compares specifications against implementation to identify:
+Uses **GitHub Spec Kit's `/speckit.analyze`** command plus additional analysis to:
 
-1. **Missing Features** - Not started (❌ MISSING status)
-2. **Partial Features** - Backend done, UI missing or vice versa (⚠️ PARTIAL status)
-3. **Technical Debt** - Code quality, tests, documentation needs
-4. **Clarifications Needed** - Ambiguous requirements marked `[NEEDS CLARIFICATION]`
-5. **Prioritized Implementation Plan** - P0/P1/P2/P3 priorities
+1. **Validate Consistency** - Check specs match implementation
+2. **Identify Gaps** - Find PARTIAL and MISSING features
+3. **Detect Inconsistencies** - Specs say one thing, code does another
+4. **Catalog Technical Debt** - Code quality, tests, documentation needs
+5. **Prioritize Implementation** - P0/P1/P2/P3 classification
+6. **Create Roadmap** - Phased implementation plan
 
 ---
 
 ## Process Overview
 
-### Step 1: Review Feature Specs
+### Step 1: Run /speckit.analyze
 
-For each feature spec in `specs/features/`:
-- Identify status (✅ COMPLETE / ⚠️ PARTIAL / ❌ MISSING)
-- List what's implemented vs what's missing
-- Note any ambiguities or unclear requirements
+GitHub Spec Kit's built-in validation:
 
-### Step 2: Identify Missing Features
+```bash
+> /speckit.analyze
+```
 
-Features marked ❌ MISSING:
-- Why weren't they implemented?
-- Are they actually needed?
-- What's the user impact?
-- Implementation effort estimate
+**What it checks:**
+- Specifications marked ✅ COMPLETE but implementation missing
+- Implementation exists but not documented in specs
+- Inconsistencies between related specifications
+- Conflicting requirements across specs
+- Outdated implementation status
 
-### Step 3: Analyze Partial Features
+**Output example:**
+```
+Analyzing specifications vs implementation...
 
-Features marked ⚠️ PARTIAL:
-- What exists? (e.g., backend API done)
-- What's missing? (e.g., UI components)
-- Why was it left incomplete?
-- Effort to complete
+Issues Found:
 
-### Step 4: Technical Debt Assessment
+1. user-authentication.md marked PARTIAL
+   - Spec says: Frontend login UI required
+   - Reality: No login components found in codebase
+
+2. analytics-dashboard.md marked MISSING
+   - Spec exists but no implementation
+
+3. Inconsistency detected:
+   - fish-management.md requires photo-upload feature
+   - photo-upload.md marked PARTIAL (upload API missing)
+
+4. Orphaned implementation:
+   - src/api/notifications.ts exists
+   - No specification found for notifications feature
+
+Summary:
+- 3 COMPLETE features
+- 4 PARTIAL features
+- 5 MISSING features
+- 2 inconsistencies
+- 1 orphaned implementation
+```
+
+See [operations/run-speckit-analyze.md](operations/run-speckit-analyze.md)
+
+### Step 2: Detailed Gap Analysis
+
+Expand on `/speckit.analyze` findings with deeper analysis:
+
+#### A. Review PARTIAL Features
+
+For each ⚠️ PARTIAL feature:
+- What exists? (backend, frontend, tests, docs)
+- What's missing? (specific components, endpoints, UI)
+- Why incomplete? (was it deprioritized? ran out of time?)
+- Effort to complete? (hours estimate)
+- Blockers? (dependencies, unclear requirements)
+
+#### B. Review MISSING Features
+
+For each ❌ MISSING feature:
+- Is it actually needed? (or can it be deprioritized?)
+- User impact if missing? (critical, important, nice-to-have)
+- Implementation complexity? (simple, moderate, complex)
+- Dependencies? (what must be done first)
+
+#### C. Technical Debt Assessment
 
 From `docs/reverse-engineering/technical-debt-analysis.md`:
 - Code quality issues
-- Missing tests
+- Missing tests (unit, integration, E2E)
 - Documentation gaps
-- Security concerns
-- Performance issues
+- Security vulnerabilities
+- Performance bottlenecks
 
-### Step 5: Mark Ambiguities
+#### D. Identify Clarification Needs
 
-Add `[NEEDS CLARIFICATION]` markers for:
+Mark ambiguous areas with `[NEEDS CLARIFICATION]`:
 - Unclear requirements
 - Missing UX/UI details
 - Undefined behavior
 - Unspecified constraints
 
-Example:
-```markdown
-### Analytics Dashboard [NEEDS CLARIFICATION]
-- What charts/metrics should be displayed?
-- Real-time or daily aggregates?
-- User filtering options?
-```
+See [operations/detailed-gap-analysis.md](operations/detailed-gap-analysis.md)
 
-### Step 6: Prioritize Implementation
+### Step 3: Prioritize Implementation
 
 Classify gaps by priority:
-- **P0** - Critical, blocking major use cases
-- **P1** - High value, important for core functionality
-- **P2** - Medium value, nice to have
-- **P3** - Low priority, future enhancement
+
+**P0 - Critical**
+- Blocking major use cases
+- Security vulnerabilities
+- Data integrity issues
+- Broken core functionality
+
+**P1 - High Priority**
+- Important for core user value
+- High user impact
+- Competitive differentiation
+- Technical debt causing problems
+
+**P2 - Medium Priority**
+- Nice-to-have features
+- Improvements to existing features
+- Minor technical debt
+- Edge cases
+
+**P3 - Low Priority**
+- Future enhancements
+- Polish and refinements
+- Non-critical optimizations
+
+See [operations/prioritization.md](operations/prioritization.md)
+
+### Step 4: Create Implementation Roadmap
+
+Phase the work into manageable chunks:
+
+**Phase 1: P0 Items** (~X hours)
+- Complete critical features
+- Fix security issues
+- Unblock major workflows
+
+**Phase 2: P1 Features** (~X hours)
+- Build high-value features
+- Address important technical debt
+- Improve test coverage
+
+**Phase 3: P2/P3 Enhancements** (~X hours or defer)
+- Nice-to-have features
+- Polish and refinements
+- Optional improvements
 
 ---
 
 ## Output Format
 
-Create `specs/gap-analysis.md`:
+Create `docs/gap-analysis-report.md` (supplementing Spec Kit's output):
 
 ```markdown
-# Gap Analysis
+# Gap Analysis Report
 
 **Date:** [Current Date]
-**Overall Completion:** ~66%
+**Based on:** /speckit.analyze + manual review
 
 ---
 
-## Summary
+## Executive Summary
 
+- **Overall Completion:** ~66%
 - **Complete Features:** 3 (25%)
 - **Partial Features:** 4 (33%)
 - **Missing Features:** 5 (42%)
-- **Clarifications Needed:** 12
+- **Critical Issues:** 2
+- **Clarifications Needed:** 8
 
 ---
 
-## Missing Features (❌)
+## Spec Kit Analysis Results
 
-### F003: Analytics Dashboard [P1]
-**Status:** Not started
+### Inconsistencies Detected by /speckit.analyze
+
+1. **user-authentication.md** (PARTIAL)
+   - Spec: Frontend login UI required
+   - Reality: No login components exist
+   - Impact: Users cannot authenticate
+
+2. **photo-upload.md → fish-management.md**
+   - fish-management depends on photo-upload
+   - photo-upload.md is PARTIAL (API incomplete)
+   - Impact: Fish photos cannot be uploaded
+
+3. **Orphaned Code: notifications.ts**
+   - Implementation exists without specification
+   - Action: Create specification or remove code
+
+---
+
+## Gap Details
+
+### Missing Features (❌ 5 features)
+
+#### F003: Analytics Dashboard [P1]
+**Specification:** `.specify/memory/specifications/analytics-dashboard.md`
+**Status:** ❌ MISSING (not started)
 **Impact:** Users cannot track metrics over time
 **Effort:** ~8 hours
 **Dependencies:** None
-**Clarifications:**
+
+**Needs Clarification:**
 - [NEEDS CLARIFICATION] What metrics to display?
 - [NEEDS CLARIFICATION] Chart types (line, bar, pie)?
+- [NEEDS CLARIFICATION] Real-time or daily aggregates?
 
-### F005: Social Features [P2]
+#### F005: Social Features [P2]
 ...
 
----
+### Partial Features (⚠️ 4 features)
 
-## Partial Features (⚠️)
+#### F002: Fish Management [P0]
+**Specification:** `.specify/memory/specifications/fish-management.md`
+**Status:** ⚠️ PARTIAL
 
-### F002: Fish Management [P0]
 **Implemented:**
 - ✅ Backend API (all CRUD endpoints)
 - ✅ Fish list page
@@ -148,11 +255,13 @@ Create `specs/gap-analysis.md`:
 
 **Missing:**
 - ❌ Fish profile edit page
-- ❌ Photo upload UI
+- ❌ Photo upload UI (blocked by photo-upload.md)
 - ❌ Bulk import feature
 
 **Effort to Complete:** ~4 hours
-**Clarifications:**
+**Blockers:** Photo upload API must be completed first
+
+**Needs Clarification:**
 - [NEEDS CLARIFICATION] Photo upload: drag-drop or click-browse?
 - [NEEDS CLARIFICATION] Max photos per fish?
 
@@ -160,15 +269,15 @@ Create `specs/gap-analysis.md`:
 
 ## Technical Debt
 
-### High Priority
-- Missing integration tests (0 tests)
-- No error handling in 8 API endpoints
-- Hardcoded AWS region (should be configurable)
+### High Priority (Blocking)
+- Missing integration tests (0 tests, blocks deployment)
+- No error handling in 8 API endpoints (causes crashes)
+- Hardcoded AWS region (prevents multi-region)
 
 ### Medium Priority
 - Frontend components lack TypeScript types
-- No loading states in UI
-- Missing rate limiting on API
+- No loading states in UI (poor UX)
+- Missing rate limiting on API (security risk)
 
 ### Low Priority
 - Inconsistent code formatting
@@ -177,56 +286,119 @@ Create `specs/gap-analysis.md`:
 
 ---
 
-## Clarifications Needed (12 total)
+## Prioritized Roadmap
 
-### Critical (P0)
-1. **F002 - Photo Upload:** UI pattern preference?
-2. **F004 - Offline Sync:** Full data or metadata only?
+### Phase 1: P0 Critical (~12 hours)
 
-### Important (P1)
-3. **F003 - Analytics:** Chart types and metrics?
-4. **F006 - Notifications:** Email, push, or both?
+**Goals:**
+- Unblock core user workflows
+- Fix security issues
+- Complete essential features
 
-### Nice-to-Have (P2)
-5. **F007 - Dark Mode:** Full theme support or toggle only?
-...
+**Tasks:**
+1. Complete F002: Fish Management UI (~4h)
+   - Implement photo upload API
+   - Build fish edit page
+   - Connect to backend
+
+2. Add error handling to all APIs (~3h)
+
+3. Implement integration tests (~5h)
+
+### Phase 2: P1 High Value (~20 hours)
+
+**Goals:**
+- Build analytics dashboard
+- Implement notifications
+- Improve test coverage
+
+**Tasks:**
+1. F003: Analytics Dashboard (~8h)
+2. F006: Notification System (~6h)
+3. Add rate limiting (~2h)
+4. Improve TypeScript coverage (~4h)
+
+### Phase 3: P2/P3 Enhancements (~TBD)
+
+**Goals:**
+- Add nice-to-have features
+- Polish and refinements
+
+**Tasks:**
+1. F005: Social Features (~12h)
+2. F007: Dark Mode (~6h)
+3. F008: Admin Panel (~10h)
 
 ---
 
-## Prioritized Implementation Plan
+## Clarifications Needed (8 total)
 
-### Phase 1: Complete P0 Items (~12 hours)
-1. F002: Complete fish management UI
-2. F004: Implement offline sync
-3. Add error handling to all APIs
-4. Add integration tests
+### Critical (P0) - 2 items
+1. **F002 - Photo Upload:** Drag-drop, click-browse, or both?
+2. **F004 - Offline Sync:** Full data or metadata only?
 
-### Phase 2: Implement P1 Features (~20 hours)
-1. F003: Analytics dashboard
-2. F006: Notification system
-3. Add rate limiting
-4. Improve TypeScript coverage
+### Important (P1) - 4 items
+3. **F003 - Analytics:** Which chart types and metrics?
+4. **F006 - Notifications:** Email, push, or both?
+5. **F003 - Data Refresh:** Real-time or daily aggregates?
+6. **F006 - Alert Frequency:** Per event or digest?
 
-### Phase 3: P2/P3 Enhancements (~TBD)
-1. F005: Social features
-2. F007: Dark mode
-3. F008: Admin panel
-...
+### Nice-to-Have (P2) - 2 items
+7. **F007 - Dark Mode:** Full theme or toggle only?
+8. **F005 - Social:** Which social features (share, comment, like)?
 
 ---
 
 ## Recommendations
 
-1. **Clarify ambiguities in Step 5** before implementing
-2. **Focus on P0 items first** - highest user impact
-3. **Address technical debt** alongside new features
-4. **Add tests** before expanding features
+1. **Resolve P0 clarifications first** (Step 5: complete-spec)
+2. **Focus on Phase 1** before expanding scope
+3. **Use /speckit.implement** for systematic implementation
+4. **Update specs as you go** to keep them accurate
+5. **Run /speckit.analyze regularly** to catch drift
 
 ---
 
-## Notes
+## Next Steps
 
-[Any additional context or observations]
+1. Run `complete-spec` skill to resolve clarifications
+2. Begin Phase 1 implementation
+3. Use `/speckit.implement` for each feature
+4. Update implementation status in specs
+5. Re-run `/speckit.analyze` to validate progress
+```
+
+---
+
+## GitHub Spec Kit Integration
+
+After gap analysis, leverage Spec Kit commands:
+
+### Validate Continuously
+```bash
+# Re-run after making changes
+> /speckit.analyze
+
+# Should show fewer issues as you implement
+```
+
+### Implement Systematically
+```bash
+# Generate tasks for a feature
+> /speckit.tasks user-authentication
+
+# Implement step-by-step
+> /speckit.implement user-authentication
+
+# Updates spec status automatically
+```
+
+### Clarify Ambiguities
+```bash
+# Before implementing unclear features
+> /speckit.clarify analytics-dashboard
+
+# Interactive Q&A to fill gaps
 ```
 
 ---
@@ -235,12 +407,15 @@ Create `specs/gap-analysis.md`:
 
 After running this skill, you should have:
 
-- ✅ `specs/gap-analysis.md` created
-- ✅ All missing features identified
-- ✅ Partial features analyzed (what exists vs missing)
+- ✅ `/speckit.analyze` results reviewed
+- ✅ All inconsistencies documented
+- ✅ PARTIAL features analyzed (what exists vs missing)
+- ✅ MISSING features categorized
 - ✅ Technical debt cataloged
-- ✅ Ambiguities marked with `[NEEDS CLARIFICATION]`
-- ✅ Prioritized implementation plan
+- ✅ `[NEEDS CLARIFICATION]` markers added
+- ✅ Priorities assigned (P0/P1/P2/P3)
+- ✅ Phased implementation roadmap
+- ✅ `docs/gap-analysis-report.md` created
 - ✅ Ready to proceed to Step 5 (Complete Specification)
 
 ---
@@ -249,17 +424,18 @@ After running this skill, you should have:
 
 Once gap analysis is complete, proceed to:
 
-**Step 5: Complete Specification** - Use the `complete-spec` skill for interactive clarification session.
+**Step 5: Complete Specification** - Use the `complete-spec` skill to resolve all `[NEEDS CLARIFICATION]` markers interactively.
 
 ---
 
 ## Technical Notes
 
-- Cross-reference specs with actual code to verify status
-- Estimate effort based on similar completed features
-- Be conservative with P0 classification (only truly critical items)
-- Group related clarifications together
+- `/speckit.analyze` is run first for automated checks
+- Manual analysis supplements with deeper insights
+- Gap report complements Spec Kit's output
+- Keep both `.specify/memory/` specs and gap report updated
+- Re-run `/speckit.analyze` frequently to track progress
 
 ---
 
-**Remember:** This is Step 4 of 6. After identifying gaps, you'll have an interactive session to resolve clarifications, then implement missing features.
+**Remember:** This step combines GitHub Spec Kit's automated validation with manual gap analysis to create a complete picture of what needs to be built.

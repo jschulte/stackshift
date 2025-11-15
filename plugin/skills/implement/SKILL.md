@@ -1,9 +1,9 @@
 ---
 name: implement
-description: Systematically implement missing features from completed specifications. Works through prioritized list (P0 → P1 → P2), checks off items as completed, validates against acceptance criteria, and achieves 100% spec completion. This is Step 6 of 6 in the reverse engineering process.
+description: Use GitHub Spec Kit's /speckit.implement and /speckit.tasks to systematically build missing features from specifications. Leverages implementation plans in .specify/memory/plans/, validates against acceptance criteria, and achieves 100% spec completion. This is Step 6 of 6 in the reverse engineering process.
 ---
 
-# Implement from Spec
+# Implement from Spec (with GitHub Spec Kit)
 
 **Step 6 of 6** in the Reverse Engineering to Spec-Driven Development process.
 
@@ -17,351 +17,473 @@ description: Systematically implement missing features from completed specificat
 
 Use this skill when:
 - You've completed Step 5 (Complete Specification)
-- All specifications are finalized and unambiguous
-- Ready to implement missing and partial features
-- Want to achieve 100% spec completion
+- All specifications in `.specify/memory/specifications/` are finalized
+- Implementation plans exist in `.specify/memory/plans/`
+- Ready to use `/speckit.implement` to build features
 
 **Trigger Phrases:**
 - "Implement missing features"
+- "Use speckit to implement"
 - "Build from specifications"
-- "Complete the partial features"
-- "Implement the roadmap"
+- "Run speckit implement"
 
 ---
 
 ## What This Skill Does
 
-Systematically implements features from specifications:
+Uses **GitHub Spec Kit's implementation workflow** to systematically build features:
 
-1. **Review Implementation Plan** - Confirm priority order
-2. **Implement P0 Features** - Critical items first
-3. **Implement P1 Features** - High-value items
-4. **Complete Partial Features** - Finish incomplete work
-5. **Validate Against Specs** - Test acceptance criteria
-6. **Update Status Markers** - Mark features as ✅ COMPLETE
-7. **Achieve 100% Completion** - All specs implemented
+1. **Use /speckit.tasks** - Generate actionable task lists from implementation plans
+2. **Use /speckit.implement** - Execute tasks step-by-step for each feature
+3. **Validate with /speckit.analyze** - Verify implementation matches specs
+4. **Update Specs Automatically** - Spec Kit marks features ✅ COMPLETE as you implement
+5. **Track Progress** - Monitor completion via `.specify/memory/` status markers
+6. **Achieve 100% Completion** - All specs implemented and validated
+
+**Key Benefit:** Spec Kit's `/speckit.implement` command guides you through implementation plans, updates specs automatically, and validates work against acceptance criteria.
+
+---
+
+## GitHub Spec Kit Implementation Workflow
+
+The standard Spec Kit workflow is:
+
+```
+/speckit.specify → /speckit.plan → /speckit.tasks → /speckit.implement → /speckit.analyze
+```
+
+**For reverse engineering, we've already done the first two steps:**
+- ✅ `/speckit.specify` - Done in Step 3 (created specifications)
+- ✅ `/speckit.plan` - Done in Step 3 (created implementation plans)
+
+**Now we use the remaining commands:**
+- `/speckit.tasks` - Generate task lists
+- `/speckit.implement` - Build features
+- `/speckit.analyze` - Validate
 
 ---
 
 ## Process Overview
 
-### Step 1: Review Implementation Plan
+### Step 1: Review Implementation Roadmap
 
-From `specs/gap-analysis.md`:
-- Prioritized list of features to implement
-- Estimated effort for each
-- Dependencies between features
+From `docs/gap-analysis-report.md`, review the phased plan:
+
+**Phase 1: P0 Critical** (~12 hours)
+- Essential features
+- Security fixes
+- Blocking issues
+
+**Phase 2: P1 High Value** (~20 hours)
+- Important features
+- High user impact
+- Key improvements
+
+**Phase 3: P2/P3** (~TBD)
+- Nice-to-have
+- Future enhancements
 
 **Confirm with user:**
-- Start with P0 items?
-- Any priority changes?
-- Time constraints or deadlines?
+- Start with Phase 1 (P0 items)?
+- Any blockers to address first?
+- Time constraints?
 
-### Step 2: Implement Each Feature
+### Step 2: For Each Feature - Generate Tasks
 
-**For each feature in priority order:**
+Use `/speckit.tasks` to generate actionable tasks from implementation plan:
 
-1. **Read Feature Spec**
-   - Review overview and purpose
-   - Read acceptance criteria
-   - Note API endpoints, data models, UI requirements
-
-2. **Plan Implementation**
-   - What files need to be created/modified?
-   - What dependencies are needed?
-   - What order to implement (backend first, then frontend)?
-
-3. **Implement Backend (if needed)**
-   - API endpoints
-   - Business logic
-   - Database changes
-   - Validation rules
-
-4. **Implement Frontend (if needed)**
-   - Pages/routes
-   - Components
-   - State management
-   - API integration
-   - Styling
-
-5. **Add Tests**
-   - Unit tests
-   - Integration tests
-   - E2E tests (for critical flows)
-
-6. **Validate Against Acceptance Criteria**
-   - Check off each criterion
-   - Test manually
-   - Verify edge cases
-
-7. **Update Feature Spec**
-   - Change status to ✅ COMPLETE
-   - Note implementation details
-   - Link to relevant code files
-
-8. **Commit Changes**
-   - Clear commit message
-   - Reference feature spec (e.g., "feat: implement F003 analytics dashboard")
-
-### Step 3: Handle Partial Features
-
-For features marked ⚠️ PARTIAL:
-- Identify what's implemented
-- Implement missing pieces
-- Ensure consistency between new and existing code
-- Update to ✅ COMPLETE
-
-### Step 4: Track Progress
-
-Keep running checklist:
-```markdown
-## Implementation Progress
-
-### P0 Items (4 total)
-- [x] F002: Complete fish management UI
-- [x] F004: Implement offline sync
-- [ ] Add error handling to APIs
-- [ ] Add integration tests
-
-### P1 Items (3 total)
-- [ ] F003: Analytics dashboard
-- [ ] F006: Notification system
-- [ ] Add rate limiting
+```bash
+# Example: Implement user authentication frontend
+> /speckit.tasks user-authentication-frontend
 ```
 
-Update `specs/implementation-status.md` after each feature.
+**What this does:**
+- Reads `.specify/memory/plans/user-authentication-frontend.md`
+- Breaks down plan into specific, actionable tasks
+- Creates task checklist
 
----
+**Output example:**
+```markdown
+# Tasks: User Authentication Frontend
 
-## Implementation Guidelines
+Based on implementation plan in `.specify/memory/plans/user-authentication-frontend.md`
 
-### Backend Development
+## Tasks
+- [ ] Create LoginPage component (app/login/page.tsx)
+- [ ] Create RegistrationPage component (app/register/page.tsx)
+- [ ] Create PasswordResetPage component (app/reset-password/page.tsx)
+- [ ] Add Zod validation schemas (lib/validation/auth.ts)
+- [ ] Create useAuth hook (hooks/useAuth.ts)
+- [ ] Implement API integration (lib/api/auth.ts)
+- [ ] Add loading states to all forms
+- [ ] Add error handling and display
+- [ ] Write component tests (LoginPage.test.tsx, etc.)
+- [ ] Update routing configuration (app/layout.tsx)
 
-**API Endpoints:**
-- Follow existing patterns
-- Use consistent error handling
-- Add input validation
-- Include proper authentication/authorization
-- Add logging for debugging
+## Dependencies
+- Backend API endpoints must be functional
+- UI component library installed
 
-**Database Changes:**
-- Create migrations (don't modify existing)
-- Add indexes for performance
-- Include seed data if needed
-- Test rollback procedures
+## Acceptance Criteria (from specification)
+- [ ] User can register with email and password
+- [ ] User can log in with credentials
+- [ ] User can reset forgotten password
+- [ ] JWT tokens stored securely
+- [ ] Forms validate input before submission
+- [ ] Loading states shown during API calls
+- [ ] Error messages displayed clearly
+```
 
-**Business Logic:**
-- Keep in service layer (not in routes)
-- Write testable functions
-- Handle edge cases
-- Add appropriate comments
+See [operations/generate-tasks.md](operations/generate-tasks.md)
 
-### Frontend Development
+### Step 3: Implement Feature with /speckit.implement
 
-**Pages/Routes:**
-- Follow existing navigation structure
-- Add loading states
-- Handle error states
-- Responsive design
+Use `/speckit.implement` to execute the implementation plan:
 
-**Components:**
-- Reuse existing components when possible
-- Follow design system
-- Add TypeScript types
-- Include accessibility attributes
+```bash
+# Implement the feature step-by-step
+> /speckit.implement user-authentication-frontend
+```
 
-**State Management:**
-- Use established patterns (Context/Redux/etc.)
-- Keep state minimal
-- Optimize re-renders
+**What this does:**
+1. Loads tasks from `/speckit.tasks` output
+2. Walks through each task systematically
+3. Generates code for each task
+4. Tests implementation against acceptance criteria
+5. Updates specification status markers
+6. Commits changes with descriptive messages
 
-**API Integration:**
-- Use existing API client
-- Add loading and error handling
-- Implement optimistic updates where appropriate
+**Interactive flow:**
+```
+> /speckit.implement user-authentication-frontend
 
-### Testing
+Starting implementation of: User Authentication Frontend
+Plan: .specify/memory/plans/user-authentication-frontend.md
 
-**Required Tests:**
-- Unit tests for business logic
-- Integration tests for API endpoints
-- Component tests for UI
-- E2E tests for critical user flows
+Task 1/10: Create LoginPage component
 
-**Test Coverage Targets:**
-- Backend: 80%+
-- Frontend: 70%+
-- Critical paths: 100%
+I'll create app/login/page.tsx with:
+- Email/password form
+- Form validation
+- Submit handler
+- Link to registration and password reset
 
-### Documentation
+[Code generated]
 
-As you implement:
-- Update inline code comments
-- Add JSDoc/TSDoc for functions
-- Update README if setup changes
-- Add to troubleshooting guide if complex
+✅ Task 1 complete
 
----
+Task 2/10: Create RegistrationPage component
+[...]
 
-## Validation Process
+All tasks complete! Running validation...
 
-For each feature, verify:
+✅ All acceptance criteria met
+✅ Tests passing (8/8)
+✅ No TypeScript errors
 
-### Against Acceptance Criteria
+Updating specification status...
+user-authentication.md: ⚠️ PARTIAL → ✅ COMPLETE
 
-Go through each criterion in the spec:
-- [ ] Manual testing confirms it works
-- [ ] Edge cases handled
-- [ ] Error states work correctly
-- [ ] Matches UX/UI requirements
+Implementation complete!
+```
 
-### Code Quality
+See [operations/use-speckit-implement.md](operations/use-speckit-implement.md)
 
-- [ ] Follows project conventions
-- [ ] No hardcoded values
-- [ ] Proper error handling
-- [ ] TypeScript types (if applicable)
-- [ ] No console.logs left in code
+### Step 4: Validate Implementation
 
-### Performance
+After implementing, use `/speckit.analyze` to verify:
 
-- [ ] No unnecessary re-renders (frontend)
-- [ ] Efficient database queries (backend)
-- [ ] Lazy loading where appropriate
-- [ ] Assets optimized
+```bash
+> /speckit.analyze
+```
 
-### Security
+**What it checks:**
+- Implementation matches specification
+- All acceptance criteria met
+- No inconsistencies with related specs
+- Status markers accurate
 
-- [ ] Input sanitization
-- [ ] Authentication checks
-- [ ] Authorization rules
-- [ ] No sensitive data exposed
+**If issues found:**
+```
+⚠️ Issues detected:
 
----
+1. user-authentication.md marked COMPLETE
+   - Missing: Token refresh mechanism
+   - Action: Add token refresh or update spec
 
-## Example Implementation Flow
+2. Inconsistency with user-profile.md
+   - user-profile depends on authentication
+   - user-profile marked PARTIAL
+   - Recommendation: Complete user-profile next
+```
 
-**Feature: F003 - Analytics Dashboard**
+Fix any issues and re-run `/speckit.analyze` until clean.
 
-1. **Backend:**
-   ```bash
-   # Create API endpoints
-   - Create src/api/analytics/fish-count.ts
-   - Create src/api/analytics/water-params.ts
-   - Create src/api/analytics/health-score.ts
-   - Add WebSocket handler for alerts
-   - Add tests
-   ```
-
-2. **Frontend:**
-   ```bash
-   # Create dashboard page
-   - Create app/analytics/page.tsx
-   - Create components/charts/FishCountChart.tsx
-   - Create components/charts/WaterParamsChart.tsx
-   - Create components/HealthScoreGauge.tsx
-   - Create components/AlertsList.tsx
-   - Add API integration
-   - Style components
-   - Add tests
-   ```
-
-3. **Validate:**
-   - Test all charts render correctly
-   - Verify date range selector works
-   - Confirm real-time alerts update
-   - Check mobile responsive design
-
-4. **Update Spec:**
-   - Change status: ❌ MISSING → ✅ COMPLETE
-   - Add implementation notes
-   - Link to code files
-
-5. **Commit:**
-   ```bash
-   git add .
-   git commit -m "feat: implement F003 analytics dashboard with charts and real-time alerts"
-   ```
-
----
-
-## Progress Tracking
-
-### Update implementation-status.md
+### Step 5: Update Progress and Continue
 
 After each feature:
-```markdown
-## Overall: ~85% Complete (was 66%)
 
-### ✅ Complete Features (6) ← was 3
-- F001: User Authentication
-- F002: Fish Management ← newly completed
-- F003: Analytics Dashboard ← newly completed
-- F004: Offline Sync ← newly completed
-- ...
+1. **Check progress:**
+   ```bash
+   > /speckit.analyze
+   # Shows: X/Y features complete
+   ```
 
-### ⚠️ Partial Features (1) ← was 4
-- F006: Notification System (email done, push pending)
+2. **Update gap report:**
+   - Mark feature as ✅ COMPLETE
+   - Update overall completion percentage
+   - Move to next priority feature
 
-### ❌ Missing Features (3) ← was 5
-- F005: Social Features
-- F007: Dark Mode
-- F008: Admin Panel
+3. **Commit changes:**
+   ```bash
+   git commit -m "feat: implement user authentication frontend (user-authentication.md)"
+   ```
+
+4. **Select next feature:**
+   - Follow prioritized roadmap
+   - Choose next P0 item, or move to P1 if P0 complete
+
+### Step 6: Iterate Until 100% Complete
+
+Repeat Steps 2-5 for each feature in the roadmap:
+
+```bash
+# Phase 1: P0 Critical
+> /speckit.tasks fish-management-ui
+> /speckit.implement fish-management-ui
+> /speckit.analyze
+
+> /speckit.tasks photo-upload-api
+> /speckit.implement photo-upload-api
+> /speckit.analyze
+
+# Phase 2: P1 High Value
+> /speckit.tasks analytics-dashboard
+> /speckit.implement analytics-dashboard
+> /speckit.analyze
+
+# Continue until all features complete...
 ```
+
+**Track progress:**
+- Phase 1: 3/3 complete (100%) ✅
+- Phase 2: 2/4 complete (50%) 🔄
+- Phase 3: 0/5 complete (0%) ⏳
+
+---
+
+## Example: Complete Implementation Flow
+
+```bash
+# 1. Review roadmap
+User: "Let's implement the missing features"
+Claude: Reviews docs/gap-analysis-report.md
+Claude: "I see 3 P0 items. Let's start with fish-management-ui?"
+User: "Yes, let's do it"
+
+# 2. Generate tasks
+> /speckit.tasks fish-management-ui
+Output: 12 tasks identified
+
+# 3. Implement
+> /speckit.implement fish-management-ui
+
+Starting implementation...
+
+Task 1/12: Create FishEditPage component
+[Code generated for app/fish/[id]/edit/page.tsx]
+✅ Task 1 complete
+
+Task 2/12: Add photo upload UI
+[Code generated for components/PhotoUpload.tsx]
+✅ Task 2 complete
+
+[... continues through all 12 tasks ...]
+
+Implementation complete!
+✅ All acceptance criteria met
+✅ Tests passing (15/15)
+
+# 4. Validate
+> /speckit.analyze
+✅ No issues found
+fish-management.md: ⚠️ PARTIAL → ✅ COMPLETE
+
+# 5. Commit
+git commit -m "feat: complete fish management UI (fish-management.md)"
+
+# 6. Next feature
+Claude: "Phase 1 progress: 1/3 complete. Next: photo-upload-api?"
+User: "Yes"
+
+# Repeat...
+```
+
+---
+
+## Integration with Reverse Engineering Process
+
+**Your reverse-engineered codebase is now:**
+1. ✅ Fully documented (Step 2)
+2. ✅ Formal specs created (Step 3)
+3. ✅ Gaps identified (Step 4)
+4. ✅ Clarifications resolved (Step 5)
+5. 🔄 **Being implemented systematically (Step 6)**
+
+**Spec Kit ensures:**
+- Implementation matches specs exactly
+- Specs stay up-to-date with code
+- No drift between docs and reality
+- Continuous validation
+
+**After completion:**
+- Use `/speckit.specify` for new features
+- Use `/speckit.plan` → `/speckit.tasks` → `/speckit.implement` for development
+- Use `/speckit.analyze` to maintain consistency
+- Your codebase is now fully spec-driven!
 
 ---
 
 ## Success Criteria
 
-After running this skill, you should have:
+After running this skill (implementing all features), you should have:
 
-- ✅ All P0 features implemented
-- ✅ All P1 features implemented (or deferred with reason)
-- ✅ All partial features completed
-- ✅ Tests added for new features
-- ✅ All feature specs marked ✅ COMPLETE
-- ✅ Documentation updated
-- ✅ Application at 100% completion (or defined scope)
+- ✅ All P0 features implemented (Phase 1 complete)
+- ✅ All P1 features implemented (Phase 2 complete)
+- ✅ P2/P3 features implemented or intentionally deferred
+- ✅ All specifications marked ✅ COMPLETE
+- ✅ `/speckit.analyze` shows no issues
+- ✅ All tests passing
+- ✅ Application at 100% completion
 - ✅ Ready for production deployment
+
+**Ongoing spec-driven development established:**
+- New features start with `/speckit.specify`
+- Implementation uses `/speckit.plan` → `/speckit.tasks` → `/speckit.implement`
+- Continuous validation with `/speckit.analyze`
 
 ---
 
-## Final Steps
+## Best Practices
 
-Once implementation is complete:
+### During Implementation
 
-1. **Run full test suite** - Ensure nothing broke
-2. **Update README** - Reflect new features
-3. **Generate final documentation** - API docs, user guide
-4. **Deploy to staging** - Test in production-like environment
-5. **User acceptance testing** - Verify against original requirements
-6. **Deploy to production** - Ship it!
+1. **One feature at a time** - Don't start multiple features in parallel
+2. **Follow the roadmap** - Respect P0 → P1 → P2 priority order
+3. **Use `/speckit.implement`** - Don't implement manually, let Spec Kit guide you
+4. **Validate frequently** - Run `/speckit.analyze` after each feature
+5. **Commit often** - Commit after each feature completion
+6. **Update specs** - If you discover new requirements, update specs first
+
+### Quality Standards
+
+For each implementation:
+- ✅ Meets all acceptance criteria
+- ✅ Tests added and passing
+- ✅ TypeScript types correct (if applicable)
+- ✅ Error handling implemented
+- ✅ Loading states for async operations
+- ✅ Responsive design (if UI)
+- ✅ Accessibility standards met
+
+### When Issues Arise
+
+If `/speckit.analyze` finds problems:
+1. Fix the implementation to match spec, OR
+2. Update the spec if requirements changed
+3. Never leave specs and code out of sync
 
 ---
 
 ## Continuous Spec-Driven Development
 
-Going forward:
+After completing the reverse engineering process:
 
-1. **New features start with specs** - Write spec first, then implement
-2. **Update specs when requirements change** - Keep specs in sync
-3. **Use specs for onboarding** - New developers read specs first
-4. **Periodic re-evaluation** - Run toolkit again after major changes
+### For New Features
+```bash
+# 1. Create specification
+> /speckit.specify
+
+# 2. Create implementation plan
+> /speckit.plan
+
+# 3. Generate tasks
+> /speckit.tasks
+
+# 4. Implement
+> /speckit.implement
+
+# 5. Validate
+> /speckit.analyze
+```
+
+### For Refactoring
+```bash
+# 1. Update affected specifications
+> /speckit.specify
+
+# 2. Update implementation plan
+> /speckit.plan
+
+# 3. Implement changes
+> /speckit.implement
+
+# 4. Validate no regression
+> /speckit.analyze
+```
+
+### For Bug Fixes
+```bash
+# 1. Update spec if bug reveals requirement gap
+> /speckit.specify
+
+# 2. Fix implementation
+[manual fix or /speckit.implement]
+
+# 3. Validate
+> /speckit.analyze
+```
 
 ---
 
 ## Technical Notes
 
-- Implement in small, testable increments
-- Commit frequently with clear messages
-- Reference feature specs in commits (F001, F002, etc.)
-- Update specs immediately after implementation
-- Use TodoWrite tool to track implementation tasks
+- Spec Kit's `/speckit.implement` generates code - review before committing
+- Implementation plans should be detailed for best results
+- `/speckit.tasks` output can be refined if tasks are too broad
+- Use `/speckit.clarify` if you discover ambiguities during implementation
+- Keep `.specify/memory/` in version control
+- `.specify/memory/specifications/` is the source of truth
 
 ---
 
-**Congratulations!** After completing this step, you'll have transformed a partially-complete application into a fully-specified, enterprise-grade, spec-driven codebase. 🎉
+## Final Outcome
+
+**You've transformed:**
+- Partially-complete codebase with no specs
+- → Fully spec-driven development workflow
+- → 100% implementation aligned with specifications
+- → Continuous validation with `/speckit.analyze`
+- → Sustainable spec-first development process
+
+**Your application is now:**
+- ✅ Fully documented
+- ✅ Completely specified
+- ✅ 100% implemented
+- ✅ Continuously validated
+- ✅ Ready for ongoing spec-driven development
 
 ---
 
-**Remember:** This is Step 6 of 6, the final step. After this, you'll have a complete application with comprehensive specifications that can guide future development.
+**Congratulations!** You've completed the 6-step Reverse Engineering to Spec-Driven Development process. Your codebase is now enterprise-grade, fully specified, and ready for sustainable development using GitHub Spec Kit. 🎉
+
+---
+
+**Remember:** Maintain the spec-driven workflow going forward:
+1. Requirements change → Update specs first (`/speckit.specify`)
+2. Plan implementation (`/speckit.plan`)
+3. Generate tasks (`/speckit.tasks`)
+4. Implement (`/speckit.implement`)
+5. Validate (`/speckit.analyze`)
+
+This ensures specs and code never drift apart.
