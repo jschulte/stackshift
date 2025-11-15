@@ -49,9 +49,12 @@ class StateManager {
           projectName: path.basename(this.cwd),
           projectPath: this.cwd
         },
-        auto_config: {
-          clarifications_strategy: 'defer', // 'defer', 'prompt', 'skip'
-          implementation_scope: 'none', // 'none', 'p0', 'p0_p1', 'all'
+        config: {
+          route: null, // 'greenfield' | 'brownfield'
+          mode: null, // 'manual' | 'cruise'
+          clarifications_strategy: 'defer', // 'defer' | 'prompt' | 'skip'
+          implementation_scope: 'none', // 'none' | 'p0' | 'p0_p1' | 'all'
+          target_stack: null, // For greenfield: target tech stack
           pause_between_gears: false
         },
         stepDetails: {}
@@ -91,21 +94,37 @@ class StateManager {
   }
 
   /**
-   * Enable cruise control (auto mode)
+   * Set complete configuration from questionnaire
    */
-  enableCruiseControl(config = {}) {
+  setConfig(config) {
     const state = this.loadState() || this.init();
 
-    state.auto_mode = true;
-    state.auto_config = {
-      clarifications_strategy: config.clarifications_strategy || 'defer',
-      implementation_scope: config.implementation_scope || 'none',
-      pause_between_gears: config.pause_between_gears || false,
-      ...config
+    // Update state with configuration
+    state.path = config.route || state.path;
+    state.auto_mode = config.mode === 'cruise';
+
+    state.config = {
+      route: config.route || state.config.route,
+      mode: config.mode || state.config.mode,
+      clarifications_strategy: config.clarifications_strategy || state.config.clarifications_strategy,
+      implementation_scope: config.implementation_scope || state.config.implementation_scope,
+      target_stack: config.target_stack || state.config.target_stack,
+      pause_between_gears: config.pause_between_gears || false
     };
+
+    state.metadata.pathDescription = config.route === 'greenfield'
+      ? 'Build new app from business logic (tech-agnostic)'
+      : 'Manage existing app with Spec Kit (tech-prescriptive)';
 
     this.saveState(state);
     return true;
+  }
+
+  /**
+   * Enable cruise control (auto mode) - legacy method
+   */
+  enableCruiseControl(config = {}) {
+    return this.setConfig({ mode: 'cruise', ...config });
   }
 
   /**
@@ -390,22 +409,44 @@ if (require.main === module) {
       console.log(manager.isAutoMode() ? 'Cruise control: ON 🚗' : 'Manual mode 🎛️');
       break;
 
+    case 'config':
+    case 'set-config':
+      // Parse config from command line or JSON
+      const configToSet = {
+        route: process.argv[3],
+        mode: process.argv[4],
+        clarifications_strategy: process.argv[5],
+        implementation_scope: process.argv[6],
+        target_stack: process.argv[7]
+      };
+      if (manager.setConfig(configToSet)) {
+        console.log('✅ Configuration saved');
+        console.log(JSON.stringify(manager.getStatus(), null, 2));
+      }
+      break;
+
     default:
       console.log(`
 StackShift - State Manager
 
 Usage:
-  node state-manager.js init                       Initialize state tracking
-  node state-manager.js set-path <path>            Set path (greenfield|brownfield)
-  node state-manager.js get-path                   Get current path
-  node state-manager.js cruise [strategy] [scope]  Enable cruise control (auto mode)
-  node state-manager.js manual                     Disable cruise control
-  node state-manager.js is-auto                    Check if cruise control is on
-  node state-manager.js start <step-id>            Start a step
-  node state-manager.js complete <step-id>         Complete a step
-  node state-manager.js status                     Show current status
-  node state-manager.js progress                   Show detailed progress
-  node state-manager.js reset                      Reset state (start over)
+  node state-manager.js init                                  Initialize state tracking
+  node state-manager.js config <route> <mode> [options...]    Set complete configuration
+  node state-manager.js set-path <path>                       Set path (greenfield|brownfield)
+  node state-manager.js get-path                              Get current path
+  node state-manager.js cruise [strategy] [scope]             Enable cruise control (auto mode)
+  node state-manager.js manual                                Disable cruise control
+  node state-manager.js is-auto                               Check if cruise control is on
+  node state-manager.js start <step-id>                       Start a step
+  node state-manager.js complete <step-id>                    Complete a step
+  node state-manager.js status                                Show current status
+  node state-manager.js progress                              Show detailed progress
+  node state-manager.js reset                                 Reset state (start over)
+
+Examples:
+  node state-manager.js config greenfield manual
+  node state-manager.js config brownfield cruise defer p0_p1
+  node state-manager.js config greenfield cruise defer all "Next.js 15"
 
 Paths:
   greenfield   - Build new app from business logic (tech-agnostic)

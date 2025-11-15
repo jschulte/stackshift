@@ -161,11 +161,20 @@ cd /path/to/your/project
 
 Simply say: "I want to reverse engineer this application" and Claude will guide you through all 6 steps.
 
-**Workflow Progress Tracking:**
+**Initial Configuration:**
 
-The plugin automatically tracks your progress:
+StackShift will ask a few questions upfront:
+1. Route: Greenfield or Brownfield?
+2. Transmission: Manual or Cruise Control?
+3. (If Cruise Control) Clarifications strategy & implementation scope
+4. (If Greenfield) Target tech stack
+
+All answers saved to `.stackshift-state.json` - configure once, use throughout!
+
+**Progress Tracking:**
+
 ```bash
-# Check progress anytime
+# Check which gear you're in
 node ~/.claude/plugins/stackshift/plugin/scripts/state-manager.js progress
 ```
 

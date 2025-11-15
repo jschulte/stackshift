@@ -80,25 +80,132 @@ This skill performs comprehensive initial analysis by:
 
 **Example:** "Add GitHub Spec Kit to this Next.js app so we can manage it with specs going forward"
 
-### Selection Question
+### Initial Questionnaire
 
-At the start of analysis, you'll be asked:
+At the start of analysis, you'll answer several questions to configure your journey:
 
+**Question 1: Choose Your Route**
 ```
 Which path best aligns with your goals?
 
-A) Greenfield: Build new app based on business logic
-   → Extract business requirements only (tech-agnostic)
+A) Greenfield: Shift to new tech stack
+   → Extract business logic only (tech-agnostic)
    → Can implement in any stack
-   → Focus: WHAT the system does
 
-B) Brownfield: Manage this app with Spec Kit
+B) Brownfield: Take the wheel on existing code
    → Extract business logic + technical details (prescriptive)
    → Manage existing codebase with specs
-   → Focus: WHAT it does + HOW it's implemented
 ```
 
-Your choice will be stored in `.stackshift-state.json` and guide all subsequent steps.
+**Question 2: Choose Your Transmission**
+```
+How do you want to shift through the gears?
+
+A) Manual - Review each gear before proceeding
+   → You're in control
+   → Stop at each step
+   → Good for first-time users
+
+B) Cruise Control - Shift through all gears automatically
+   → Hands-free
+   → Unattended execution
+   → Good for experienced users or overnight runs
+```
+
+**Question 3: Clarifications Strategy** _(If Cruise Control selected)_
+```
+How should [NEEDS CLARIFICATION] markers be handled?
+
+A) Defer - Mark them, continue implementation around them
+   → Fastest
+   → Can clarify later with /speckit.clarify
+
+B) Prompt - Stop and ask questions interactively
+   → Most thorough
+   → Takes longer
+
+C) Skip - Only implement fully-specified features
+   → Safest
+   → Some features won't be implemented
+```
+
+**Question 4: Implementation Scope** _(If Cruise Control selected)_
+```
+What should be implemented in Gear 6?
+
+A) None - Stop after specs are ready
+   → Just want specifications
+   → Will implement manually later
+
+B) P0 only - Critical features only
+   → Essential features
+   → Fastest implementation
+
+C) P0 + P1 - Critical + high-value features
+   → Good balance
+   → Most common choice
+
+D) All - Every feature (may take hours/days)
+   → Complete implementation
+   → Longest runtime
+```
+
+**Question 5: Target Stack** _(If Greenfield + Implementation selected)_
+```
+What tech stack for the new implementation?
+
+Examples:
+- Next.js 15 + TypeScript + Prisma + PostgreSQL
+- Python/FastAPI + SQLAlchemy + PostgreSQL
+- Go + Gin + GORM + PostgreSQL
+- Your choice: [specify your preferred stack]
+```
+
+All answers are stored in `.stackshift-state.json` and guide the entire workflow.
+
+### Implementing the Questionnaire
+
+Use the `AskUserQuestion` tool to collect all configuration upfront:
+
+```typescript
+// Example implementation
+AskUserQuestion({
+  questions: [
+    {
+      question: "Which route best aligns with your goals?",
+      header: "Route",
+      multiSelect: false,
+      options: [
+        {
+          label: "Greenfield",
+          description: "Shift to new tech stack - extract business logic only (tech-agnostic)"
+        },
+        {
+          label: "Brownfield",
+          description: "Manage existing code with specs - extract full implementation (tech-prescriptive)"
+        }
+      ]
+    },
+    {
+      question: "How do you want to shift through the gears?",
+      header: "Transmission",
+      multiSelect: false,
+      options: [
+        {
+          label: "Manual",
+          description: "Review each gear before proceeding - you're in control"
+        },
+        {
+          label: "Cruise Control",
+          description: "Shift through all gears automatically - hands-free, unattended execution"
+        }
+      ]
+    }
+  ]
+});
+
+// Then based on answers, ask follow-up questions if cruise control chosen
+```
 
 ---
 
