@@ -53,12 +53,18 @@ First, initialize Spec Kit in the project:
 # Install Spec Kit CLI (if not already installed)
 uv tool install specify-cli --from git+https://github.com/github/spec-kit.git
 
-# Initialize in your project
-specify init <project-name>
+# Initialize in your project (non-interactive mode)
+specify init --here --ai claude --force
+
+# Or with project name
+specify init <project-name> --ai claude
 
 # Verify installation
 specify check
 ```
+
+**Important:** Use `--ai claude` flag to run in non-interactive mode. This prevents
+the CLI from prompting for AI agent selection, which doesn't work in automated contexts.
 
 This creates:
 ```
