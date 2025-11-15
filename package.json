@@ -1,7 +1,7 @@
 {
-  "name": "reverse-engineering-toolkit",
+  "name": "stackshift",
   "version": "1.0.0",
-  "description": "Transform any partially-complete application into a fully-specified, enterprise-grade, spec-driven codebase",
+  "description": "Reverse engineering toolkit with manual control - shift gears in your codebase. Transform any application into a fully-specified, spec-driven project with GitHub Spec Kit. Dual workflow: extract business logic for rebuilds (Greenfield) or manage existing code with specs (Brownfield).",
   "keywords": [
     "claude",
     "claude-code",
@@ -11,6 +11,9 @@
     "documentation",
     "spec-driven",
     "github-spec-kit",
+    "stackshift",
+    "migration",
+    "refactoring",
     "openapi",
     "json-schema"
   ],
@@ -18,11 +21,11 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/jonahschulte/reverse-engineering-toolkit.git"
+    "url": "https://github.com/jonahschulte/stackshift.git"
   },
-  "homepage": "https://github.com/jonahschulte/reverse-engineering-toolkit#readme",
+  "homepage": "https://github.com/jonahschulte/stackshift#readme",
   "bugs": {
-    "url": "https://github.com/jonahschulte/reverse-engineering-toolkit/issues"
+    "url": "https://github.com/jonahschulte/stackshift/issues"
   },
   "engines": {
     "node": ">=18.0.0"

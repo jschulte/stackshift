@@ -15,7 +15,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const STATE_FILE = '.re-toolkit-state.json';
+const STATE_FILE = '.stackshift-state.json';
 
 const STEPS = [
   { id: 'analyze', name: 'Initial Analysis', output: 'analysis-report.md' },
@@ -325,7 +325,7 @@ if (require.main === module) {
 
     default:
       console.log(`
-Reverse Engineering Toolkit - State Manager
+StackShift - State Manager
 
 Usage:
   node state-manager.js init                       Initialize state tracking

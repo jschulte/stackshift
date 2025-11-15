@@ -1,18 +1,18 @@
 {
-  "name": "reverse-engineering-toolkit",
+  "name": "stackshift",
   "owner": {
     "name": "Jonah Schulte"
   },
   "metadata": {
-    "description": "Systematic toolkit for transforming incomplete applications into spec-driven codebases",
-    "homepage": "https://github.com/jonahschulte/reverse-engineering-toolkit"
+    "description": "Reverse engineering toolkit with manual control - shift gears in your codebase for spec-driven development",
+    "homepage": "https://github.com/jonahschulte/stackshift"
   },
   "plugins": [
     {
-      "name": "reverse-engineering-toolkit",
+      "name": "stackshift",
       "version": "1.0.0",
       "source": "./plugin",
-      "description": "Transform any partially-complete application into a fully-specified, enterprise-grade, spec-driven codebase using a systematic 6-step process"
+      "description": "Reverse engineering toolkit - shift gears between tech stacks or manage existing code with GitHub Spec Kit. Start in reverse (engineering), shift through 6 gears, cruise into spec-driven development. Dual workflow: Greenfield (extract business logic) or Brownfield (manage existing). Interactive skills with auto-activation."
     }
   ]
 }

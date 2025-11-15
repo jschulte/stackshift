@@ -1,10 +1,10 @@
-# Installation Guide
+# StackShift Installation Guide
 
 ## 🧪 Option 1: Install Locally for Testing (Fastest)
 
 ### Quick Install
 
-From this repository directory:
+From the StackShift repository directory:
 
 ```bash
 ./install-local.sh
@@ -17,7 +17,7 @@ Or manually:
 mkdir -p ~/.claude/plugins/local
 
 # Symlink this directory
-ln -s $(pwd) ~/.claude/plugins/local/reverse-engineering-toolkit
+ln -s $(pwd) ~/.claude/plugins/local/stackshift
 
 # Restart Claude Code
 ```
@@ -63,14 +63,14 @@ Try these trigger phrases:
 ### Check State
 
 ```bash
-# See current progress
-node ~/.claude/plugins/local/reverse-engineering-toolkit/plugin/scripts/state-manager.js status
+# See current progress (which gear you're in)
+node ~/.claude/plugins/local/stackshift/plugin/scripts/state-manager.js status
 
 # See detailed progress
-node ~/.claude/plugins/local/reverse-engineering-toolkit/plugin/scripts/state-manager.js progress
+node ~/.claude/plugins/local/stackshift/plugin/scripts/state-manager.js progress
 
-# Check which path you chose
-node ~/.claude/plugins/local/reverse-engineering-toolkit/plugin/scripts/state-manager.js get-path
+# Check which route you chose
+node ~/.claude/plugins/local/stackshift/plugin/scripts/state-manager.js get-path
 ```
 
 ---
@@ -85,8 +85,8 @@ Once the repository is public and configured:
 # Add the marketplace
 > /plugin marketplace add jonahschulte
 
-# Install the plugin
-> /plugin install reverse-engineering-toolkit
+# Install StackShift
+> /plugin install stackshift
 
 # Restart Claude Code
 ```
@@ -95,7 +95,7 @@ Once the repository is public and configured:
 
 ```bash
 > /plugin list
-# Should show: reverse-engineering-toolkit (installed)
+# Should show: stackshift (installed)
 ```
 
 ---
@@ -231,7 +231,7 @@ Or visit: https://code.claude.com/docs (check for marketplace submission process
 # Check if symlink exists
 ls -la ~/.claude/plugins/local/
 
-# Should show: reverse-engineering-toolkit -> /path/to/your/repo
+# Should show: stackshift -> /path/to/your/repo
 
 # If not there, re-run install
 ./install-local.sh
@@ -289,13 +289,13 @@ Once installed:
    "I want to reverse engineer this application"
    ```
 
-4. **Answer the path question:**
-   - Choose Greenfield for new builds
-   - Choose Brownfield for existing management
+4. **Choose your route:**
+   - Greenfield: Shift to new tech stack
+   - Brownfield: Take the wheel on existing code
 
-5. **Follow the guided workflow!**
+5. **Shift through the gears!**
 
-The plugin will guide you through all 6 steps automatically.
+StackShift will guide you through all 6 gears automatically.
 
 ---
 

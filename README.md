@@ -1,23 +1,27 @@
-# Reverse Engineering to Spec-Driven Development Toolkit
+# StackShift
 
-**Transform any partially-complete application into a fully-specified, enterprise-grade, spec-driven codebase.**
+**A reverse engineering toolkit that lets you shift gears in your codebase.**
+
+Transform any application into a fully-specified, spec-driven project with complete control - whether you're shifting to a new tech stack or taking the wheel on existing code.
+
+> Like a stick shift gives you manual control, StackShift gives you complete control over your codebase transformation. Start in reverse (engineering), shift through 6 gears, and cruise into spec-driven development.
 
 ---
 
-## 🎯 What This Toolkit Does
+## 🎯 What StackShift Does
 
-This toolkit provides a **systematic, repeatable process** to:
+**Reverse Engineering Meets Manual Control** - StackShift provides a **systematic, 6-gear process** to:
 
-1. **Reverse-engineer** existing codebases (even incomplete ones)
-2. **Generate comprehensive documentation** automatically
-3. **Transform into formal specifications** (GitHub Spec Kit format)
-4. **Identify feature gaps** clearly
-5. **Complete missing implementations** systematically
-6. **Establish spec-driven development** going forward
+1. **🔄 First Gear (Reverse):** Reverse-engineer existing codebases (even incomplete ones)
+2. **📚 Second Gear:** Generate comprehensive documentation automatically
+3. **📋 Third Gear:** Transform into formal specifications (GitHub Spec Kit format)
+4. **🔍 Fourth Gear:** Identify feature gaps clearly
+5. **✨ Fifth Gear:** Complete missing implementations systematically
+6. **🚀 Sixth Gear:** Kick it into high gear - implement from specs and establish spec-driven development!
 
-**Two Paths Available:**
+**Two Paths - Choose Your Route:**
 
-### Path A: Greenfield (Build New App from Business Logic)
+### 🔀 Path A: Greenfield (Shift to New Stack)
 **Use when:** Rebuilding in a different tech stack or platform
 
 **Approach:** Extract business logic ONLY (tech-agnostic)
@@ -28,7 +32,7 @@ This toolkit provides a **systematic, repeatable process** to:
 
 **Example:** "Extract business logic from Rails app to rebuild in Next.js"
 
-### Path B: Brownfield (Manage Existing with Spec Kit)
+### ⚙️ Path B: Brownfield (Take the Wheel on Existing Code)
 **Use when:** Managing existing codebase with GitHub Spec Kit
 
 **Approach:** Extract business logic + technical implementation (tech-prescriptive)
@@ -43,18 +47,18 @@ This toolkit provides a **systematic, repeatable process** to:
 
 ---
 
-## 📊 Process Overview
+## 🚗 6-Gear Process
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│                    6-Step Process                            │
+│                  Shift Through 6 Gears                       │
 ├─────────────────────────────────────────────────────────────┤
 │                                                              │
-│  Step 1: Initial Analysis + Path Selection                  │
+│  Gear 1: Initial Analysis + Route Selection                 │
 │  ├─ Detect technology stack                                 │
 │  ├─ Identify application type                               │
 │  ├─ Map directory structure                                 │
-│  └─ Choose: Greenfield or Brownfield? ◄─── NEW!             │
+│  └─ Choose your route: Greenfield or Brownfield?            │
 │         │                                                    │
 │         ├─────────────────┬────────────────────┐            │
 │         │                 │                    │            │
@@ -62,39 +66,39 @@ This toolkit provides a **systematic, repeatable process** to:
 │  (Tech-Agnostic)   (Tech-Prescriptive)         │            │
 │         │                 │                    │            │
 │         ▼                 ▼                    │            │
-│  Step 2: Reverse Engineer                                   │
+│  Gear 2: Reverse Engineer (Reverse Gear! 🔄)                │
 │  ├─ Extract business logic ONLY ◄── Greenfield              │
 │  ├─ OR business logic + tech details ◄── Brownfield         │
 │  └─ Generate 8 comprehensive docs                           │
 │         │                                                    │
 │         ▼                                                    │
-│  Step 3: Create Specifications                              │
+│  Gear 3: Create Specifications                              │
 │  ├─ Initialize .specify/ (GitHub Spec Kit)                  │
 │  ├─ Agnostic constitution ◄── Greenfield                    │
 │  ├─ OR prescriptive constitution ◄── Brownfield             │
 │  └─ Generate feature specs, plans                           │
 │         │                                                    │
 │         ▼                                                    │
-│  Step 4: Gap Analysis                                       │
+│  Gear 4: Gap Analysis                                       │
 │  ├─ Run /speckit.analyze                                    │
 │  ├─ Identify missing features                               │
 │  ├─ Brownfield: ~100% match initially                       │
 │  └─ Greenfield: All features marked MISSING                 │
 │         │                                                    │
 │         ▼                                                    │
-│  Step 5: Complete Specification                             │
+│  Gear 5: Complete Specification                             │
 │  ├─ Use /speckit.clarify                                    │
 │  ├─ Answer clarifications                                   │
 │  ├─ Define missing details                                  │
 │  └─ Prioritize implementation                               │
 │         │                                                    │
 │         ▼                                                    │
-│  Step 6: Implement from Spec                                │
+│  Gear 6: Implement from Spec (Kick it into 6th! 🚀)         │
 │  ├─ Use /speckit.tasks & /speckit.implement                 │
 │  ├─ Greenfield: Build in new stack                          │
 │  ├─ Brownfield: Fill gaps in existing                       │
 │  ├─ Validate with /speckit.analyze                          │
-│  └─ Achieve 100% completion                                 │
+│  └─ Achieve 100% completion - cruise into production!       │
 │                                                              │
 └─────────────────────────────────────────────────────────────┘
 ```
@@ -111,8 +115,8 @@ Install as a Claude Code plugin for the best experience with interactive skills 
 
 ```bash
 # In Claude Code
-> /plugin marketplace add jonahschulte/reverse-engineering-toolkit
-> /plugin install reverse-engineering-toolkit
+> /plugin marketplace add jonahschulte/stackshift
+> /plugin install stackshift
 ```
 
 Restart Claude Code. Skills will now be available:
@@ -162,7 +166,7 @@ Simply say: "I want to reverse engineer this application" and Claude will guide 
 The plugin automatically tracks your progress:
 ```bash
 # Check progress anytime
-node ~/.claude/plugins/reverse-engineering-toolkit/plugin/scripts/state-manager.js progress
+node ~/.claude/plugins/stackshift/plugin/scripts/state-manager.js progress
 ```
 
 **Without Plugin (Manual):**
@@ -170,11 +174,11 @@ node ~/.claude/plugins/reverse-engineering-toolkit/plugin/scripts/state-manager.
 If not using the plugin, you can still use the prompts directly:
 
 ```bash
-# 1. Clone this toolkit
-git clone https://github.com/jonahschulte/reverse-engineering-toolkit.git
+# 1. Clone StackShift
+git clone https://github.com/jonahschulte/stackshift.git
 
 # 2. Copy prompts to your project
-cp -r reverse-engineering-toolkit/prompts /path/to/your/project/
+cp -r stackshift/prompts /path/to/your/project/
 
 # 3. Choose your path
 # Greenfield (business logic only):
@@ -186,9 +190,9 @@ cat prompts/brownfield/02-reverse-engineer-full-stack.md
 
 ---
 
-## 🔀 Choosing Your Path
+## 🔀 Choose Your Route
 
-**The toolkit asks this question in Step 1:**
+**StackShift asks this question in Gear 1 (Initial Analysis):**
 
 > Which path best aligns with your goals?
 >
@@ -246,12 +250,12 @@ cat prompts/brownfield/02-reverse-engineer-full-stack.md
 
 ---
 
-## 📁 Toolkit Structure
+## 📁 StackShift Structure
 
 ### Plugin Structure (Recommended)
 
 ```
-reverse-engineering-toolkit/
+stackshift/
 ├── README.md                           ← You are here
 ├── .claude-plugin/
 │   └── marketplace.json               ← Plugin marketplace config
@@ -284,11 +288,12 @@ reverse-engineering-toolkit/
 **Why use the plugin over manual prompts?**
 
 ✅ **Auto-activation** - Skills activate based on context, no copy-paste needed
-✅ **Progress tracking** - State management tracks where you are in the workflow
+✅ **Progress tracking** - State management tracks where you are (which gear)
 ✅ **Resume capability** - Pick up where you left off if interrupted
-✅ **Guided experience** - Claude knows the full context and next steps
+✅ **Guided experience** - StackShift knows the full context and next steps
 ✅ **Templates included** - Access all templates without file operations
 ✅ **Updates** - Get improvements via plugin updates
+✅ **Smooth shifting** - Seamless transitions between steps
 
 ---
 

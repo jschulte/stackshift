@@ -1,21 +1,23 @@
 {
-  "name": "reverse-engineering-toolkit",
+  "name": "stackshift",
   "version": "1.0.0",
-  "description": "Transform any partially-complete application into a fully-specified, enterprise-grade, spec-driven codebase. Provides systematic 6-step process: Initial Analysis → Reverse Engineer → Create Specifications → Gap Analysis → Complete Specification → Implement from Spec",
+  "description": "Reverse engineering toolkit with manual control over your codebase transformation. Shift through 6 gears to transform applications into spec-driven projects with GitHub Spec Kit. Dual workflow: Greenfield (extract business logic for rebuilds) or Brownfield (manage existing with specs). Interactive skills with auto-activation.",
   "author": {
     "name": "Jonah Schulte"
   },
-  "repository": "https://github.com/jonahschulte/reverse-engineering-toolkit",
+  "repository": "https://github.com/jonahschulte/stackshift",
   "license": "MIT",
   "keywords": [
+    "stackshift",
     "reverse-engineering",
     "specifications",
-    "documentation",
     "spec-driven",
     "github-spec-kit",
+    "migration",
+    "refactoring",
+    "greenfield",
+    "brownfield",
     "openapi",
-    "json-schema",
-    "technical-debt",
-    "gap-analysis"
+    "json-schema"
   ]
 }

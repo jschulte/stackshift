@@ -1,8 +1,10 @@
-# Reverse Engineering Toolkit - Claude Code Plugin
+# StackShift - Claude Code Plugin
+
+**Shift gears in your codebase with complete control.**
 
 ## Overview
 
-This plugin transforms the Reverse Engineering Toolkit into an interactive, guided experience for Claude Code users. Instead of copy-pasting prompts, users get intelligent skills that auto-activate and guide them through the 6-step process.
+StackShift transforms reverse engineering into an interactive, guided experience for Claude Code users. Like a manual transmission gives you control over your drive, StackShift gives you control over your codebase transformation - whether shifting to a new tech stack or taking the wheel on existing code.
 
 ---
 
@@ -12,21 +14,21 @@ This plugin transforms the Reverse Engineering Toolkit into an interactive, guid
 
 ```bash
 # In Claude Code
-> /plugin marketplace add jonahschulte/reverse-engineering-toolkit
-> /plugin install reverse-engineering-toolkit
+> /plugin marketplace add jonahschulte/stackshift
+> /plugin install stackshift
 ```
 
-Restart Claude Code. Skills are now available!
+Restart Claude Code. Shift into gear!
 
 ### For Developers
 
 ```bash
 # Clone the repository
-git clone https://github.com/jonahschulte/reverse-engineering-toolkit.git
-cd reverse-engineering-toolkit
+git clone https://github.com/jonahschulte/stackshift.git
+cd stackshift
 
 # Link to local plugin directory for testing
-ln -s $(pwd) ~/.claude/plugins/local/reverse-engineering-toolkit
+ln -s $(pwd) ~/.claude/plugins/local/stackshift
 ```
 
 ---
@@ -365,10 +367,10 @@ MIT
 
 ## Support
 
-- **Issues:** https://github.com/jonahschulte/reverse-engineering-toolkit/issues
+- **Repository:** https://github.com/jonahschulte/stackshift
+- **Issues:** https://github.com/jonahschulte/stackshift/issues
 - **Documentation:** See README.md and individual SKILL.md files
-- **Examples:** See `examples/` directory
 
 ---
 
-**Built for Claude Code** | **Powered by Skills** | **Spec-Driven Development**
+**Built for Claude Code** | **Powered by Skills** | **Spec-Driven Development** | **🚗 Shift with Confidence**
