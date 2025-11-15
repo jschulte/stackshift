@@ -161,6 +161,25 @@ Examples:
 - Your choice: [specify your preferred stack]
 ```
 
+**Question 6: Project Structure** _(If Greenfield + Implementation selected)_
+```
+Where should the new application be built?
+
+A) Subfolder: greenfield/ (recommended for Web)
+   → Keeps old and new in same repo
+   → Easy comparison and reference
+   → Works perfectly in Claude Code Web
+
+B) Separate repo (requires additional setup)
+   → Clean separation
+   → Requires creating new repo
+   → Needs manual setup in Web
+
+C) Replace in place (destructive)
+   → Removes old code as new is built
+   → Not recommended (can't compare)
+```
+
 All answers are stored in `.stackshift-state.json` and guide the entire workflow.
 
 ### Implementing the Questionnaire

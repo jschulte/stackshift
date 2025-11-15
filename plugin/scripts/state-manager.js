@@ -55,6 +55,7 @@ class StateManager {
           clarifications_strategy: 'defer', // 'defer' | 'prompt' | 'skip'
           implementation_scope: 'none', // 'none' | 'p0' | 'p0_p1' | 'all'
           target_stack: null, // For greenfield: target tech stack
+          greenfield_location: 'greenfield/', // Where to build new app
           pause_between_gears: false
         },
         stepDetails: {}

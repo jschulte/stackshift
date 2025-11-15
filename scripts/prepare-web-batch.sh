@@ -52,6 +52,46 @@ if [ -d "../stackshift/plugin/speckit-templates" ]; then
   cp ../stackshift/plugin/speckit-templates/*.md .specify/templates/ 2>/dev/null || true
 fi
 
+# Create greenfield directory if greenfield route
+if [ "$ROUTE" = "greenfield" ]; then
+  echo "4a. Creating greenfield directory structure..."
+  mkdir -p greenfield
+  cat > greenfield/README.md <<'GREENFIELD_README'
+# Greenfield Rebuild
+
+This directory contains the NEW implementation built from business logic
+extracted from the legacy application.
+
+## Original Application
+
+See parent directory for:
+- Legacy code (original implementation)
+- Business logic documentation (docs/reverse-engineering/)
+- Tech-agnostic specifications (.specify/)
+
+## This Application
+
+Built from specifications using: ${TARGET_STACK}
+
+**Status:** Being built by StackShift Gear 6
+
+**Implementation approach:**
+- Read specs from ../.specify/memory/specifications/
+- Implement each feature in chosen tech stack
+- Follow implementation plans from ../.specify/memory/plans/
+- Test against acceptance criteria from specs
+
+## Structure
+
+[Will be created by StackShift during Gear 6]
+
+## Next Steps
+
+StackShift will initialize this directory with the new tech stack and
+implement features from the specifications.
+GREENFIELD_README
+fi
+
 # Create pre-configured state
 echo "4. Creating pre-configured state..."
 cat > .stackshift-state.json <<EOF
@@ -75,7 +115,8 @@ cat > .stackshift-state.json <<EOF
     "mode": "$MODE",
     "clarifications_strategy": "defer",
     "implementation_scope": "$SCOPE",
-    "target_stack": null
+    "target_stack": null,
+    "greenfield_location": "greenfield/"
   },
   "stepDetails": {}
 }
@@ -153,7 +194,11 @@ EOF
 
 # Commit
 echo "6. Committing..."
-git add .stackshift-state.json .specify/ STACKSHIFT_WEB_INSTRUCTIONS.md
+if [ "$ROUTE" = "greenfield" ]; then
+  git add .stackshift-state.json .specify/ STACKSHIFT_WEB_INSTRUCTIONS.md greenfield/
+else
+  git add .stackshift-state.json .specify/ STACKSHIFT_WEB_INSTRUCTIONS.md
+fi
 git commit -m "chore: prepare StackShift web batch for $PROJECT_NAME
 
 Pre-configured for Claude Code Web:
