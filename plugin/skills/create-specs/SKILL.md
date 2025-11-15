@@ -314,6 +314,34 @@ docs/reverse-engineering/  # Keep original docs for reference
 └── ...
 ```
 
+### For Greenfield Separate Directory
+
+If `greenfield_location` is an absolute path (e.g., `~/git/my-new-app`):
+
+**After Gear 3, .specify/ exists in BOTH locations:**
+
+**Original repo:**
+```
+~/git/my-app/
+├── [original code]
+├── .specify/           # Created here first
+└── docs/
+```
+
+**New repo (created and initialized):**
+```
+~/git/my-new-app/
+├── .specify/           # COPIED from original repo
+├── README.md
+└── .gitignore
+```
+
+**Why copy?**
+- New repo needs specs for `/speckit.*` commands
+- New repo is self-contained and spec-driven
+- Can develop independently going forward
+- Original repo keeps specs for reference
+
 ---
 
 ## Integration with Original Toolkit

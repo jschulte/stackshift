@@ -116,11 +116,19 @@ git/
 ### Setup
 
 **StackShift will:**
-1. Create the directory if it doesn't exist
-2. Initialize git repo (if not exists)
-3. Initialize target stack (npm init, etc.)
-4. Build features from specs
-5. Commit to the new repo
+1. Extract specs in original repo (.specify/)
+2. Create the new directory if it doesn't exist
+3. Initialize git repo (if not exists)
+4. **COPY .specify/ to new repo**
+5. Initialize target stack (npm init, etc.)
+6. Build features from specs (now in new repo!)
+7. Commit to the new repo
+
+**Why copy .specify/?**
+- New repo needs specs for ongoing development
+- `/speckit.*` commands require .specify/ to be present
+- Future features can be added with `/speckit.specify`
+- New repo is self-contained and spec-driven from day one
 
 **You provide:**
 - Path to new directory

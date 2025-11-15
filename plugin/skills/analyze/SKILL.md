@@ -161,34 +161,48 @@ Examples:
 - Your choice: [specify your preferred stack]
 ```
 
-**Question 6: Project Structure** _(If Greenfield + Implementation selected)_
+**Question 6: Build Location** _(If Greenfield + Implementation selected)_
 ```
 Where should the new application be built?
 
 A) Subfolder (recommended for Web)
-   → Default: greenfield/
-   → Custom: Specify your own folder name (e.g., v2/, new-app/, rebuilt/)
+   → Examples: greenfield/, v2/, new-app/
    → Keeps old and new in same repo
-   → Easy comparison and reference
+   → Works in Claude Code Web
 
-B) Separate repo (requires additional setup)
-   → Clean separation
-   → Requires creating new repo
-   → Needs manual setup in Web
+B) Separate directory (local only)
+   → Examples: ~/git/my-new-app, ../my-app-v2
+   → Completely separate location
+   → Requires local Claude Code (doesn't work in Web)
 
 C) Replace in place (destructive)
    → Removes old code as new is built
-   → Not recommended (can't compare)
+   → Not recommended
 ```
 
-**If subfolder chosen, ask for folder name:**
-```
-What folder name for the new application?
+**Then ask for the specific path:**
 
-Default: greenfield/
+**If subfolder (A):**
+```
+Folder name within this repo? (default: greenfield/)
+
 Examples: v2/, new-app/, nextjs-version/, rebuilt/
+Your choice: [or press enter for greenfield/]
+```
 
-Your choice: [specify or press enter for greenfield/]
+**If separate directory (B):**
+```
+Full path to new application directory:
+
+Examples:
+- ~/git/my-new-app
+- ../my-app-v2
+- /Users/you/projects/new-version
+
+Your choice: [absolute or relative path]
+
+⚠️  Note: Directory will be created if it doesn't exist.
+Claude Code Web users: This won't work in Web - use subfolder instead.
 ```
 
 All answers are stored in `.stackshift-state.json` and guide the entire workflow.
@@ -255,9 +269,32 @@ Stored in state as:
 ```json
 {
   "config": {
-    "greenfield_location": "v2/"
+    "greenfield_location": "v2/"  // Relative (subfolder)
+    // OR
+    "greenfield_location": "~/git/my-new-app"  // Absolute (separate)
   }
 }
+```
+
+**How it works:**
+
+**Subfolder (relative path):**
+```bash
+# Building in: /Users/you/git/my-app/greenfield/
+cd /Users/you/git/my-app
+# StackShift creates: ./greenfield/
+# Everything in one repo
+```
+
+**Separate directory (absolute path):**
+```bash
+# Current repo: /Users/you/git/my-app
+# New app: /Users/you/git/my-new-app
+
+# StackShift:
+# - Reads specs from: /Users/you/git/my-app/.specify/
+# - Builds new app in: /Users/you/git/my-new-app/
+# - Two completely separate repos
 ```
 
 ---
