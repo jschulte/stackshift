@@ -107,11 +107,13 @@ Transform any application into a fully-specified, spec-driven project with compl
 
 ## 🚀 Quick Start
 
-### Installation (Claude Code Plugin)
+### Three Ways to Use StackShift
 
-**Recommended Method:**
+#### Option 1: Claude Code Plugin (Local - Best Experience)
 
-Install as a Claude Code plugin for the best experience with interactive skills and workflow tracking:
+**Recommended for:** Regular use, local development
+
+Install as a Claude Code plugin for interactive skills and workflow tracking:
 
 ```bash
 # In Claude Code
@@ -196,6 +198,44 @@ cat prompts/greenfield/02-reverse-engineer-business-logic.md
 # Brownfield (business + technical):
 cat prompts/brownfield/02-reverse-engineer-full-stack.md
 ```
+
+#### Option 2: Claude Code Web (Browser - No Install!)
+
+**Recommended for:** Quick analysis, trying before installing, working on any device
+
+```bash
+# In Claude Code Web (https://claude.ai/code)
+1. Upload your project folder
+2. Copy-paste web/stackshift-web-orchestrator.md
+3. Answer configuration questions
+4. Shift through the gears! 🚗
+```
+
+See [`web/README.md`](web/README.md) for complete instructions.
+
+**Benefits:**
+- ☁️ Works in browser (any device)
+- 🚀 No installation required
+- 🔄 Full cruise control support
+- 💾 Download specs when complete
+
+#### Option 3: MCP Server (VSCode, Copilot)
+
+**Recommended for:** VSCode users, GitHub Copilot users
+
+```bash
+# Configure in VSCode settings.json
+{
+  "mcp.servers": {
+    "stackshift": {
+      "command": "npx",
+      "args": ["-y", "stackshift-mcp"]
+    }
+  }
+}
+```
+
+See [`mcp-server/README.md`](mcp-server/README.md) for complete instructions.
 
 ---
 
