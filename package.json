@@ -31,7 +31,10 @@
     "node": ">=18.0.0"
   },
   "scripts": {
-    "test": "echo \"No tests yet\" && exit 0"
+    "test": "echo \"No tests yet\" && exit 0",
+    "build:mcp": "cd mcp-server && npm install && npm run build",
+    "dev:mcp": "cd mcp-server && npm run dev",
+    "start:mcp": "cd mcp-server && npm start"
   },
   "files": [
     "plugin/",

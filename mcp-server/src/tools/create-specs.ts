@@ -1,0 +1,133 @@
+/**
+ * Gear 3: Create Specs Tool
+ *
+ * Generates GitHub Spec Kit specifications
+ */
+
+import * as fs from 'fs/promises';
+import * as path from 'path';
+
+interface CreateSpecsArgs {
+  directory?: string;
+}
+
+export async function createSpecsToolHandler(args: CreateSpecsArgs) {
+  const directory = args.directory || process.cwd();
+
+  try {
+    // Load state
+    const stateFile = path.join(directory, '.stackshift-state.json');
+    const state = JSON.parse(await fs.readFile(stateFile, 'utf-8'));
+    const route = state.path;
+
+    if (!route) {
+      throw new Error('Route not set. Run stackshift_analyze first.');
+    }
+
+    const response = `# StackShift - Gear 3: Create Specifications
+
+## Route: ${route === 'greenfield' ? 'Greenfield' : 'Brownfield'}
+
+## GitHub Spec Kit Integration
+
+### Step 1: Initialize Spec Kit
+
+Run:
+\`\`\`bash
+uv tool install specify-cli --from git+https://github.com/github/spec-kit.git
+specify init <project-name>
+\`\`\`
+
+### Step 2: Generate Constitution
+
+${route === 'greenfield' ? `
+**Using:** Tech-Agnostic Template
+
+Create \`.specify/memory/constitution.md\` with:
+- Business purpose and values
+- Non-functional requirements (no tech specifics)
+- Business rules and governance
+- Quality standards (goals, not implementation)
+
+**Template:** \`plugin/templates/constitution-agnostic-template.md\`
+` : `
+**Using:** Tech-Prescriptive Template
+
+Create \`.specify/memory/constitution.md\` with:
+- Business purpose and values
+- **Exact technical architecture** (frameworks, versions, file paths)
+- **Technical decisions with rationale**
+- Development standards (current implementation)
+- Dependency management policy
+
+**Template:** \`plugin/templates/constitution-prescriptive-template.md\`
+`}
+
+### Step 3: Generate Feature Specifications
+
+Transform \`docs/reverse-engineering/functional-specification.md\` into individual
+feature specs in \`.specify/memory/specifications/\`
+
+Each spec includes:
+- User stories and acceptance criteria
+${route === 'brownfield' ? '- Current implementation details (tech stack, file paths, dependencies)' : '- Business requirements only (no tech specifics)'}
+- Implementation status: ✅ COMPLETE / ⚠️ PARTIAL / ❌ MISSING
+
+### Step 4: Create Implementation Plans
+
+For PARTIAL and MISSING features, create plans in \`.specify/memory/plans/\`
+
+## Output Structure
+
+\`\`\`
+.specify/
+├── memory/
+│   ├── constitution.md
+│   ├── specifications/
+│   │   ├── user-authentication.md
+│   │   ├── feature-2.md
+│   │   └── ...
+│   └── plans/
+│       ├── feature-impl-plan-1.md
+│       └── ...
+├── templates/
+└── scripts/
+\`\`\`
+
+## Next Gear
+
+Ready to shift into **Gear 4: Gap Analysis**
+
+Use tool: \`stackshift_gap_analysis\`
+
+Then run: \`/speckit.analyze\` to validate specs
+
+---
+
+**Manual prompt:** \`prompts/${route}/03-create-${route === 'greenfield' ? 'agnostic' : 'prescriptive'}-specs.md\`
+`;
+
+    // Update state
+    if (!state.completedSteps.includes('create-specs')) {
+      state.completedSteps.push('create-specs');
+    }
+    state.currentStep = 'gap-analysis';
+    state.stepDetails['create-specs'] = {
+      completed: new Date().toISOString(),
+      status: 'completed',
+    };
+    state.updated = new Date().toISOString();
+    await fs.writeFile(stateFile, JSON.stringify(state, null, 2));
+
+    return {
+      content: [
+        {
+          type: 'text',
+          text: response,
+        },
+      ],
+    };
+  } catch (error) {
+    throw new Error(`Spec creation failed: ${error instanceof Error ? error.message : String(error)}`);
+  }
+}

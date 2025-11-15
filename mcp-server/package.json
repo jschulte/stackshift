@@ -1,0 +1,41 @@
+{
+  "name": "stackshift-mcp",
+  "version": "1.0.0",
+  "description": "MCP server for StackShift - reverse engineering toolkit with manual control",
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "stackshift",
+    "reverse-engineering",
+    "spec-driven",
+    "github-spec-kit"
+  ],
+  "author": "Jonah Schulte",
+  "license": "MIT",
+  "type": "module",
+  "bin": {
+    "stackshift-mcp": "./dist/index.js"
+  },
+  "main": "./dist/index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jschulte/stackshift.git",
+    "directory": "mcp-server"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "scripts": {
+    "build": "tsc && chmod +x dist/index.js",
+    "dev": "tsc --watch",
+    "start": "node dist/index.js",
+    "prepublishOnly": "npm run build"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "typescript": "^5.3.0"
+  }
+}
