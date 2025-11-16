@@ -46,7 +46,8 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
     tools: [
       {
         name: 'stackshift_analyze',
-        description: 'Gear 1: Analyze codebase, detect tech stack, choose route (Greenfield or Brownfield)',
+        description:
+          'Gear 1: Analyze codebase, detect tech stack, choose route (Greenfield or Brownfield)',
         inputSchema: {
           type: 'object',
           properties: {
@@ -57,14 +58,16 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
             route: {
               type: 'string',
               enum: ['greenfield', 'brownfield'],
-              description: 'Route choice: greenfield (extract business logic) or brownfield (full stack)',
+              description:
+                'Route choice: greenfield (extract business logic) or brownfield (full stack)',
             },
           },
         },
       },
       {
         name: 'stackshift_reverse_engineer',
-        description: 'Gear 2: Extract comprehensive documentation (8 files) based on selected route',
+        description:
+          'Gear 2: Extract comprehensive documentation (8 files) based on selected route',
         inputSchema: {
           type: 'object',
           properties: {
@@ -144,7 +147,8 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
       },
       {
         name: 'stackshift_cruise_control',
-        description: 'Cruise Control: Automatic mode - shift through all 6 gears sequentially without stopping',
+        description:
+          'Cruise Control: Automatic mode - shift through all 6 gears sequentially without stopping',
         inputSchema: {
           type: 'object',
           properties: {
@@ -206,7 +210,7 @@ server.setRequestHandler(ListResourcesRequestSchema, async () => {
 /**
  * Handle tool calls
  */
-server.setRequestHandler(CallToolRequestSchema, async (request) => {
+server.setRequestHandler(CallToolRequestSchema, async request => {
   const { name, arguments: args } = request.params;
 
   try {
@@ -230,7 +234,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
         return await implementToolHandler(args || {});
 
       case 'stackshift_cruise_control':
-        return await cruiseControlToolHandler(args as any || {});
+        return await cruiseControlToolHandler((args as any) || {});
 
       default:
         throw new Error(`Unknown tool: ${name}`);
@@ -251,7 +255,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
 /**
  * Handle resource reads
  */
-server.setRequestHandler(ReadResourceRequestSchema, async (request) => {
+server.setRequestHandler(ReadResourceRequestSchema, async request => {
   const { uri } = request.params;
 
   try {
@@ -290,10 +294,12 @@ async function main() {
 
   // Log to stderr (stdout is reserved for MCP protocol)
   console.error('StackShift MCP Server running');
-  console.error('Shift through 6 gears: analyze → reverse-engineer → create-specs → gap-analysis → complete-spec → implement');
+  console.error(
+    'Shift through 6 gears: analyze → reverse-engineer → create-specs → gap-analysis → complete-spec → implement'
+  );
 }
 
-main().catch((error) => {
+main().catch(error => {
   console.error('Fatal error:', error);
   process.exit(1);
 });

@@ -49,9 +49,9 @@ describe('Reverse Engineer Tool Tests', () => {
       ];
 
       for (const maliciousPath of traversalAttempts) {
-        await expect(
-          reverseEngineerToolHandler({ directory: maliciousPath })
-        ).rejects.toThrow(/outside allowed workspace/);
+        await expect(reverseEngineerToolHandler({ directory: maliciousPath })).rejects.toThrow(
+          /outside allowed workspace/
+        );
       }
     });
 
@@ -111,9 +111,9 @@ describe('Reverse Engineer Tool Tests', () => {
       // Create state without route (null)
       await stateManager.initialize(testDir, null);
 
-      await expect(
-        reverseEngineerToolHandler({ directory: testDir })
-      ).rejects.toThrow(/Route not set/);
+      await expect(reverseEngineerToolHandler({ directory: testDir })).rejects.toThrow(
+        /Route not set/
+      );
     });
   });
 
@@ -136,9 +136,7 @@ describe('Reverse Engineer Tool Tests', () => {
       await fs.mkdir(docsDir, { recursive: true });
 
       // Should not throw
-      await expect(
-        reverseEngineerToolHandler({ directory: testDir })
-      ).resolves.toBeDefined();
+      await expect(reverseEngineerToolHandler({ directory: testDir })).resolves.toBeDefined();
     });
   });
 
@@ -168,15 +166,11 @@ describe('Reverse Engineer Tool Tests', () => {
 
   describe('Input Validation', () => {
     it('should reject non-string directory parameter', async () => {
-      await expect(
-        reverseEngineerToolHandler({ directory: 123 as any })
-      ).rejects.toThrow();
+      await expect(reverseEngineerToolHandler({ directory: 123 as any })).rejects.toThrow();
     });
 
     it('should reject empty string directory', async () => {
-      await expect(
-        reverseEngineerToolHandler({ directory: '' })
-      ).rejects.toThrow();
+      await expect(reverseEngineerToolHandler({ directory: '' })).rejects.toThrow();
     });
 
     it('should accept valid directory path', async () => {
@@ -224,9 +218,9 @@ describe('Reverse Engineer Tool Tests', () => {
   describe('Error Handling', () => {
     it('should provide clear error messages for invalid state', async () => {
       // Try to call without initializing state first
-      await expect(
-        reverseEngineerToolHandler({ directory: testDir })
-      ).rejects.toThrow(/State file does not exist/);
+      await expect(reverseEngineerToolHandler({ directory: testDir })).rejects.toThrow(
+        /State file does not exist/
+      );
     });
 
     it('should wrap errors with descriptive message', async () => {
@@ -236,9 +230,9 @@ describe('Reverse Engineer Tool Tests', () => {
       // (using a very long path that might cause issues)
       const veryLongPath = testDir + '/' + 'a'.repeat(1000);
 
-      await expect(
-        reverseEngineerToolHandler({ directory: veryLongPath })
-      ).rejects.toThrow(/Reverse engineering failed/);
+      await expect(reverseEngineerToolHandler({ directory: veryLongPath })).rejects.toThrow(
+        /Reverse engineering failed/
+      );
     });
   });
 });

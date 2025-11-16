@@ -172,7 +172,9 @@ describe('Cruise Control Tool Tests', () => {
       });
 
       expect(result.content[0].text).toContain('Clarifications Strategy:** defer');
-      expect(result.content[0].text).toContain('Will mark [NEEDS CLARIFICATION] items, continue anyway');
+      expect(result.content[0].text).toContain(
+        'Will mark [NEEDS CLARIFICATION] items, continue anyway'
+      );
 
       const state = await stateManager.load();
       expect(state.auto_config?.clarifications_strategy).toBe('defer');
@@ -188,7 +190,9 @@ describe('Cruise Control Tool Tests', () => {
       });
 
       expect(result.content[0].text).toContain('Clarifications Strategy:** defer');
-      expect(result.content[0].text).toContain('Will mark [NEEDS CLARIFICATION] items, continue anyway');
+      expect(result.content[0].text).toContain(
+        'Will mark [NEEDS CLARIFICATION] items, continue anyway'
+      );
     });
 
     it('should accept "prompt" strategy', async () => {
@@ -214,7 +218,9 @@ describe('Cruise Control Tool Tests', () => {
       });
 
       expect(result.content[0].text).toContain('Clarifications Strategy:** skip');
-      expect(result.content[0].text).toContain('Will skip unclear features, implement only what\'s clear');
+      expect(result.content[0].text).toContain(
+        "Will skip unclear features, implement only what's clear"
+      );
     });
 
     it('should reject invalid clarifications strategy', async () => {
@@ -371,7 +377,9 @@ describe('Cruise Control Tool Tests', () => {
       });
 
       const state = await stateManager.load();
-      expect(state.metadata?.pathDescription).toBe('Build new app from business logic (tech-agnostic)');
+      expect(state.metadata?.pathDescription).toBe(
+        'Build new app from business logic (tech-agnostic)'
+      );
     });
 
     it('should set correct path description for brownfield', async () => {
@@ -383,7 +391,9 @@ describe('Cruise Control Tool Tests', () => {
       });
 
       const state = await stateManager.load();
-      expect(state.metadata?.pathDescription).toBe('Manage existing app with Spec Kit (tech-prescriptive)');
+      expect(state.metadata?.pathDescription).toBe(
+        'Manage existing app with Spec Kit (tech-prescriptive)'
+      );
     });
 
     it('should initialize with empty completedSteps', async () => {
@@ -600,7 +610,9 @@ describe('Cruise Control Tool Tests', () => {
             });
 
             expect(result.content).toBeDefined();
-            expect(result.content[0].text).toContain(route === 'greenfield' ? 'Greenfield' : 'Brownfield');
+            expect(result.content[0].text).toContain(
+              route === 'greenfield' ? 'Greenfield' : 'Brownfield'
+            );
             expect(result.content[0].text).toContain(`Clarifications Strategy:** ${clarStrategy}`);
             expect(result.content[0].text).toContain(`Implementation Scope:** ${scope}`);
 
@@ -624,7 +636,9 @@ describe('Cruise Control Tool Tests', () => {
         route: 'greenfield',
         clarifications_strategy: 'defer',
       });
-      expect(result.content[0].text).toContain('5. ✨ **5th Gear: Complete Spec** - Mark clarifications, continue');
+      expect(result.content[0].text).toContain(
+        '5. ✨ **5th Gear: Complete Spec** - Mark clarifications, continue'
+      );
 
       // Prompt
       await fs.rm(testDir, { recursive: true, force: true });
@@ -648,7 +662,9 @@ describe('Cruise Control Tool Tests', () => {
         route: 'greenfield',
         clarifications_strategy: 'skip',
       });
-      expect(result.content[0].text).toContain('5. ✨ **5th Gear: Complete Spec** - Skip unclear items');
+      expect(result.content[0].text).toContain(
+        '5. ✨ **5th Gear: Complete Spec** - Skip unclear items'
+      );
     });
 
     it('should show correct gear 6 behavior based on implementation scope', async () => {
@@ -660,7 +676,9 @@ describe('Cruise Control Tool Tests', () => {
         route: 'greenfield',
         implementation_scope: 'none',
       });
-      expect(result.content[0].text).toContain('6. 🚀 **6th Gear: Implement** - Skip implementation');
+      expect(result.content[0].text).toContain(
+        '6. 🚀 **6th Gear: Implement** - Skip implementation'
+      );
 
       // P0
       await fs.rm(testDir, { recursive: true, force: true });
@@ -684,7 +702,9 @@ describe('Cruise Control Tool Tests', () => {
         route: 'greenfield',
         implementation_scope: 'all',
       });
-      expect(result.content[0].text).toContain('6. 🚀 **6th Gear: Implement** - Build all features');
+      expect(result.content[0].text).toContain(
+        '6. 🚀 **6th Gear: Implement** - Build all features'
+      );
     });
   });
 });

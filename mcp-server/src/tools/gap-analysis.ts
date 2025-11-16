@@ -40,16 +40,20 @@ export async function gapAnalysisToolHandler(args: GapAnalysisArgs) {
 > /speckit.analyze
 \`\`\`
 
-${route === 'brownfield' ? `
+${
+  route === 'brownfield'
+    ? `
 **Expected for Brownfield:**
 - Should show ~100% alignment initially (specs match code)
 - May reveal minor inconsistencies
 - Good baseline for ongoing management
-` : `
+`
+    : `
 **Expected for Greenfield:**
 - Most/all features marked ❌ MISSING (to be built in new stack)
 - Focus on identifying which features are P0/P1/P2
-`}
+`
+}
 
 ## Step 2: Create Gap Analysis Report
 
@@ -98,6 +102,8 @@ Then run: \`/speckit.clarify\` to resolve ambiguities
       ],
     };
   } catch (error) {
-    throw new Error(`Gap analysis failed: ${error instanceof Error ? error.message : String(error)}`);
+    throw new Error(
+      `Gap analysis failed: ${error instanceof Error ? error.message : String(error)}`
+    );
   }
 }

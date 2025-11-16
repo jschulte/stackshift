@@ -23,7 +23,10 @@ describe('skill-loader', () => {
     originalHome = process.env.HOME;
 
     // Create unique temporary directory for each test
-    testDir = path.join(tmpdir(), `skill-loader-test-${Date.now()}-${Math.random().toString(36).slice(2)}`);
+    testDir = path.join(
+      tmpdir(),
+      `skill-loader-test-${Date.now()}-${Math.random().toString(36).slice(2)}`
+    );
     await fs.mkdir(testDir, { recursive: true });
 
     // Spy on console.error to suppress output during tests
@@ -49,7 +52,11 @@ describe('skill-loader', () => {
     it('should load SKILL.md from .claude/plugins directory', async () => {
       const skillName = 'test-skill';
       const skillContent = 'x'.repeat(150); // Must be > 100 chars
-      const claudeDir = path.join(testDir, '.claude/plugins/marketplaces/jschulte/stackshift/skills', skillName);
+      const claudeDir = path.join(
+        testDir,
+        '.claude/plugins/marketplaces/jschulte/stackshift/skills',
+        skillName
+      );
 
       await fs.mkdir(claudeDir, { recursive: true });
       await fs.writeFile(path.join(claudeDir, 'SKILL.md'), skillContent);
@@ -64,7 +71,8 @@ describe('skill-loader', () => {
 
     it('should load SKILL.md from current working directory', async () => {
       const skillName = 'test-skill';
-      const skillContent = 'This is a skill file with enough content to pass the 100 character minimum requirement for validation.';
+      const skillContent =
+        'This is a skill file with enough content to pass the 100 character minimum requirement for validation.';
       const skillsDir = path.join(testDir, 'plugin/skills', skillName);
 
       await fs.mkdir(skillsDir, { recursive: true });
@@ -399,9 +407,9 @@ Paragraph 3 with enough content to exceed the minimum character requirement for 
         content: [
           {
             type: 'text',
-            text: expect.any(String)
-          }
-        ]
+            text: expect.any(String),
+          },
+        ],
       });
     });
 

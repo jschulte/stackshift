@@ -96,7 +96,14 @@ export class StateManager {
     }
 
     // Validate currentStep
-    const validSteps = ['analyze', 'reverse-engineer', 'create-specs', 'gap-analysis', 'complete-spec', 'implement'];
+    const validSteps = [
+      'analyze',
+      'reverse-engineer',
+      'create-specs',
+      'gap-analysis',
+      'complete-spec',
+      'implement',
+    ];
     if (data.currentStep !== null && !validSteps.includes(data.currentStep)) {
       errors.push(`Invalid currentStep: ${data.currentStep}`);
     }
@@ -132,7 +139,7 @@ export class StateManager {
 
     return {
       valid: errors.length === 0,
-      errors
+      errors,
     };
   }
 
@@ -198,9 +205,7 @@ export class StateManager {
       const validation = this.validateState(parsed);
 
       if (!validation.valid) {
-        throw new Error(
-          `Invalid state file structure:\n${validation.errors.join('\n')}`
-        );
+        throw new Error(`Invalid state file structure:\n${validation.errors.join('\n')}`);
       }
 
       // Now sanitize the validated object
@@ -285,9 +290,7 @@ export class StateManager {
     // Validate before writing
     const validation = this.validateState(newState);
     if (!validation.valid) {
-      throw new Error(
-        `Updated state is invalid:\n${validation.errors.join('\n')}`
-      );
+      throw new Error(`Updated state is invalid:\n${validation.errors.join('\n')}`);
     }
 
     await this.atomicWrite(newState);
@@ -306,11 +309,12 @@ export class StateManager {
       path: route,
       metadata: {
         ...state.metadata,
-        pathDescription: route === 'greenfield'
-          ? 'Build new app from business logic (tech-agnostic)'
-          : route === 'brownfield'
-          ? 'Manage existing app with Spec Kit (tech-prescriptive)'
-          : undefined,
+        pathDescription:
+          route === 'greenfield'
+            ? 'Build new app from business logic (tech-agnostic)'
+            : route === 'brownfield'
+              ? 'Manage existing app with Spec Kit (tech-prescriptive)'
+              : undefined,
       },
     }));
   }

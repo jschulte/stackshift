@@ -40,10 +40,14 @@ export async function getStateResource() {
         {
           uri: 'stackshift://state',
           mimeType: 'application/json',
-          text: JSON.stringify({
-            error: 'No state file found',
-            message: 'Run stackshift_analyze to initialize',
-          }, null, 2),
+          text: JSON.stringify(
+            {
+              error: 'No state file found',
+              message: 'Run stackshift_analyze to initialize',
+            },
+            null,
+            2
+          ),
         },
       ],
     };
@@ -61,7 +65,7 @@ export async function getProgressResource() {
     const stateData = await fs.readFile(stateFile, 'utf-8');
     const state = JSON.parse(stateData);
 
-    const progress = GEARS.map((gear) => {
+    const progress = GEARS.map(gear => {
       const isCompleted = state.completedSteps.includes(gear.id);
       const isCurrent = state.currentStep === gear.id;
 
@@ -123,11 +127,12 @@ export async function getRouteResource() {
     const stateData = await fs.readFile(stateFile, 'utf-8');
     const state = JSON.parse(stateData);
 
-    const routeInfo = state.path === 'greenfield'
-      ? '🔀 Greenfield: Shift to new tech stack (tech-agnostic specs)'
-      : state.path === 'brownfield'
-      ? '⚙️ Brownfield: Manage existing code with specs (tech-prescriptive)'
-      : '❓ Not selected - run stackshift_analyze to choose';
+    const routeInfo =
+      state.path === 'greenfield'
+        ? '🔀 Greenfield: Shift to new tech stack (tech-agnostic specs)'
+        : state.path === 'brownfield'
+          ? '⚙️ Brownfield: Manage existing code with specs (tech-prescriptive)'
+          : '❓ Not selected - run stackshift_analyze to choose';
 
     return {
       contents: [

@@ -49,9 +49,9 @@ describe('Create Specs Tool Tests', () => {
       ];
 
       for (const maliciousPath of traversalAttempts) {
-        await expect(
-          createSpecsToolHandler({ directory: maliciousPath })
-        ).rejects.toThrow(/outside allowed workspace/);
+        await expect(createSpecsToolHandler({ directory: maliciousPath })).rejects.toThrow(
+          /outside allowed workspace/
+        );
       }
     });
 
@@ -113,9 +113,7 @@ describe('Create Specs Tool Tests', () => {
       // Create state without route (null)
       await stateManager.initialize(testDir, null);
 
-      await expect(
-        createSpecsToolHandler({ directory: testDir })
-      ).rejects.toThrow(/Route not set/);
+      await expect(createSpecsToolHandler({ directory: testDir })).rejects.toThrow(/Route not set/);
     });
   });
 
@@ -147,15 +145,11 @@ describe('Create Specs Tool Tests', () => {
 
   describe('Input Validation', () => {
     it('should reject non-string directory parameter', async () => {
-      await expect(
-        createSpecsToolHandler({ directory: 123 as any })
-      ).rejects.toThrow();
+      await expect(createSpecsToolHandler({ directory: 123 as any })).rejects.toThrow();
     });
 
     it('should reject empty string directory', async () => {
-      await expect(
-        createSpecsToolHandler({ directory: '' })
-      ).rejects.toThrow();
+      await expect(createSpecsToolHandler({ directory: '' })).rejects.toThrow();
     });
 
     it('should accept valid directory path', async () => {
@@ -237,9 +231,9 @@ describe('Create Specs Tool Tests', () => {
   describe('Error Handling', () => {
     it('should provide clear error messages for missing state', async () => {
       // Try to call without initializing state first
-      await expect(
-        createSpecsToolHandler({ directory: testDir })
-      ).rejects.toThrow(/State file does not exist/);
+      await expect(createSpecsToolHandler({ directory: testDir })).rejects.toThrow(
+        /State file does not exist/
+      );
     });
 
     it('should wrap errors with descriptive message', async () => {
@@ -248,9 +242,9 @@ describe('Create Specs Tool Tests', () => {
       // Try with a directory that doesn't exist for validation
       const nonExistentPath = path.join(testDir, 'nonexistent', 'path');
 
-      await expect(
-        createSpecsToolHandler({ directory: nonExistentPath })
-      ).rejects.toThrow(/Spec creation failed/);
+      await expect(createSpecsToolHandler({ directory: nonExistentPath })).rejects.toThrow(
+        /Spec creation failed/
+      );
     });
   });
 

@@ -11,7 +11,12 @@
 
 import * as fs from 'fs/promises';
 import * as path from 'path';
-import { createDefaultValidator, validateRoute, validateClarificationsStrategy, validateImplementationScope } from '../utils/security.js';
+import {
+  createDefaultValidator,
+  validateRoute,
+  validateClarificationsStrategy,
+  validateImplementationScope,
+} from '../utils/security.js';
 import { StateManager } from '../utils/state-manager.js';
 
 interface CruiseControlArgs {
@@ -57,9 +62,10 @@ export async function cruiseControlToolHandler(args: CruiseControlArgs) {
       },
       metadata: {
         ...initialState.metadata,
-        pathDescription: route === 'greenfield'
-          ? 'Build new app from business logic (tech-agnostic)'
-          : 'Manage existing app with Spec Kit (tech-prescriptive)',
+        pathDescription:
+          route === 'greenfield'
+            ? 'Build new app from business logic (tech-agnostic)'
+            : 'Manage existing app with Spec Kit (tech-prescriptive)',
       },
     };
 
@@ -75,7 +81,7 @@ export async function cruiseControlToolHandler(args: CruiseControlArgs) {
 **Clarifications Strategy:** ${clarifications_strategy}
 ${clarifications_strategy === 'defer' ? '- Will mark [NEEDS CLARIFICATION] items, continue anyway' : ''}
 ${clarifications_strategy === 'prompt' ? '- Will stop and ask questions interactively' : ''}
-${clarifications_strategy === 'skip' ? '- Will skip unclear features, implement only what\'s clear' : ''}
+${clarifications_strategy === 'skip' ? "- Will skip unclear features, implement only what's clear" : ''}
 
 **Implementation Scope:** ${implementation_scope}
 ${implementation_scope === 'none' ? '- Stop after specs ready (no implementation)' : ''}
@@ -139,6 +145,8 @@ which detect auto_mode and proceed automatically.
       ],
     };
   } catch (error) {
-    throw new Error(`Cruise control failed: ${error instanceof Error ? error.message : String(error)}`);
+    throw new Error(
+      `Cruise control failed: ${error instanceof Error ? error.message : String(error)}`
+    );
   }
 }

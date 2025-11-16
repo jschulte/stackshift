@@ -49,9 +49,9 @@ describe('Gap Analysis Tool Tests', () => {
       ];
 
       for (const maliciousPath of traversalAttempts) {
-        await expect(
-          gapAnalysisToolHandler({ directory: maliciousPath })
-        ).rejects.toThrow(/outside allowed workspace/);
+        await expect(gapAnalysisToolHandler({ directory: maliciousPath })).rejects.toThrow(
+          /outside allowed workspace/
+        );
       }
     });
 
@@ -153,15 +153,11 @@ describe('Gap Analysis Tool Tests', () => {
 
   describe('Input Validation', () => {
     it('should reject non-string directory parameter', async () => {
-      await expect(
-        gapAnalysisToolHandler({ directory: 123 as any })
-      ).rejects.toThrow();
+      await expect(gapAnalysisToolHandler({ directory: 123 as any })).rejects.toThrow();
     });
 
     it('should reject empty string directory', async () => {
-      await expect(
-        gapAnalysisToolHandler({ directory: '' })
-      ).rejects.toThrow();
+      await expect(gapAnalysisToolHandler({ directory: '' })).rejects.toThrow();
     });
 
     it('should accept valid directory path', async () => {
@@ -241,9 +237,9 @@ describe('Gap Analysis Tool Tests', () => {
   describe('Error Handling', () => {
     it('should provide clear error messages for missing state', async () => {
       // Try to call without initializing state first
-      await expect(
-        gapAnalysisToolHandler({ directory: testDir })
-      ).rejects.toThrow(/State file does not exist/);
+      await expect(gapAnalysisToolHandler({ directory: testDir })).rejects.toThrow(
+        /State file does not exist/
+      );
     });
 
     it('should wrap errors with descriptive message', async () => {
@@ -252,9 +248,9 @@ describe('Gap Analysis Tool Tests', () => {
       // Try with a directory that doesn't exist for validation
       const nonExistentPath = path.join(testDir, 'nonexistent', 'path');
 
-      await expect(
-        gapAnalysisToolHandler({ directory: nonExistentPath })
-      ).rejects.toThrow(/Gap analysis failed/);
+      await expect(gapAnalysisToolHandler({ directory: nonExistentPath })).rejects.toThrow(
+        /Gap analysis failed/
+      );
     });
   });
 

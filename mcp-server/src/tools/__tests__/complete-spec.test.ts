@@ -49,9 +49,9 @@ describe('Complete Spec Tool Tests', () => {
       ];
 
       for (const maliciousPath of traversalAttempts) {
-        await expect(
-          completeSpecToolHandler({ directory: maliciousPath })
-        ).rejects.toThrow(/outside allowed workspace/);
+        await expect(completeSpecToolHandler({ directory: maliciousPath })).rejects.toThrow(
+          /outside allowed workspace/
+        );
       }
     });
 
@@ -285,15 +285,11 @@ describe('Complete Spec Tool Tests', () => {
 
   describe('Input Validation', () => {
     it('should reject non-string directory parameter', async () => {
-      await expect(
-        completeSpecToolHandler({ directory: 123 as any })
-      ).rejects.toThrow();
+      await expect(completeSpecToolHandler({ directory: 123 as any })).rejects.toThrow();
     });
 
     it('should reject empty string directory', async () => {
-      await expect(
-        completeSpecToolHandler({ directory: '' })
-      ).rejects.toThrow();
+      await expect(completeSpecToolHandler({ directory: '' })).rejects.toThrow();
     });
 
     it('should accept valid directory path', async () => {
@@ -376,9 +372,9 @@ describe('Complete Spec Tool Tests', () => {
   describe('Error Handling', () => {
     it('should provide clear error messages for missing state', async () => {
       // Try to call without initializing state first
-      await expect(
-        completeSpecToolHandler({ directory: testDir })
-      ).rejects.toThrow(/State file does not exist/);
+      await expect(completeSpecToolHandler({ directory: testDir })).rejects.toThrow(
+        /State file does not exist/
+      );
     });
 
     it('should wrap errors with descriptive message', async () => {
@@ -387,9 +383,9 @@ describe('Complete Spec Tool Tests', () => {
       // Try with a directory that doesn't exist for validation
       const nonExistentPath = path.join(testDir, 'nonexistent', 'path');
 
-      await expect(
-        completeSpecToolHandler({ directory: nonExistentPath })
-      ).rejects.toThrow(/Spec completion failed/);
+      await expect(completeSpecToolHandler({ directory: nonExistentPath })).rejects.toThrow(
+        /Spec completion failed/
+      );
     });
   });
 

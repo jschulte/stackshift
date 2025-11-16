@@ -19,7 +19,10 @@ describe('file-utils', () => {
 
   beforeEach(async () => {
     // Create unique temporary directory for each test
-    testDir = path.join(tmpdir(), `file-utils-test-${Date.now()}-${Math.random().toString(36).slice(2)}`);
+    testDir = path.join(
+      tmpdir(),
+      `file-utils-test-${Date.now()}-${Math.random().toString(36).slice(2)}`
+    );
     await fs.mkdir(testDir, { recursive: true });
   });
 
@@ -305,7 +308,7 @@ describe('file-utils', () => {
       const filePath = path.join(testDir, 'polluted.json');
       const maliciousJson = JSON.stringify({
         name: 'test',
-        __proto__: { isAdmin: true }
+        __proto__: { isAdmin: true },
       });
       await fs.writeFile(filePath, maliciousJson);
 
@@ -319,7 +322,7 @@ describe('file-utils', () => {
       const filePath = path.join(testDir, 'constructor.json');
       const json = JSON.stringify({
         name: 'test',
-        constructor: { dangerous: true }
+        constructor: { dangerous: true },
       });
       await fs.writeFile(filePath, json);
 
@@ -333,7 +336,7 @@ describe('file-utils', () => {
       const filePath = path.join(testDir, 'prototype.json');
       const json = JSON.stringify({
         name: 'test',
-        prototype: { harmful: true }
+        prototype: { harmful: true },
       });
       await fs.writeFile(filePath, json);
 
@@ -366,7 +369,7 @@ describe('file-utils', () => {
       const filePath = path.join(testDir, 'special.json');
       const data = {
         text: 'Special "quotes" and \\backslashes\\',
-        unicode: '你好 🌍'
+        unicode: '你好 🌍',
       };
       await fs.writeFile(filePath, JSON.stringify(data));
 
@@ -382,10 +385,10 @@ describe('file-utils', () => {
           level2: {
             level3: [
               { id: 1, items: [1, 2, 3] },
-              { id: 2, items: [4, 5, 6] }
-            ]
-          }
-        }
+              { id: 2, items: [4, 5, 6] },
+            ],
+          },
+        },
       };
       await fs.writeFile(filePath, JSON.stringify(data));
 

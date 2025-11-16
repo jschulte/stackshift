@@ -255,7 +255,9 @@ describe('StateManager', () => {
       await stateManager.completeStep('analyze');
       const state2 = await stateManager.load();
 
-      expect(new Date(state2.updated).getTime()).toBeGreaterThan(new Date(state1.updated).getTime());
+      expect(new Date(state2.updated).getTime()).toBeGreaterThan(
+        new Date(state1.updated).getTime()
+      );
     });
   });
 });

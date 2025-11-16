@@ -8,7 +8,12 @@
  */
 
 import { describe, it, expect, beforeEach } from 'vitest';
-import { SecurityValidator, validateRoute, validateClarificationsStrategy, validateImplementationScope } from '../security.js';
+import {
+  SecurityValidator,
+  validateRoute,
+  validateClarificationsStrategy,
+  validateImplementationScope,
+} from '../security.js';
 import { tmpdir } from 'os';
 import { join } from 'path';
 
@@ -41,12 +46,7 @@ describe('SecurityValidator', () => {
     });
 
     it('should reject absolute paths outside workspace', () => {
-      const outsidePaths = [
-        '/etc/passwd',
-        '/var/log',
-        '/tmp/../etc/passwd',
-        tmpdir(),
-      ];
+      const outsidePaths = ['/etc/passwd', '/var/log', '/tmp/../etc/passwd', tmpdir()];
 
       for (const path of outsidePaths) {
         expect(() => validator.validateDirectory(path)).toThrow(/outside allowed workspace/);
@@ -103,26 +103,22 @@ describe('SecurityValidator', () => {
     });
 
     it('should reject file paths that escape directory', () => {
-      const escapePaths = [
-        '../../../etc/passwd',
-        '../../.ssh/id_rsa',
-        '../etc/shadow',
-      ];
+      const escapePaths = ['../../../etc/passwd', '../../.ssh/id_rsa', '../etc/shadow'];
 
       for (const filePath of escapePaths) {
-        expect(() => validator.validateFilePath(allowedPath, filePath)).toThrow(/escapes directory/);
+        expect(() => validator.validateFilePath(allowedPath, filePath)).toThrow(
+          /escapes directory/
+        );
       }
     });
 
     it('should reject file names with shell metacharacters', () => {
-      const dangerousFiles = [
-        '$(whoami).txt',
-        'file`cmd`.txt',
-        'file;rm -rf /.txt',
-      ];
+      const dangerousFiles = ['$(whoami).txt', 'file`cmd`.txt', 'file;rm -rf /.txt'];
 
       for (const fileName of dangerousFiles) {
-        expect(() => validator.validateFilePath(allowedPath, fileName)).toThrow(/shell metacharacters/);
+        expect(() => validator.validateFilePath(allowedPath, fileName)).toThrow(
+          /shell metacharacters/
+        );
       }
     });
   });
@@ -169,15 +165,12 @@ describe('Clarifications Strategy Validation', () => {
   });
 
   it('should reject invalid strategies', () => {
-    const invalidStrategies = [
-      'invalid',
-      'DEFER',
-      'ask',
-      '../../etc',
-    ];
+    const invalidStrategies = ['invalid', 'DEFER', 'ask', '../../etc'];
 
     for (const strategy of invalidStrategies) {
-      expect(() => validateClarificationsStrategy(strategy)).toThrow(/Invalid clarifications_strategy/);
+      expect(() => validateClarificationsStrategy(strategy)).toThrow(
+        /Invalid clarifications_strategy/
+      );
     }
   });
 
@@ -195,12 +188,7 @@ describe('Implementation Scope Validation', () => {
   });
 
   it('should reject invalid scopes', () => {
-    const invalidScopes = [
-      'invalid',
-      'P0',
-      'p1',
-      '../../etc',
-    ];
+    const invalidScopes = ['invalid', 'P0', 'p1', '../../etc'];
 
     for (const scope of invalidScopes) {
       expect(() => validateImplementationScope(scope)).toThrow(/Invalid implementation_scope/);

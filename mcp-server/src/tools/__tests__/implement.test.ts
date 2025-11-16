@@ -50,9 +50,9 @@ describe('Implement Tool Tests', () => {
       ];
 
       for (const maliciousPath of traversalAttempts) {
-        await expect(
-          implementToolHandler({ directory: maliciousPath })
-        ).rejects.toThrow(/outside allowed workspace/);
+        await expect(implementToolHandler({ directory: maliciousPath })).rejects.toThrow(
+          /outside allowed workspace/
+        );
       }
     });
 
@@ -178,9 +178,9 @@ describe('Implement Tool Tests', () => {
     it('should reject empty feature name', async () => {
       await stateManager.initialize(testDir, 'greenfield');
 
-      await expect(
-        implementToolHandler({ directory: testDir, feature: '' })
-      ).rejects.toThrow(/Implementation failed.*Invalid feature name length/);
+      await expect(implementToolHandler({ directory: testDir, feature: '' })).rejects.toThrow(
+        /Implementation failed.*Invalid feature name length/
+      );
     });
 
     it('should reject too long feature name', async () => {
@@ -188,9 +188,9 @@ describe('Implement Tool Tests', () => {
 
       const tooLong = 'a'.repeat(201);
 
-      await expect(
-        implementToolHandler({ directory: testDir, feature: tooLong })
-      ).rejects.toThrow(/Implementation failed.*Invalid feature name length/);
+      await expect(implementToolHandler({ directory: testDir, feature: tooLong })).rejects.toThrow(
+        /Implementation failed.*Invalid feature name length/
+      );
     });
 
     it('should reject feature names with path separators', async () => {
@@ -205,9 +205,9 @@ describe('Implement Tool Tests', () => {
       ];
 
       for (const name of invalidNames) {
-        await expect(
-          implementToolHandler({ directory: testDir, feature: name })
-        ).rejects.toThrow(/cannot contain path separators/);
+        await expect(implementToolHandler({ directory: testDir, feature: name })).rejects.toThrow(
+          /cannot contain path separators/
+        );
       }
     });
 
@@ -217,7 +217,9 @@ describe('Implement Tool Tests', () => {
       const result = await implementToolHandler({ directory: testDir });
 
       expect(result.content[0].text).toContain('Implementation Process');
-      expect(result.content[0].text).toContain('Call with feature parameter to implement specific feature');
+      expect(result.content[0].text).toContain(
+        'Call with feature parameter to implement specific feature'
+      );
       expect(result.content[0].text).not.toContain('Implementing Feature:');
     });
 
@@ -301,15 +303,11 @@ describe('Implement Tool Tests', () => {
 
   describe('Input Validation', () => {
     it('should reject non-string directory parameter', async () => {
-      await expect(
-        implementToolHandler({ directory: 123 as any })
-      ).rejects.toThrow();
+      await expect(implementToolHandler({ directory: 123 as any })).rejects.toThrow();
     });
 
     it('should reject empty string directory', async () => {
-      await expect(
-        implementToolHandler({ directory: '' })
-      ).rejects.toThrow();
+      await expect(implementToolHandler({ directory: '' })).rejects.toThrow();
     });
 
     it('should accept valid directory path', async () => {
@@ -381,7 +379,9 @@ describe('Implement Tool Tests', () => {
       stateManager = new StateManager(testDir);
       await stateManager.initialize(testDir, 'brownfield');
       result = await implementToolHandler({ directory: testDir });
-      expect(result.content[0].text).toContain('brought your existing application under GitHub Spec Kit');
+      expect(result.content[0].text).toContain(
+        'brought your existing application under GitHub Spec Kit'
+      );
       expect(result.content[0].text).toContain('spec-driven going forward');
     });
 
@@ -402,9 +402,9 @@ describe('Implement Tool Tests', () => {
   describe('Error Handling', () => {
     it('should provide clear error messages for missing state', async () => {
       // Try to call without initializing state first
-      await expect(
-        implementToolHandler({ directory: testDir })
-      ).rejects.toThrow(/State file does not exist/);
+      await expect(implementToolHandler({ directory: testDir })).rejects.toThrow(
+        /State file does not exist/
+      );
     });
 
     it('should wrap errors with descriptive message', async () => {
@@ -413,9 +413,9 @@ describe('Implement Tool Tests', () => {
       // Try with a directory that doesn't exist for validation
       const nonExistentPath = path.join(testDir, 'nonexistent', 'path');
 
-      await expect(
-        implementToolHandler({ directory: nonExistentPath })
-      ).rejects.toThrow(/Implementation failed/);
+      await expect(implementToolHandler({ directory: nonExistentPath })).rejects.toThrow(
+        /Implementation failed/
+      );
     });
   });
 

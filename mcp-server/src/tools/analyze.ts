@@ -56,23 +56,29 @@ export async function analyzeToolHandler(args: AnalyzeArgs) {
 ## Route Selection
 ${route ? `✅ Route set to: **${route}**` : '⚠️ Route not selected - use route parameter to choose'}
 
-${route === 'greenfield' ? `
+${
+  route === 'greenfield'
+    ? `
 **Greenfield Route:** Extract business logic only (tech-agnostic)
 - Focus on WHAT the system does
 - Framework-agnostic specifications
 - Can implement in any tech stack
-` : route === 'brownfield' ? `
+`
+    : route === 'brownfield'
+      ? `
 **Brownfield Route:** Extract business logic + technical implementation
 - Focus on WHAT and HOW
 - Tech-stack prescriptive
 - Enables /speckit.analyze validation
-` : `
+`
+      : `
 **Choose your route:**
 - **Greenfield:** Shift to new tech stack (extract business logic only)
 - **Brownfield:** Take the wheel on existing code (document full implementation)
 
 Call again with route parameter to set your path.
-`}
+`
+}
 
 ## Technology Stack Detected
 
@@ -143,19 +149,19 @@ async function detectTechStack(directory: string) {
     }
 
     // Check for Python
-    if (await fileExists(path.join(directory, 'requirements.txt')) && !result.primaryLanguage) {
+    if ((await fileExists(path.join(directory, 'requirements.txt'))) && !result.primaryLanguage) {
       result.primaryLanguage = 'Python';
       result.buildSystem = 'pip';
     }
 
     // Check for Go
-    if (await fileExists(path.join(directory, 'go.mod')) && !result.primaryLanguage) {
+    if ((await fileExists(path.join(directory, 'go.mod'))) && !result.primaryLanguage) {
       result.primaryLanguage = 'Go';
       result.buildSystem = 'go modules';
     }
 
     // Check for Rust
-    if (await fileExists(path.join(directory, 'Cargo.toml')) && !result.primaryLanguage) {
+    if ((await fileExists(path.join(directory, 'Cargo.toml'))) && !result.primaryLanguage) {
       result.primaryLanguage = 'Rust';
       result.buildSystem = 'Cargo';
     }
@@ -195,8 +201,9 @@ async function assessCompleteness(directory: string) {
     // Simple overall average
     result.backend = 70; // Default estimates
     result.frontend = 60;
-    result.overall = Math.round((result.backend + result.frontend + result.tests + result.documentation) / 4);
-
+    result.overall = Math.round(
+      (result.backend + result.frontend + result.tests + result.documentation) / 4
+    );
   } catch (error) {
     // Return defaults
     result.overall = 50;
