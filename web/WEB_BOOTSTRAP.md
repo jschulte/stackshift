@@ -5,7 +5,7 @@ You are setting up StackShift - a reverse engineering toolkit that transforms ap
 First, download and set up StackShift in this repository:
 
 ```bash
-# Download StackShift from GitHub
+# Download StackShift v1.0.0 from GitHub
 curl -L https://github.com/jschulte/stackshift/archive/refs/tags/v1.0.0.tar.gz -o stackshift.tar.gz
 
 # Extract to .stackshift directory
@@ -15,133 +15,171 @@ tar -xzf stackshift.tar.gz -C .stackshift --strip-components=1
 # Cleanup
 rm stackshift.tar.gz
 
-# Verify
+# Verify installation
 ls .stackshift/
-# Should show: plugin/, mcp-server/, prompts/, docs/, etc.
 ```
 
-## Now You Have Access To
-
-✅ **All skills** - `.stackshift/plugin/skills/*/SKILL.md`
-✅ **All agents** - `.stackshift/plugin/agents/*/AGENT.md`
-✅ **All templates** - `.stackshift/plugin/templates/*.md`
-✅ **All prompts** - `.stackshift/prompts/greenfield/` and `.stackshift/prompts/brownfield/`
-✅ **Spec Kit templates** - `.stackshift/plugin/speckit-templates/*.md`
+You should now have:
+- `.stackshift/plugin/skills/` - 7 skills
+- `.stackshift/plugin/agents/` - 2 agents
+- `.stackshift/plugin/templates/` - Constitution and spec templates
+- `.stackshift/plugin/speckit-templates/` - Fallback Spec Kit templates
+- `.stackshift/prompts/greenfield/` - Tech-agnostic prompts
+- `.stackshift/prompts/brownfield/` - Tech-prescriptive prompts
 
 ## Configuration
 
 Ask me these questions:
 
 1. **Route:**
-   - Greenfield: Extract business logic only (tech-agnostic)
-   - Brownfield: Extract full implementation (tech-prescriptive)
+   - A) Greenfield: Extract business logic only (tech-agnostic) for rebuilding in new stack
+   - B) Brownfield: Extract full implementation (tech-prescriptive) for managing with GitHub Spec Kit
 
 2. **Mode:**
-   - Manual: Stop at each gear
-   - Cruise Control: Automatic through all 6 gears
+   - A) Manual: Stop at each gear for review
+   - B) Cruise Control: Shift through all 6 gears automatically
 
-3. **If Cruise Control - Clarifications:**
-   - Defer, Prompt, or Skip
+3. **(If Cruise Control) Clarifications Strategy:**
+   - A) Defer: Mark [NEEDS CLARIFICATION], continue anyway
+   - B) Prompt: Stop and ask questions
+   - C) Skip: Only implement clear features
 
-4. **If Cruise Control - Scope:**
-   - None, P0, P0+P1, or All
+4. **(If Cruise Control) Implementation Scope:**
+   - A) None: Stop after specs ready
+   - B) P0: Critical features only
+   - C) P0+P1: Critical + high-value (recommended)
+   - D) All: Everything (may take hours)
 
-5. **If Greenfield + implementing - Target Stack:**
-   - What tech stack?
+5. **(If Greenfield + implementing) Target Stack:**
+   - What tech stack for the new implementation?
+   - Examples: Next.js 15, Python/FastAPI, Go/Gin
 
-6. **If Greenfield + implementing - Build Location:**
-   - greenfield/ or custom folder
+6. **(If Greenfield + implementing) Build Location:**
+   - Where to build new app? (default: greenfield/)
 
 Save configuration to `.stackshift-state.json`
 
-## Execute StackShift
+## Execute 6-Gear Process
 
-Now execute the 6-gear process:
+Based on my answers, follow the appropriate guide from `.stackshift/prompts/`:
 
-### Gear 1: Analyze
+### For Brownfield Route
 
-Read and follow: `.stackshift/plugin/skills/analyze/SKILL.md`
+Read and execute: `.stackshift/prompts/brownfield/02-reverse-engineer-full-stack.md`
 
-This file contains complete instructions for:
-- Tech stack detection (use operations/detect-stack.md)
-- Directory analysis (use operations/directory-analysis.md)
-- Documentation scan (use operations/documentation-scan.md)
-- Completeness assessment (use operations/completeness-assessment.md)
-- Report generation (use operations/generate-report.md)
+Use the Task tool with subagent_type=Explore to:
+- Extract business logic + technical implementation
+- Document exact frameworks, versions, file paths
+- Generate 8 comprehensive docs in `docs/reverse-engineering/`
 
-Generate `analysis-report.md` following the template.
+Then continue through remaining gears using Brownfield approach.
 
-### Gear 2: Reverse Engineer
+### For Greenfield Route
 
-Read and follow: `.stackshift/plugin/skills/reverse-engineer/SKILL.md`
+Read and execute: `.stackshift/prompts/greenfield/02-reverse-engineer-business-logic.md`
 
-**Route-specific instructions:**
-- Greenfield: Read `.stackshift/prompts/greenfield/02-reverse-engineer-business-logic.md`
-- Brownfield: Read `.stackshift/prompts/brownfield/02-reverse-engineer-full-stack.md`
+Use the Task tool with subagent_type=Explore to:
+- Extract business logic ONLY (no tech details)
+- Focus on WHAT, not HOW
+- Generate 8 tech-agnostic docs in `docs/reverse-engineering/`
 
-Use the stackshift:code-analyzer agent instructions from:
-`.stackshift/plugin/agents/stackshift-code-analyzer/AGENT.md`
+Then continue through remaining gears using Greenfield approach.
 
-Generate 8 comprehensive docs in `docs/reverse-engineering/`
+## The 6 Gears
 
-### Gear 3: Create Specifications
+### 🔍 Gear 1: Analyze
+- Detect tech stack
+- Assess completeness
+- Generate `analysis-report.md`
+- Save state to `.stackshift-state.json`
 
-Read and follow: `.stackshift/plugin/skills/create-specs/SKILL.md`
+### 🔄 Gear 2: Reverse Engineer
+- Use appropriate prompt from `.stackshift/prompts/`
+- Generate 8 comprehensive documentation files
+- Save to `docs/reverse-engineering/`
 
-**Constitution template:**
-- Greenfield: Use `.stackshift/plugin/templates/constitution-agnostic-template.md`
-- Brownfield: Use `.stackshift/plugin/templates/constitution-prescriptive-template.md`
+### 📋 Gear 3: Create Specifications
+- Run: `specify init --here --ai claude --force`
+- If fails: Create `.specify/memory/{specifications,plans}` manually
+- Copy templates from `.stackshift/plugin/speckit-templates/*.md` to `.specify/templates/`
+- Generate constitution using `.stackshift/plugin/templates/constitution-{agnostic|prescriptive}-template.md`
+- Generate feature specifications in `.specify/memory/specifications/`
+- Generate implementation plans in `.specify/memory/plans/`
 
-**Feature spec template:**
-Use `.stackshift/plugin/templates/feature-spec-template.md`
+### 🔍 Gear 4: Gap Analysis
+- Compare specs vs implementation
+- Identify COMPLETE/PARTIAL/MISSING features
+- Mark [NEEDS CLARIFICATION] items
+- Create prioritized roadmap
+- Generate `docs/gap-analysis-report.md`
 
-**Spec Kit setup:**
-1. Try: `specify init --here --ai claude --force`
-2. If fails: Copy templates from `.stackshift/plugin/speckit-templates/*.md` to `.specify/templates/`
+### ✨ Gear 5: Complete Specification
+- Based on clarifications_strategy (defer/prompt/skip)
+- Resolve [NEEDS CLARIFICATION] markers
+- Finalize all specifications
 
-Use the stackshift:technical-writer agent instructions from:
-`.stackshift/plugin/agents/stackshift-technical-writer/AGENT.md`
+### 🚀 Gear 6: Implement
+- Based on implementation_scope (none/p0/p0_p1/all)
+- Use /speckit.tasks and /speckit.implement
+- For Greenfield: Build in greenfield/ (or custom location)
+- For Brownfield: Build in current directory
 
-Generate specifications in `.specify/memory/specifications/`
-
-### Gear 4: Gap Analysis
-
-Read and follow: `.stackshift/plugin/skills/gap-analysis/SKILL.md`
-
-Run /speckit.analyze if available, or manually compare specs vs code.
-
-Generate `docs/gap-analysis-report.md`
-
-### Gear 5: Complete Specification
-
-Read and follow: `.stackshift/plugin/skills/complete-spec/SKILL.md`
-
-Handle clarifications based on strategy from configuration.
-
-Use `/speckit.clarify` if available, or manually resolve.
-
-### Gear 6: Implement
-
-Read and follow: `.stackshift/plugin/skills/implement/SKILL.md`
-
-Implement features based on scope from configuration.
-
-Use `/speckit.tasks` and `/speckit.implement` if available.
-
-For greenfield: Build in greenfield_location using target_stack.
-
-## Progress Tracking
+## Progress Reporting
 
 After each gear:
-- Update `.stackshift-state.json` with progress
-- Commit changes with clear message
-- Report progress to user
+```
+✅ Gear N: [Name] Complete (X minutes)
+Progress: N/6 gears (X%)
+```
 
-## Completion
+Final report:
+```
+🏁 All gears complete!
 
-Show summary:
-- What was generated
-- Current state
-- Next steps for ongoing spec-driven development
+Generated:
+- analysis-report.md
+- docs/reverse-engineering/ (8 files)
+- .specify/memory/constitution.md
+- .specify/memory/specifications/ (X specs)
+- .specify/memory/plans/ (Y plans)
+- docs/gap-analysis-report.md
+- .stackshift-state.json
 
-All changes automatically committed to the branch.
+All committed to this branch.
+```
+
+## Handoff After Completion
+
+If Gears 1-5 complete and gaps exist (PARTIAL/MISSING features):
+
+Run the handoff procedure from `.stackshift/plugin/skills/implement/operations/handoff.md`:
+1. Celebrate completion
+2. Explain transition to standard Spec Kit workflow
+3. List remaining features
+4. Offer to set up first feature branch
+5. Provide /speckit.* command guidance
+
+## Important Notes
+
+**For Brownfield:**
+- Extract business logic + technical details
+- Document exact versions, file paths, schemas
+- Specs match current implementation
+- Enables /speckit.analyze validation
+
+**For Greenfield:**
+- Extract business logic ONLY
+- NO framework/library names (unless business requirement)
+- Tech-agnostic specs
+- Can implement in any stack
+
+**For Both:**
+- Use Task tool with Explore agent for deep analysis
+- Generate files in parallel for efficiency
+- Commit after each gear
+- All files created in current working directory
+- StackShift code in `.stackshift/` (available to reference)
+
+## Ready?
+
+Ask me the configuration questions (1-6 above), then shift through the gears! 🚗💨
