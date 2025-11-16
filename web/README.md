@@ -4,7 +4,7 @@
 
 ---
 
-## Quick Start (Recommended: WEB_BOOTSTRAP.md)
+## Quick Start
 
 **This downloads the full StackShift from GitHub - giving you the complete plugin experience!**
 
@@ -13,9 +13,11 @@
 - Go to: https://claude.ai/code
 - Connect to your GitHub repository
 
-### 2. Copy the Bootstrap Prompt
+### 2. Copy the Prompt
 
 Open [`WEB_BOOTSTRAP.md`](WEB_BOOTSTRAP.md) and copy the entire prompt.
+
+**This is the ONLY prompt you need.** It downloads StackShift from GitHub first, so all skills, agents, and templates are available.
 
 ### 3. Paste into Claude Code Web
 
