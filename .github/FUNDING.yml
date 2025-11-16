@@ -1,10 +1,4 @@
 # Support StackShift Development
 
-# Primary funding (once Ko-fi is set up)
-ko_fi: YOUR_KOFI_USERNAME  # Replace with your Ko-fi username
-
-# Future: GitHub Sponsors (once approved)
-# github: jschulte
-
-# Optional: Add custom link
-custom: ["https://github.com/jschulte/stackshift#support"]
+github: jschulte
+ko_fi: jschulte
