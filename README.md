@@ -11,6 +11,13 @@ Transform any application into a fully-specified, spec-driven project with compl
   <a href="https://ko-fi.com/jschulte"><img src="https://img.shields.io/badge/Support-Ko--fi-ff5e5b?style=for-the-badge&logo=ko-fi&logoColor=white" alt="Ko-fi"></a>
 </p>
 
+<p>
+  <a href="https://github.com/jschulte/stackshift/actions/workflows/ci.yml"><img src="https://github.com/jschulte/stackshift/actions/workflows/ci.yml/badge.svg" alt="CI Status"></a>
+  <a href="https://github.com/jschulte/stackshift/blob/main/LICENSE"><img src="https://img.shields.io/badge/License-MIT-blue.svg" alt="License"></a>
+  <img src="https://img.shields.io/badge/Node.js-%3E%3D18.0.0-green" alt="Node.js">
+  <img src="https://img.shields.io/badge/TypeScript-5.3.0-blue" alt="TypeScript">
+</p>
+
 </div>
 
 > **Two paths, complete control:**
