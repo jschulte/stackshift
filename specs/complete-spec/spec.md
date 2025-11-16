@@ -6,7 +6,7 @@
 **Route**: Brownfield
 
 ## Overview
-Resolves `[NEEDS CLARIFICATION]` markers interactively to ensure specifications are fully actionable before implementation.
+Resolves `[NEEDS CLARIFICATION]` markers to ensure specifications are fully actionable before implementation. Supports two strategies: **interactive** (ask user) or **defer** (document and continue with defaults).
 
 ## User Stories
 
@@ -28,6 +28,17 @@ Resolves `[NEEDS CLARIFICATION]` markers interactively to ensure specifications 
 - ❌ Unit tests (0% coverage)
 
 **Required Tests**: ~2 hours
+
+## Cruise Control Execution (2025-11-16)
+
+**Strategy Used**: Defer (per configuration)
+
+**Output**: `docs/clarifications-deferred.md` (140 lines)
+- Documented 5 deferred clarifications with reasonable defaults
+- Updated constitution with deferred clarifications section
+- All defaults are production-ready and can be adjusted later
+
+**Result**: ✅ Specifications actionable with defaults, implementation can proceed
 
 ---
 

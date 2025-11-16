@@ -275,6 +275,23 @@ Scopes: gear-1 through gear-6, mcp-server, plugin, security, tests
 
 ---
 
+## Deferred Clarifications
+
+During specification completion (Gear 5), several clarifications were identified and **deferred** per cruise control configuration (`clarifications_strategy: defer`). These decisions use reasonable defaults and can be revisited later without affecting core functionality.
+
+**Reference**: See `docs/clarifications-deferred.md` for full details
+
+**Key Deferred Items**:
+1. **Test Coverage Target**: Proceeding with 80% (vs 90% alternative)
+2. **CI/CD Platform**: Proceeding with GitHub Actions (vs alternatives)
+3. **npm Registry**: Deferring publication decision
+4. **ESLint Configuration**: Proceeding with @typescript-eslint/recommended
+5. **Prettier Configuration**: Proceeding with defaults
+
+**Impact**: Low - all defaults are production-ready and can be adjusted later
+
+---
+
 ## Success Metrics
 
 ### Business KPIs

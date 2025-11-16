@@ -6,8 +6,8 @@
     "clarifications": "defer",
     "implementation_scope": "p0_p1"
   },
-  "currentStep": 5,
-  "currentGear": "complete-spec",
+  "currentStep": 6,
+  "currentGear": "implement",
   "gears": {
     "1-analyze": {
       "status": "completed",
@@ -34,12 +34,16 @@
       "output": "docs/gap-analysis-report.md"
     },
     "5-complete-spec": {
-      "status": "in_progress",
-      "started": "2025-11-16T10:40:00Z"
+      "status": "completed",
+      "started": "2025-11-16T10:40:00Z",
+      "completed": "2025-11-16T10:45:00Z",
+      "output": "docs/clarifications-deferred.md + constitution updated"
     },
     "6-implement": {
-      "status": "pending"
+      "status": "in_progress",
+      "started": "2025-11-16T10:45:00Z",
+      "scope": "p0_p1"
     }
   },
-  "lastUpdated": "2025-11-16T10:40:00Z"
+  "lastUpdated": "2025-11-16T10:45:00Z"
 }
