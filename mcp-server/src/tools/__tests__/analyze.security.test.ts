@@ -106,8 +106,9 @@ describe('Analyze Tool - Security Tests', () => {
     });
 
     it('should reject access to parent directories', async () => {
+      // Go up two levels to escape /tmp (which is allowed in test mode)
       await expect(
-        analyzeToolHandler({ directory: path.join(testDir, '..') })
+        analyzeToolHandler({ directory: path.join(testDir, '../..') })
       ).rejects.toThrow(/outside allowed workspace/);
     });
   });
@@ -230,7 +231,8 @@ describe('Analyze Tool - Security Tests', () => {
       await fs.writeFile(path.join(testDir, 'test2.spec.ts'), 'test');
 
       const result = await analyzeToolHandler({ directory: testDir });
-      expect(result.content[0].text).toMatch(/Tests:\s+~\d+%/);
+      // Match the markdown-formatted output: - **Tests:** ~10%
+      expect(result.content[0].text).toMatch(/\*\*Tests:\*\*\s+~\d+%/);
     });
 
     it('should handle large numbers of files without DoS', async () => {

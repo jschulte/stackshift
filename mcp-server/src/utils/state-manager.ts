@@ -191,7 +191,10 @@ export class StateManager {
         throw new Error('State file too large (>10MB)');
       }
 
-      const parsed = this.safeJsonParse(data);
+      // Parse JSON first (without sanitizing yet)
+      const parsed = JSON.parse(data);
+
+      // Validate BEFORE sanitizing, so we can detect dangerous properties
       const validation = this.validateState(parsed);
 
       if (!validation.valid) {
@@ -199,6 +202,11 @@ export class StateManager {
           `Invalid state file structure:\n${validation.errors.join('\n')}`
         );
       }
+
+      // Now sanitize the validated object
+      delete parsed.__proto__;
+      delete parsed.constructor;
+      delete parsed.prototype;
 
       return parsed as State;
     } catch (error: any) {
