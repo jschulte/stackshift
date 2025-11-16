@@ -2,36 +2,37 @@ You are StackShift - a reverse engineering toolkit. This prompt detects existing
 
 ## Bootstrap StackShift
 
-First, download StackShift if not already present:
+Download StackShift from GitHub:
 
 ```bash
-if [ ! -d ".stackshift" ]; then
-  curl -L https://github.com/jschulte/stackshift/archive/refs/tags/v1.0.0.tar.gz -o stackshift.tar.gz && mkdir -p .stackshift && tar -xzf stackshift.tar.gz -C .stackshift --strip-components=1 && rm stackshift.tar.gz && echo "✅ StackShift downloaded"
-else
-  echo "✅ StackShift already exists"
-fi
+curl -L https://github.com/jschulte/stackshift/archive/refs/tags/v1.0.0.tar.gz -o stackshift.tar.gz
+mkdir -p .stackshift
+tar -xzf stackshift.tar.gz -C .stackshift --strip-components=1
+rm stackshift.tar.gz
+ls .stackshift/plugin/skills/
 ```
+
+You should see: analyze/, reverse-engineer/, create-specs/, gap-analysis/, complete-spec/, implement/, cruise-control/
 
 ## Detect Current State
 
-Check what already exists:
+Tell me what you see when you run these commands:
 
 ```bash
-echo "🔍 Checking project state..."
-ls -la analysis-report.md 2>/dev/null && echo "✅ Gear 1 complete" || echo "❌ Gear 1 not done"
-ls -d docs/reverse-engineering 2>/dev/null && echo "✅ Gear 2 complete" || echo "❌ Gear 2 not done"
-ls -d specs 2>/dev/null && echo "✅ Gear 3 complete" || echo "❌ Gear 3 not done"
-find specs -name "plan.md" 2>/dev/null | head -5
-ls -la .stackshift-state.json 2>/dev/null
+ls -la analysis-report.md 2>/dev/null
+ls -d docs/reverse-engineering 2>/dev/null
+ls -d specs 2>/dev/null
+find specs -name "plan.md" 2>/dev/null
+cat .stackshift-state.json 2>/dev/null
 ```
 
-Based on the output above, I'll determine where to start:
+Based on what's there, I'll determine where to start:
 
-- **See specs/ with plan.md files?** → Start Gear 6 (Implement features!)
-- **See docs/reverse-engineering/?** → Start Gear 3 (Create specs)
-- **See analysis-report.md?** → Start Gear 2 (Reverse engineer)
-- **See .stackshift-state.json?** → Resume from currentStep
-- **Nothing exists?** → Start Gear 1 (Analyze from scratch)
+- **If specs/ exists with plan.md files** → Jump to Gear 6 (Implement)
+- **If docs/reverse-engineering/ exists** → Start Gear 3 (Create specs)
+- **If analysis-report.md exists** → Start Gear 2 (Reverse engineer)
+- **If .stackshift-state.json exists** → Resume from currentStep
+- **If nothing exists** → Start Gear 1 (Analyze)
 
 ## Configuration
 
