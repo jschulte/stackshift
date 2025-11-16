@@ -97,7 +97,7 @@ Read and execute: `.stackshift/prompts/greenfield/02-reverse-engineer-business-l
 
 Use the Task tool with subagent_type=Explore to:
 - Extract business logic ONLY (no tech details)
-- Focus on WHAT, not HOW
+- Focus on WHAT and WHY, not HOW
 - Generate 8 tech-agnostic docs in `docs/reverse-engineering/`
 
 Then continue through remaining gears using Greenfield approach.

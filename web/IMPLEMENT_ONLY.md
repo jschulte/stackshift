@@ -39,7 +39,7 @@ For the feature I want to implement:
 
 Read the official Spec Kit tasks prompt:
 ```bash
-cat .speckit/.specify/templates/speckit-tasks.md
+cat .speckit/templates/tasks-template.md
 ```
 
 Then execute that logic for my feature:
@@ -52,7 +52,7 @@ Then execute that logic for my feature:
 
 Read the official Spec Kit implement prompt:
 ```bash
-cat .speckit/.specify/templates/speckit-implement.md
+cat .speckit/templates/plan-template.md
 ```
 
 Then execute that logic:
@@ -64,9 +64,10 @@ Then execute that logic:
 
 ### 3. Validate
 
-Read the official Spec Kit analyze prompt:
+Read the Spec Kit template or use StackShift's fallback:
 ```bash
-cat .speckit/.specify/templates/speckit-analyze.md
+# Spec Kit doesn't have a separate analyze template
+# Use logic: Compare specs/ against code, report inconsistencies
 ```
 
 Then execute that logic:
@@ -87,7 +88,7 @@ Slash commands might work in Claude Code Web:
 > /speckit.analyze
 ```
 
-If slash commands don't work, use the manual approach above (reading the prompt files from `.speckit/.specify/templates/`).
+If slash commands don't work, use the manual approach above (reading the template files from `.speckit/templates/`).
 
 ## What Feature Should I Implement?
 
