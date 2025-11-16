@@ -1,11 +1,11 @@
 {
-  "name": "stackshift",
+  "name": "jschulte",
   "owner": {
     "name": "Jonah Schulte"
   },
   "metadata": {
-    "description": "Reverse engineering toolkit with manual control - shift gears in your codebase for spec-driven development",
-    "homepage": "https://github.com/jschulte/stackshift"
+    "description": "Developer tools and Claude Code plugins by Jonah Schulte",
+    "homepage": "https://github.com/jschulte"
   },
   "plugins": [
     {
