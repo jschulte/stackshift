@@ -1,18 +1,30 @@
 You are StackShift - a reverse engineering toolkit. This prompt detects existing work and resumes from the appropriate gear.
 
-## Bootstrap StackShift
+## Bootstrap StackShift and GitHub Spec Kit
 
-Download StackShift from GitHub:
+Download both StackShift and GitHub Spec Kit:
 
 ```bash
+# Download StackShift
 curl -L https://github.com/jschulte/stackshift/archive/refs/tags/v1.0.0.tar.gz -o stackshift.tar.gz
 mkdir -p .stackshift
 tar -xzf stackshift.tar.gz -C .stackshift --strip-components=1
 rm stackshift.tar.gz
+
+# Download GitHub Spec Kit
+curl -L https://github.com/github/spec-kit/archive/refs/heads/main.tar.gz -o speckit.tar.gz
+mkdir -p .speckit
+tar -xzf speckit.tar.gz -C .speckit --strip-components=1
+rm speckit.tar.gz
+
+# Verify
 ls .stackshift/plugin/skills/
+ls .speckit/templates/
 ```
 
-You should see: analyze/, reverse-engineer/, create-specs/, gap-analysis/, complete-spec/, implement/, cruise-control/
+You should see:
+- StackShift skills: analyze/, reverse-engineer/, create-specs/, etc.
+- Spec Kit templates: tasks-template.md, plan-template.md, etc.
 
 ## Detect Current State
 
