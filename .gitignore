@@ -4,3 +4,7 @@ dist/
 .DS_Store
 mcp-server/dist/
 mcp-server/node_modules/
+
+# Downloaded toolkits
+.stackshift/
+.speckit/
