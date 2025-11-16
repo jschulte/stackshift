@@ -91,8 +91,8 @@ git merge <branch-name>
 
 **Or continue in Web:**
 
-- Use `/speckit.tasks` and `/speckit.implement` for more features
-- Or paste WEB_BOOTSTRAP.md again to implement more!
+- Paste WEB_BOOTSTRAP.md again - it resumes from where you left off
+- Use `/speckit.tasks` and `/speckit.implement` for more features (if available)
 
 ---
 
