@@ -2,15 +2,26 @@
 
 <img src="public/stackshift-logo.png" alt="StackShift" width="400">
 
-# StackShift
+**A reverse engineering toolkit that lets you shift gears in your codebase.**
 
-**A reverse engineering toolkit that lets you shift gears smoothly in your codebase.**
+Transform any application into a fully-specified, spec-driven project with complete control - whether you're shifting to a new tech stack or taking the wheel on existing code.
 
-Transform any application into a fully-specified, Google spec kit spec-driven project with complete control - whether you're shifting to a new tech stack or taking the wheel on existing code.
+<p>
+  <a href="https://github.com/sponsors/jschulte"><img src="https://img.shields.io/badge/Sponsor-GitHub-ea4aaa?style=for-the-badge&logo=github" alt="GitHub Sponsors"></a>
+  <a href="https://ko-fi.com/jschulte"><img src="https://img.shields.io/badge/Support-Ko--fi-ff5e5b?style=for-the-badge&logo=ko-fi&logoColor=white" alt="Ko-fi"></a>
+</p>
 
 </div>
 
-> Like a stick shift puts you in control, StackShift gives you complete control over your codebase transformation. Start in reverse (engineering), shift like butter through the 6 gears of modernization, and cruise into spec-driven development.
+> **Two paths, complete control:**
+>
+> **🔀 Greenfield:** Extract business logic from your legacy app, then rebuild in a modern stack using tech-agnostic specs.
+>
+> **⚙️ Brownfield:** Transform your existing codebase into a spec-driven project and manage it with GitHub Spec Kit going forward.
+>
+> Start in reverse (engineering), shift through 6 gears, and cruise into spec-driven development!
+>
+> *Free and open source. [Support development](https://github.com/sponsors/jschulte) to keep the gears turning!* ☕🚗
 
 ---
 
