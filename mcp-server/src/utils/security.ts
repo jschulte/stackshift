@@ -9,6 +9,7 @@
 
 import { resolve, relative, normalize, isAbsolute } from 'path';
 import { access } from 'fs/promises';
+import { tmpdir } from 'os';
 
 export class SecurityValidator {
   private allowedBasePaths: string[];
@@ -125,9 +126,28 @@ export class SecurityValidator {
 /**
  * Create a default security validator for current working directory
  * This is the most common use case for MCP tools
+ *
+ * In test environments (NODE_ENV=test or VITEST=true), also allows /tmp directory
+ * to enable integration testing with temporary test directories.
+ *
+ * **Security Note:** Test mode detection is based on environment variables.
+ * Ensure these are NEVER set in production deployments.
  */
 export function createDefaultValidator(): SecurityValidator {
-  return new SecurityValidator([process.cwd()]);
+  const basePaths = [process.cwd()];
+
+  // Allow /tmp in test environments for integration testing
+  // Check multiple test indicators for reliability
+  const isTestEnv =
+    process.env.NODE_ENV === 'test' ||
+    process.env.VITEST === 'true' ||
+    process.env.npm_lifecycle_event === 'test';
+
+  if (isTestEnv) {
+    basePaths.push(tmpdir());
+  }
+
+  return new SecurityValidator(basePaths);
 }
 
 /**

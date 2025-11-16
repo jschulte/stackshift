@@ -70,8 +70,12 @@ export class StateManager {
   private validateState(data: any): ValidationResult {
     const errors: string[] = [];
 
-    // Check for prototype pollution
-    if ('__proto__' in data || 'constructor' in data || 'prototype' in data) {
+    // Check for prototype pollution - only check own properties, not inherited
+    if (
+      Object.prototype.hasOwnProperty.call(data, '__proto__') ||
+      Object.prototype.hasOwnProperty.call(data, 'constructor') ||
+      Object.prototype.hasOwnProperty.call(data, 'prototype')
+    ) {
       errors.push('State contains dangerous properties (__proto__, constructor, prototype)');
     }
 

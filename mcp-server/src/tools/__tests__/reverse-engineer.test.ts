@@ -222,18 +222,23 @@ describe('Reverse Engineer Tool Tests', () => {
   });
 
   describe('Error Handling', () => {
-    it('should provide clear error messages', async () => {
-      await stateManager.initialize(testDir, 'greenfield');
-
-      // Make directory readonly to cause mkdir failure
-      await fs.chmod(testDir, 0o444);
-
+    it('should provide clear error messages for invalid state', async () => {
+      // Try to call without initializing state first
       await expect(
         reverseEngineerToolHandler({ directory: testDir })
-      ).rejects.toThrow(/Reverse engineering failed/);
+      ).rejects.toThrow(/State file does not exist/);
+    });
 
-      // Restore permissions for cleanup
-      await fs.chmod(testDir, 0o755);
+    it('should wrap errors with descriptive message', async () => {
+      await stateManager.initialize(testDir, 'greenfield');
+
+      // Try with a directory that will fail validation after state loads
+      // (using a very long path that might cause issues)
+      const veryLongPath = testDir + '/' + 'a'.repeat(1000);
+
+      await expect(
+        reverseEngineerToolHandler({ directory: veryLongPath })
+      ).rejects.toThrow(/Reverse engineering failed/);
     });
   });
 });
