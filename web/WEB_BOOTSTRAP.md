@@ -1,113 +1,61 @@
 You are StackShift - a reverse engineering toolkit. This prompt detects existing work and resumes from the appropriate gear.
 
-## Bootstrap StackShift (Idempotent)
+## Bootstrap StackShift
+
+First, download StackShift if not already present:
 
 ```bash
-# Download StackShift only if needed
 if [ ! -d ".stackshift" ]; then
-  echo "📥 Downloading StackShift v1.0.0..."
-  curl -L https://github.com/jschulte/stackshift/archive/refs/tags/v1.0.0.tar.gz -o stackshift.tar.gz
-  mkdir -p .stackshift
-  tar -xzf stackshift.tar.gz -C .stackshift --strip-components=1
-  rm stackshift.tar.gz
-  echo "✅ StackShift ready at .stackshift/"
+  curl -L https://github.com/jschulte/stackshift/archive/refs/tags/v1.0.0.tar.gz -o stackshift.tar.gz && mkdir -p .stackshift && tar -xzf stackshift.tar.gz -C .stackshift --strip-components=1 && rm stackshift.tar.gz && echo "✅ StackShift downloaded"
 else
   echo "✅ StackShift already exists"
 fi
-
-# Detect current state
-echo ""
-echo "🔍 Detecting current state..."
-[ -f ".stackshift-state.json" ] && echo "📊 State file exists"
-[ -f "analysis-report.md" ] && echo "✅ Gear 1 complete (Analysis)"
-[ -d "docs/reverse-engineering" ] && echo "✅ Gear 2 complete (Docs)"
-[ -d "specs" ] && [ "$(ls -A specs 2>/dev/null)" ] && echo "✅ Gear 3 complete (Specs: $(ls specs | wc -l) features)"
-[ -f "docs/gap-analysis-report.md" ] && echo "✅ Gear 4 complete (Gap analysis)"
-
-# Determine starting point
-if [ -d "specs" ] && find specs -name "plan.md" -quit 2>/dev/null; then
-  echo ""
-  echo "🚀 Ready for Gear 6: Implementation"
-  echo "Found specs with plans - jumping to implementation!"
-  RESUME_FROM="implement"
-elif [ -d "docs/reverse-engineering" ]; then
-  echo ""
-  echo "📋 Ready for Gear 3: Create Specifications"
-  RESUME_FROM="create-specs"
-elif [ -f "analysis-report.md" ]; then
-  echo ""
-  echo "🔄 Ready for Gear 2: Reverse Engineer"
-  RESUME_FROM="reverse-engineer"
-elif [ -f ".stackshift-state.json" ]; then
-  CURRENT=$(grep -o '"currentStep":"[^"]*"' .stackshift-state.json | cut -d'"' -f4)
-  echo ""
-  echo "📊 Resume from state: $CURRENT"
-  RESUME_FROM="$CURRENT"
-else
-  echo ""
-  echo "🔍 Starting from Gear 1: Analyze"
-  RESUME_FROM="analyze"
-fi
-
-echo "Starting point: $RESUME_FROM"
 ```
+
+## Detect Current State
+
+Check what already exists:
+
+```bash
+echo "🔍 Checking project state..."
+ls -la analysis-report.md 2>/dev/null && echo "✅ Gear 1 complete" || echo "❌ Gear 1 not done"
+ls -d docs/reverse-engineering 2>/dev/null && echo "✅ Gear 2 complete" || echo "❌ Gear 2 not done"
+ls -d specs 2>/dev/null && echo "✅ Gear 3 complete" || echo "❌ Gear 3 not done"
+find specs -name "plan.md" 2>/dev/null | head -5
+ls -la .stackshift-state.json 2>/dev/null
+```
+
+Based on the output above, I'll determine where to start:
+
+- **See specs/ with plan.md files?** → Start Gear 6 (Implement features!)
+- **See docs/reverse-engineering/?** → Start Gear 3 (Create specs)
+- **See analysis-report.md?** → Start Gear 2 (Reverse engineer)
+- **See .stackshift-state.json?** → Resume from currentStep
+- **Nothing exists?** → Start Gear 1 (Analyze from scratch)
 
 ## Configuration
 
-Ask only what's needed based on starting point:
+I'll ask only what's needed based on starting point.
 
-**If RESUME_FROM = "implement":**
-- Which feature to implement? (list available)
-- Or implement all PARTIAL/MISSING in priority order?
+**Starting from Gear 6 (implement)?**
+- Which feature to implement?
 
-**If RESUME_FROM = "analyze" (fresh start):**
-- Route (Greenfield/Brownfield)
-- Mode (Manual/Cruise Control)
-- Clarifications strategy (if Cruise)
-- Implementation scope (if Cruise)
-- Target stack (if Greenfield)
+**Starting from Gear 1 (fresh)?**
+- Route, Mode, Clarifications, Scope, Target Stack
 
-**If RESUME_FROM = other:**
+**Resuming mid-process?**
 - Check state file for existing config
-- Ask only missing configuration items
 
-## Execute from Starting Point
+## Execute from Appropriate Gear
 
-### Gear 6: Implement (if specs exist)
+I'll read the corresponding SKILL.md file from `.stackshift/plugin/skills/` and follow those detailed instructions.
 
-Read complete instructions: `.stackshift/plugin/skills/implement/SKILL.md`
-
-**For each feature:**
-1. Check for `tasks.md` - generate if missing (from `plan.md`)
-2. Read `spec.md` (acceptance criteria)
-3. Execute tasks one by one
-4. Update spec status to ✅ COMPLETE
-5. Commit
-
-### Gear 3: Create Specs (if docs exist)
-
-Read: `.stackshift/plugin/skills/create-specs/SKILL.md`
-
-Generate `specs/FEATURE-ID/` directories with spec.md and plan.md
-
-### Gear 2: Reverse Engineer (if analysis exists)
-
-Read: `.stackshift/plugin/skills/reverse-engineer/SKILL.md`
-
-Generate 8 docs in `docs/reverse-engineering/`
-
-### Gear 1: Analyze (fresh start)
-
-Read: `.stackshift/plugin/skills/analyze/SKILL.md`
-
-Detect tech stack, assess completeness, generate `analysis-report.md`
+Each SKILL.md has complete step-by-step instructions, templates, and examples.
 
 ## Progress Tracking
 
-Update `.stackshift-state.json` after each gear.
-
-Commit after significant steps.
+I'll update `.stackshift-state.json` as I complete each gear and commit changes to the branch.
 
 ## Ready!
 
-Detecting current state and resuming from appropriate gear... 🚗
+Let me detect the current state and start from the appropriate gear... 🚗💨
