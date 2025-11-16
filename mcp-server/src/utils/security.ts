@@ -9,6 +9,7 @@
 
 import { resolve, relative, normalize, isAbsolute } from 'path';
 import { access } from 'fs/promises';
+import { tmpdir } from 'os';
 
 export class SecurityValidator {
   private allowedBasePaths: string[];
@@ -32,9 +33,7 @@ export class SecurityValidator {
   validateDirectory(directory: string): string {
     // Check for shell metacharacters that could enable command injection
     if (/[;&|`$(){}[\]<>\\!]/.test(directory)) {
-      throw new Error(
-        `Invalid directory path: contains shell metacharacters`
-      );
+      throw new Error(`Invalid directory path: contains shell metacharacters`);
     }
 
     // Resolve to absolute normalized path
@@ -53,7 +52,7 @@ export class SecurityValidator {
     if (!isAllowed) {
       throw new Error(
         `Directory access denied: "${directory}" is outside allowed workspace. ` +
-        `Allowed paths: ${this.allowedBasePaths.join(', ')}`
+          `Allowed paths: ${this.allowedBasePaths.join(', ')}`
       );
     }
 
@@ -75,9 +74,7 @@ export class SecurityValidator {
 
     // Check filename for shell metacharacters
     if (/[;&|`$(){}[\]<>\\!]/.test(filename)) {
-      throw new Error(
-        `Invalid filename: contains shell metacharacters`
-      );
+      throw new Error(`Invalid filename: contains shell metacharacters`);
     }
 
     // Resolve file path
@@ -86,9 +83,7 @@ export class SecurityValidator {
     // Ensure file is still within validated directory
     const rel = relative(validDir, filePath);
     if (rel.startsWith('..') || isAbsolute(rel)) {
-      throw new Error(
-        `File path escapes directory: "${filename}"`
-      );
+      throw new Error(`File path escapes directory: "${filename}"`);
     }
 
     return filePath;
@@ -125,9 +120,28 @@ export class SecurityValidator {
 /**
  * Create a default security validator for current working directory
  * This is the most common use case for MCP tools
+ *
+ * In test environments (NODE_ENV=test or VITEST=true), also allows /tmp directory
+ * to enable integration testing with temporary test directories.
+ *
+ * **Security Note:** Test mode detection is based on environment variables.
+ * Ensure these are NEVER set in production deployments.
  */
 export function createDefaultValidator(): SecurityValidator {
-  return new SecurityValidator([process.cwd()]);
+  const basePaths = [process.cwd()];
+
+  // Allow /tmp in test environments for integration testing
+  // Check multiple test indicators for reliability
+  const isTestEnv =
+    process.env.NODE_ENV === 'test' ||
+    process.env.VITEST === 'true' ||
+    process.env.npm_lifecycle_event === 'test';
+
+  if (isTestEnv) {
+    basePaths.push(tmpdir());
+  }
+
+  return new SecurityValidator(basePaths);
 }
 
 /**
@@ -146,9 +160,7 @@ export function validateRoute(route: unknown): 'greenfield' | 'brownfield' | nul
   }
 
   if (route !== 'greenfield' && route !== 'brownfield') {
-    throw new Error(
-      `Invalid route: "${route}". Must be "greenfield" or "brownfield"`
-    );
+    throw new Error(`Invalid route: "${route}". Must be "greenfield" or "brownfield"`);
   }
 
   return route;
@@ -157,9 +169,7 @@ export function validateRoute(route: unknown): 'greenfield' | 'brownfield' | nul
 /**
  * Validate clarifications strategy
  */
-export function validateClarificationsStrategy(
-  strategy: unknown
-): 'defer' | 'prompt' | 'skip' {
+export function validateClarificationsStrategy(strategy: unknown): 'defer' | 'prompt' | 'skip' {
   if (typeof strategy !== 'string') {
     throw new Error(
       `Invalid clarifications_strategy type: expected string, got ${typeof strategy}`
@@ -178,13 +188,9 @@ export function validateClarificationsStrategy(
 /**
  * Validate implementation scope
  */
-export function validateImplementationScope(
-  scope: unknown
-): 'none' | 'p0' | 'p0_p1' | 'all' {
+export function validateImplementationScope(scope: unknown): 'none' | 'p0' | 'p0_p1' | 'all' {
   if (typeof scope !== 'string') {
-    throw new Error(
-      `Invalid implementation_scope type: expected string, got ${typeof scope}`
-    );
+    throw new Error(`Invalid implementation_scope type: expected string, got ${typeof scope}`);
   }
 
   if (!['none', 'p0', 'p0_p1', 'all'].includes(scope)) {

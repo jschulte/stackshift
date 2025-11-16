@@ -56,7 +56,9 @@ specify init <project-name> --ai claude
 
 ### Step 2: Generate Constitution
 
-${route === 'greenfield' ? `
+${
+  route === 'greenfield'
+    ? `
 **Using:** Tech-Agnostic Template
 
 Create \`.specify/memory/constitution.md\` with:
@@ -66,7 +68,8 @@ Create \`.specify/memory/constitution.md\` with:
 - Quality standards (goals, not implementation)
 
 **Template:** \`plugin/templates/constitution-agnostic-template.md\`
-` : `
+`
+    : `
 **Using:** Tech-Prescriptive Template
 
 Create \`.specify/memory/constitution.md\` with:
@@ -77,7 +80,8 @@ Create \`.specify/memory/constitution.md\` with:
 - Dependency management policy
 
 **Template:** \`plugin/templates/constitution-prescriptive-template.md\`
-`}
+`
+}
 
 ### Step 3: Generate Feature Specifications
 
@@ -135,6 +139,8 @@ Then run: \`/speckit.analyze\` to validate specs
       ],
     };
   } catch (error) {
-    throw new Error(`Spec creation failed: ${error instanceof Error ? error.message : String(error)}`);
+    throw new Error(
+      `Spec creation failed: ${error instanceof Error ? error.message : String(error)}`
+    );
   }
 }

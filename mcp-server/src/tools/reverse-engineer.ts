@@ -41,7 +41,9 @@ export async function reverseEngineerToolHandler(args: ReverseEngineerArgs) {
 
 ## Route: ${route === 'greenfield' ? 'Greenfield (Business Logic Only)' : 'Brownfield (Full Stack)'}
 
-${route === 'greenfield' ? `
+${
+  route === 'greenfield'
+    ? `
 ### Extraction Focus: Business Logic Only
 
 Extracting:
@@ -57,7 +59,8 @@ Avoiding:
 ❌ File paths and code structure
 
 **Output:** Tech-agnostic specifications that can be implemented in any stack
-` : `
+`
+    : `
 ### Extraction Focus: Full Stack
 
 Extracting:
@@ -69,7 +72,8 @@ Extracting:
 ✅ Configuration and environment variables
 
 **Output:** Prescriptive specifications that document current implementation
-`}
+`
+}
 
 ## Documentation Generated
 
@@ -110,6 +114,8 @@ or manual prompts in \`prompts/${route}/\` directory.
       ],
     };
   } catch (error) {
-    throw new Error(`Reverse engineering failed: ${error instanceof Error ? error.message : String(error)}`);
+    throw new Error(
+      `Reverse engineering failed: ${error instanceof Error ? error.message : String(error)}`
+    );
   }
 }

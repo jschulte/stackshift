@@ -4,3 +4,8 @@ dist/
 .DS_Store
 mcp-server/dist/
 mcp-server/node_modules/
+
+# Downloaded toolkits (session-specific)
+.stackshift/
+.speckit/
+.stackshift-state.json

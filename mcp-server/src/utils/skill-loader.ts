@@ -14,7 +14,12 @@ import * as path from 'path';
 export async function loadSkillFile(skillName: string): Promise<string | null> {
   const possiblePaths = [
     // If StackShift is installed locally
-    path.join(process.env.HOME || '~', '.claude/plugins/marketplaces/jschulte/stackshift/skills', skillName, 'SKILL.md'),
+    path.join(
+      process.env.HOME || '~',
+      '.claude/plugins/marketplaces/jschulte/stackshift/skills',
+      skillName,
+      'SKILL.md'
+    ),
 
     // If running from StackShift repo
     path.join(__dirname, '../../plugin/skills', skillName, 'SKILL.md'),

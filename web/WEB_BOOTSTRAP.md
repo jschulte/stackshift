@@ -26,6 +26,25 @@ You should see:
 - StackShift skills: analyze/, reverse-engineer/, create-specs/, etc.
 - Spec Kit templates: tasks-template.md, plan-template.md, etc.
 
+## Configure .gitignore
+
+Add StackShift working directories and state files to .gitignore (these are session-specific and should not be committed):
+
+```bash
+# Add to .gitignore if not already present
+echo -e "\n# StackShift working directories (session-specific)\n.stackshift/\n.speckit/\n.stackshift-state.json" >> .gitignore
+```
+
+Verify the entries were added:
+```bash
+tail -5 .gitignore
+```
+
+These files/directories should not be committed because:
+- `.stackshift/` - Downloaded toolkit, not part of your project
+- `.speckit/` - Downloaded templates, not part of your project
+- `.stackshift-state.json` - Session-specific state, only needed during active StackShift runs
+
 ## Detect Current State
 
 Tell me what you see when you run these commands:
@@ -68,6 +87,25 @@ Each SKILL.md has complete step-by-step instructions, templates, and examples.
 ## Progress Tracking
 
 I'll update `.stackshift-state.json` as I complete each gear and commit changes to the branch.
+
+## Cleanup Before Final Push
+
+**IMPORTANT:** Before your final commit and push, remove the scaffolding directories:
+
+```bash
+# Remove downloaded toolkits and session state
+rm -rf .stackshift .speckit .stackshift-state.json
+
+# Verify they're gone
+ls -la | grep -E '\.(stackshift|speckit)'
+```
+
+These directories contain only scaffolding (skills, templates, state tracking). Your actual project artifacts are in:
+- `docs/` - All documentation
+- `specs/` - All specifications
+- `analysis-report.md` - Analysis results
+
+The scaffolding is already in `.gitignore`, but explicitly removing it ensures a clean repository with only the meaningful project outputs.
 
 ## Ready!
 

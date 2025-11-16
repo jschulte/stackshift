@@ -28,7 +28,7 @@ export async function implementToolHandler(args: ImplementArgs) {
     const directory = validator.validateDirectory(args.directory || process.cwd());
 
     // SECURITY: Validate feature parameter
-    let feature: string | undefined = args.feature;
+    const feature: string | undefined = args.feature;
     if (feature !== undefined) {
       if (typeof feature !== 'string') {
         throw new Error(`Invalid feature parameter: must be a string`);
@@ -42,9 +42,7 @@ export async function implementToolHandler(args: ImplementArgs) {
 
       // Check for path traversal attempts in feature name
       if (feature.includes('..') || feature.includes('/') || feature.includes('\\')) {
-        throw new Error(
-          `Invalid feature name: cannot contain path separators or '..'`
-        );
+        throw new Error(`Invalid feature name: cannot contain path separators or '..'`);
       }
     }
 
@@ -57,7 +55,9 @@ export async function implementToolHandler(args: ImplementArgs) {
 
 ## Route: ${route === 'greenfield' ? 'Greenfield (Build New)' : 'Brownfield (Fill Gaps)'}
 
-${feature ? `
+${
+  feature
+    ? `
 ## Implementing Feature: ${feature}
 
 ### GitHub Spec Kit Workflow
@@ -86,12 +86,15 @@ ${feature ? `
 - Updates spec status: ❌ MISSING → ✅ COMPLETE
 - Commits changes
 
-` : `
+`
+    : `
 ## Implementation Process
 
 ### For ${route === 'greenfield' ? 'Greenfield' : 'Brownfield'} Route
 
-${route === 'greenfield' ? `
+${
+  route === 'greenfield'
+    ? `
 **Building in NEW tech stack:**
 
 1. Choose your stack (Next.js, Python/Flask, Go, etc.)
@@ -102,7 +105,8 @@ ${route === 'greenfield' ? `
    - \`> /speckit.analyze\` (validate)
 4. Implement ALL features from scratch
 5. Achieve 100% completion in chosen stack
-` : `
+`
+    : `
 **Filling gaps in existing stack:**
 
 1. Review prioritized roadmap (P0 → P1 → P2)
@@ -113,7 +117,8 @@ ${route === 'greenfield' ? `
 3. Complete PARTIAL features (finish what's started)
 4. Implement MISSING features
 5. Achieve 100% spec completion
-`}
+`
+}
 
 ### Systematic Implementation
 
@@ -136,7 +141,8 @@ Example:
 \`\`\`
 stackshift_implement({ feature: "user-authentication" })
 \`\`\`
-`}
+`
+}
 
 ## Completion Status
 
@@ -149,13 +155,17 @@ After all features implemented:
 
 ## Cruise Into Production! 🏁
 
-${route === 'greenfield' ? `
+${
+  route === 'greenfield'
+    ? `
 You've successfully built a new application from the business logic
 of your existing codebase using your chosen tech stack!
-` : `
+`
+    : `
 You've successfully brought your existing application under GitHub Spec Kit
 management. All features are spec-driven going forward!
-`}
+`
+}
 
 ### Ongoing Spec-Driven Development
 
@@ -193,6 +203,8 @@ Continue using GitHub Spec Kit:
       ],
     };
   } catch (error) {
-    throw new Error(`Implementation failed: ${error instanceof Error ? error.message : String(error)}`);
+    throw new Error(
+      `Implementation failed: ${error instanceof Error ? error.message : String(error)}`
+    );
   }
 }

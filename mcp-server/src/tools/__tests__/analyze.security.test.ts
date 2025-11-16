@@ -26,11 +26,15 @@ describe('Analyze Tool - Security Tests', () => {
     // Create a basic package.json for tech stack detection
     await fs.writeFile(
       path.join(testDir, 'package.json'),
-      JSON.stringify({
-        name: 'test-project',
-        version: '1.0.0',
-        dependencies: { react: '18.0.0' }
-      }, null, 2)
+      JSON.stringify(
+        {
+          name: 'test-project',
+          version: '1.0.0',
+          dependencies: { react: '18.0.0' },
+        },
+        null,
+        2
+      )
     );
   });
 
@@ -55,9 +59,9 @@ describe('Analyze Tool - Security Tests', () => {
       ];
 
       for (const maliciousDir of injectionAttempts) {
-        await expect(
-          analyzeToolHandler({ directory: maliciousDir })
-        ).rejects.toThrow(/shell metacharacters|outside allowed workspace/);
+        await expect(analyzeToolHandler({ directory: maliciousDir })).rejects.toThrow(
+          /shell metacharacters|outside allowed workspace/
+        );
       }
     });
 
@@ -65,12 +69,11 @@ describe('Analyze Tool - Security Tests', () => {
       // Attempt to inject command that would create a file
       const maliciousDir = '$(touch /tmp/pwned.txt)';
 
-      await expect(
-        analyzeToolHandler({ directory: maliciousDir })
-      ).rejects.toThrow();
+      await expect(analyzeToolHandler({ directory: maliciousDir })).rejects.toThrow();
 
       // Verify the command was not executed
-      const pwnedExists = await fs.access('/tmp/pwned.txt')
+      const pwnedExists = await fs
+        .access('/tmp/pwned.txt')
         .then(() => true)
         .catch(() => false);
 
@@ -89,16 +92,16 @@ describe('Analyze Tool - Security Tests', () => {
       ];
 
       for (const maliciousPath of traversalAttempts) {
-        await expect(
-          analyzeToolHandler({ directory: maliciousPath })
-        ).rejects.toThrow(/outside allowed workspace/);
+        await expect(analyzeToolHandler({ directory: maliciousPath })).rejects.toThrow(
+          /outside allowed workspace/
+        );
       }
     });
 
     it('should only allow access to current working directory', async () => {
       const result = await analyzeToolHandler({
         directory: testDir,
-        route: 'greenfield'
+        route: 'greenfield',
       });
 
       expect(result.content).toBeDefined();
@@ -106,21 +109,16 @@ describe('Analyze Tool - Security Tests', () => {
     });
 
     it('should reject access to parent directories', async () => {
-      await expect(
-        analyzeToolHandler({ directory: path.join(testDir, '..') })
-      ).rejects.toThrow(/outside allowed workspace/);
+      // Go up two levels to escape /tmp (which is allowed in test mode)
+      await expect(analyzeToolHandler({ directory: path.join(testDir, '../..') })).rejects.toThrow(
+        /outside allowed workspace/
+      );
     });
   });
 
   describe('Input Validation', () => {
     it('should reject invalid route values', async () => {
-      const invalidRoutes = [
-        'invalid',
-        'GREENFIELD',
-        '../../etc',
-        '$(whoami)',
-        'greyfield',
-      ];
+      const invalidRoutes = ['invalid', 'GREENFIELD', '../../etc', '$(whoami)', 'greyfield'];
 
       for (const route of invalidRoutes) {
         await expect(
@@ -144,9 +142,7 @@ describe('Analyze Tool - Security Tests', () => {
     });
 
     it('should reject non-string directory parameter', async () => {
-      await expect(
-        analyzeToolHandler({ directory: 123 as any })
-      ).rejects.toThrow();
+      await expect(analyzeToolHandler({ directory: 123 as any })).rejects.toThrow();
     });
   });
 
@@ -198,10 +194,7 @@ describe('Analyze Tool - Security Tests', () => {
   describe('Tech Stack Detection Security', () => {
     it('should safely handle malformed package.json', async () => {
       // Write malformed JSON
-      await fs.writeFile(
-        path.join(testDir, 'package.json'),
-        '{ invalid json }'
-      );
+      await fs.writeFile(path.join(testDir, 'package.json'), '{ invalid json }');
 
       // Should not crash, just return no tech stack detected
       const result = await analyzeToolHandler({ directory: testDir });
@@ -211,10 +204,14 @@ describe('Analyze Tool - Security Tests', () => {
     it('should handle package.json with dangerous properties', async () => {
       await fs.writeFile(
         path.join(testDir, 'package.json'),
-        JSON.stringify({
-          __proto__: { isAdmin: true },
-          dependencies: { react: '18.0.0' }
-        }, null, 2)
+        JSON.stringify(
+          {
+            __proto__: { isAdmin: true },
+            dependencies: { react: '18.0.0' },
+          },
+          null,
+          2
+        )
       );
 
       // Should still work without using dangerous properties
@@ -230,7 +227,8 @@ describe('Analyze Tool - Security Tests', () => {
       await fs.writeFile(path.join(testDir, 'test2.spec.ts'), 'test');
 
       const result = await analyzeToolHandler({ directory: testDir });
-      expect(result.content[0].text).toMatch(/Tests:\s+~\d+%/);
+      // Match the markdown-formatted output: - **Tests:** ~10%
+      expect(result.content[0].text).toMatch(/\*\*Tests:\*\*\s+~\d+%/);
     });
 
     it('should handle large numbers of files without DoS', async () => {

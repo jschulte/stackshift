@@ -1,0 +1,195 @@
+name: CI
+
+on:
+  push:
+    branches: [ main, develop, 'claude/**' ]
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  test:
+    name: Test & Build
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [18.x, 20.x]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+          cache-dependency-path: mcp-server/package-lock.json
+
+      - name: Install dependencies
+        working-directory: ./mcp-server
+        run: npm ci
+
+      - name: Run TypeScript compiler
+        working-directory: ./mcp-server
+        run: npx tsc --noEmit
+
+      - name: Run tests
+        working-directory: ./mcp-server
+        run: npm test
+
+      - name: Run tests with coverage
+        working-directory: ./mcp-server
+        run: npm run test:coverage
+        if: matrix.node-version == '20.x'
+
+      - name: Upload coverage reports
+        uses: codecov/codecov-action@v4
+        if: matrix.node-version == '20.x'
+        with:
+          directory: ./mcp-server/coverage
+          flags: mcp-server
+          fail_ci_if_error: false
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+
+      - name: Build
+        working-directory: ./mcp-server
+        run: npm run build
+
+      - name: Security audit
+        working-directory: ./mcp-server
+        run: npm audit --audit-level=high
+        continue-on-error: true
+
+  lint:
+    name: Lint & Format Check
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+          cache: 'npm'
+          cache-dependency-path: mcp-server/package-lock.json
+
+      - name: Install dependencies
+        working-directory: ./mcp-server
+        run: npm ci
+
+      - name: Check TypeScript types
+        working-directory: ./mcp-server
+        run: npx tsc --noEmit
+
+      - name: Run ESLint (if configured)
+        working-directory: ./mcp-server
+        run: |
+          if [ -f ".eslintrc.js" ] || [ -f ".eslintrc.json" ] || grep -q "eslintConfig" package.json; then
+            npm run lint || echo "ESLint not configured yet"
+          else
+            echo "ESLint not configured - skipping"
+          fi
+        continue-on-error: true
+
+      - name: Check Prettier formatting (if configured)
+        working-directory: ./mcp-server
+        run: |
+          if [ -f ".prettierrc" ] || [ -f ".prettierrc.json" ] || grep -q "prettier" package.json; then
+            npm run format:check || echo "Prettier not configured yet"
+          else
+            echo "Prettier not configured - skipping"
+          fi
+        continue-on-error: true
+
+  validate-state:
+    name: Validate StackShift State
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Validate state file
+        run: |
+          if [ -f ".stackshift-state.json" ]; then
+            echo "Validating .stackshift-state.json..."
+            cat .stackshift-state.json | jq empty && echo "✅ Valid JSON"
+          else
+            echo "No state file found - skipping validation"
+          fi
+
+  security:
+    name: Security Scan
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+
+      - name: Install dependencies
+        working-directory: ./mcp-server
+        run: npm ci
+
+      - name: Run npm audit
+        working-directory: ./mcp-server
+        run: npm audit --audit-level=moderate
+        continue-on-error: true
+
+      - name: Check for known vulnerabilities
+        working-directory: ./mcp-server
+        run: |
+          echo "Checking for security vulnerabilities..."
+          npm audit --json > audit-results.json || true
+
+          HIGH_COUNT=$(cat audit-results.json | jq '.metadata.vulnerabilities.high // 0')
+          CRITICAL_COUNT=$(cat audit-results.json | jq '.metadata.vulnerabilities.critical // 0')
+
+          echo "Critical: $CRITICAL_COUNT, High: $HIGH_COUNT"
+
+          if [ "$CRITICAL_COUNT" -gt "0" ]; then
+            echo "❌ Critical vulnerabilities found!"
+            exit 1
+          elif [ "$HIGH_COUNT" -gt "0" ]; then
+            echo "⚠️  High severity vulnerabilities found"
+            exit 1
+          else
+            echo "✅ No critical or high severity vulnerabilities"
+          fi
+        continue-on-error: true
+
+  build-plugin:
+    name: Validate Claude Code Plugin
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Validate plugin structure
+        run: |
+          echo "Validating Claude Code plugin structure..."
+
+          # Check for required plugin files
+          [ -f "plugin/.claude-plugin/plugin.json" ] && echo "✅ plugin.json found" || echo "❌ plugin.json missing"
+
+          # Validate plugin.json
+          if [ -f "plugin/.claude-plugin/plugin.json" ]; then
+            cat plugin/.claude-plugin/plugin.json | jq empty && echo "✅ Valid plugin.json"
+          fi
+
+          # Check for skills
+          echo "Checking skills..."
+          find plugin/skills -name "SKILL.md" -type f | wc -l | xargs -I {} echo "Found {} skills"
+
+          # Check for agents
+          echo "Checking agents..."
+          find plugin/agents -type d -mindepth 1 -maxdepth 1 | wc -l | xargs -I {} echo "Found {} agents"

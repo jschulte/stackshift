@@ -70,8 +70,12 @@ export class StateManager {
   private validateState(data: any): ValidationResult {
     const errors: string[] = [];
 
-    // Check for prototype pollution
-    if ('__proto__' in data || 'constructor' in data || 'prototype' in data) {
+    // Check for prototype pollution - only check own properties, not inherited
+    if (
+      Object.prototype.hasOwnProperty.call(data, '__proto__') ||
+      Object.prototype.hasOwnProperty.call(data, 'constructor') ||
+      Object.prototype.hasOwnProperty.call(data, 'prototype')
+    ) {
       errors.push('State contains dangerous properties (__proto__, constructor, prototype)');
     }
 
@@ -92,7 +96,14 @@ export class StateManager {
     }
 
     // Validate currentStep
-    const validSteps = ['analyze', 'reverse-engineer', 'create-specs', 'gap-analysis', 'complete-spec', 'implement'];
+    const validSteps = [
+      'analyze',
+      'reverse-engineer',
+      'create-specs',
+      'gap-analysis',
+      'complete-spec',
+      'implement',
+    ];
     if (data.currentStep !== null && !validSteps.includes(data.currentStep)) {
       errors.push(`Invalid currentStep: ${data.currentStep}`);
     }
@@ -128,7 +139,7 @@ export class StateManager {
 
     return {
       valid: errors.length === 0,
-      errors
+      errors,
     };
   }
 
@@ -187,14 +198,20 @@ export class StateManager {
         throw new Error('State file too large (>10MB)');
       }
 
-      const parsed = this.safeJsonParse(data);
+      // Parse JSON first (without sanitizing yet)
+      const parsed = JSON.parse(data);
+
+      // Validate BEFORE sanitizing, so we can detect dangerous properties
       const validation = this.validateState(parsed);
 
       if (!validation.valid) {
-        throw new Error(
-          `Invalid state file structure:\n${validation.errors.join('\n')}`
-        );
+        throw new Error(`Invalid state file structure:\n${validation.errors.join('\n')}`);
       }
+
+      // Now sanitize the validated object
+      delete parsed.__proto__;
+      delete parsed.constructor;
+      delete parsed.prototype;
 
       return parsed as State;
     } catch (error: any) {
@@ -273,9 +290,7 @@ export class StateManager {
     // Validate before writing
     const validation = this.validateState(newState);
     if (!validation.valid) {
-      throw new Error(
-        `Updated state is invalid:\n${validation.errors.join('\n')}`
-      );
+      throw new Error(`Updated state is invalid:\n${validation.errors.join('\n')}`);
     }
 
     await this.atomicWrite(newState);
@@ -294,11 +309,12 @@ export class StateManager {
       path: route,
       metadata: {
         ...state.metadata,
-        pathDescription: route === 'greenfield'
-          ? 'Build new app from business logic (tech-agnostic)'
-          : route === 'brownfield'
-          ? 'Manage existing app with Spec Kit (tech-prescriptive)'
-          : undefined,
+        pathDescription:
+          route === 'greenfield'
+            ? 'Build new app from business logic (tech-agnostic)'
+            : route === 'brownfield'
+              ? 'Manage existing app with Spec Kit (tech-prescriptive)'
+              : undefined,
       },
     }));
   }

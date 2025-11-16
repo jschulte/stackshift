@@ -58,7 +58,10 @@ export async function completeSpecToolHandler(args: CompleteSpecArgs) {
         throw new Error(`Invalid clarification at index ${index}: answer must be a string`);
       }
 
-      if (clarification.question.length === 0 || clarification.question.length > MAX_STRING_LENGTH) {
+      if (
+        clarification.question.length === 0 ||
+        clarification.question.length > MAX_STRING_LENGTH
+      ) {
         throw new Error(
           `Invalid clarification question at index ${index}: length must be 1-${MAX_STRING_LENGTH} characters`
         );
@@ -79,16 +82,23 @@ export async function completeSpecToolHandler(args: CompleteSpecArgs) {
 
 ## Interactive Clarification Session
 
-${clarifications.length > 0 ? `
+${
+  clarifications.length > 0
+    ? `
 ### Clarifications Provided
 
-${clarifications.map((c, i) => `
+${clarifications
+  .map(
+    (c, i) => `
 **Q${i + 1}:** ${c.question}
 **A${i + 1}:** ${c.answer}
-`).join('\n')}
+`
+  )
+  .join('\n')}
 
 ✅ These clarifications will be incorporated into specifications
-` : `
+`
+    : `
 ### Use /speckit.clarify
 
 Run the GitHub Spec Kit clarification command:
@@ -109,7 +119,8 @@ This will:
 - UX/UI preferences (drag-drop or click-browse?)
 - Business rule specifics (max items? timeout values?)
 - Priority confirmation (is this really P0?)
-`}
+`
+}
 
 ## Specification Readiness
 
@@ -156,6 +167,8 @@ Then run: \`/speckit.tasks\` and \`/speckit.implement\`
       ],
     };
   } catch (error) {
-    throw new Error(`Spec completion failed: ${error instanceof Error ? error.message : String(error)}`);
+    throw new Error(
+      `Spec completion failed: ${error instanceof Error ? error.message : String(error)}`
+    );
   }
 }

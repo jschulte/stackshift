@@ -34,7 +34,8 @@
     "test": "echo \"No tests yet\" && exit 0",
     "build:mcp": "cd mcp-server && npm install && npm run build",
     "dev:mcp": "cd mcp-server && npm run dev",
-    "start:mcp": "cd mcp-server && npm start"
+    "start:mcp": "cd mcp-server && npm start",
+    "prepare": "husky"
   },
   "files": [
     "plugin/",

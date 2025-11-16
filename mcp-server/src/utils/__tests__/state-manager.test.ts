@@ -62,21 +62,21 @@ describe('StateManager', () => {
 
   describe('State Validation', () => {
     it('should reject state with dangerous properties', async () => {
-      const maliciousState = {
-        __proto__: { isAdmin: true },
-        version: '1.0.0',
-        created: new Date().toISOString(),
-        updated: new Date().toISOString(),
-        path: 'greenfield',
-        currentStep: 'analyze',
-        completedSteps: [],
-        metadata: { projectName: 'test', projectPath: testDir },
-        stepDetails: {},
-      };
-
-      // Write malicious state directly
+      // Write malicious state with __proto__ directly in JSON string
+      // (creating it as an object doesn't work because JS handles __proto__ specially)
       const stateFile = path.join(testDir, '.stackshift-state.json');
-      await fs.writeFile(stateFile, JSON.stringify(maliciousState, null, 2));
+      const maliciousJson = `{
+        "__proto__": { "isAdmin": true },
+        "version": "1.0.0",
+        "created": "${new Date().toISOString()}",
+        "updated": "${new Date().toISOString()}",
+        "path": "greenfield",
+        "currentStep": "analyze",
+        "completedSteps": [],
+        "metadata": { "projectName": "test", "projectPath": "${testDir}" },
+        "stepDetails": {}
+      }`;
+      await fs.writeFile(stateFile, maliciousJson);
 
       // Should throw when loading
       await expect(stateManager.load()).rejects.toThrow(/dangerous properties/);
@@ -255,7 +255,9 @@ describe('StateManager', () => {
       await stateManager.completeStep('analyze');
       const state2 = await stateManager.load();
 
-      expect(new Date(state2.updated).getTime()).toBeGreaterThan(new Date(state1.updated).getTime());
+      expect(new Date(state2.updated).getTime()).toBeGreaterThan(
+        new Date(state1.updated).getTime()
+      );
     });
   });
 });

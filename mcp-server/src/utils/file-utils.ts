@@ -51,8 +51,10 @@ export async function findFiles(
 
         // Skip node_modules and hidden directories (except .specify)
         if (entry.isDirectory()) {
-          if (entry.name === 'node_modules' ||
-              (entry.name.startsWith('.') && entry.name !== '.specify')) {
+          if (
+            entry.name === 'node_modules' ||
+            (entry.name.startsWith('.') && entry.name !== '.specify')
+          ) {
             continue;
           }
           await search(fullPath, depth + 1);
@@ -86,10 +88,7 @@ export async function findFiles(
  * @param patterns File patterns to match
  * @returns Number of matching files
  */
-export async function countFiles(
-  directory: string,
-  patterns: string[]
-): Promise<number> {
+export async function countFiles(directory: string, patterns: string[]): Promise<number> {
   const files = await findFiles(directory, patterns);
   return files.length;
 }
@@ -124,9 +123,7 @@ export async function readFileSafe(
   const stats = await fs.stat(filePath);
 
   if (stats.size > maxSize) {
-    throw new Error(
-      `File too large: ${stats.size} bytes (max ${maxSize})`
-    );
+    throw new Error(`File too large: ${stats.size} bytes (max ${maxSize})`);
   }
 
   return fs.readFile(filePath, 'utf-8');
