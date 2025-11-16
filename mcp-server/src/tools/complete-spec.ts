@@ -2,24 +2,78 @@
  * Gear 5: Complete Specification Tool
  *
  * Interactive clarification to resolve ambiguities
+ *
+ * SECURITY FIXES:
+ * - Fixed path traversal vulnerability (CWE-22) - added directory validation
+ * - Fixed TOCTOU race conditions (CWE-367) - using atomic state operations
+ * - Added input validation for clarifications array
+ * - Added size limits to prevent DoS
  */
 
 import * as fs from 'fs/promises';
 import * as path from 'path';
+import { createDefaultValidator } from '../utils/security.js';
+import { StateManager } from '../utils/state-manager.js';
+
+interface Clarification {
+  question: string;
+  answer: string;
+}
 
 interface CompleteSpecArgs {
   directory?: string;
-  clarifications?: Array<{ question: string; answer: string }>;
+  clarifications?: Clarification[];
 }
 
-export async function completeSpecToolHandler(args: CompleteSpecArgs) {
-  const directory = args.directory || process.cwd();
-  const clarifications = args.clarifications || [];
+const MAX_CLARIFICATIONS = 100;
+const MAX_STRING_LENGTH = 5000;
 
+export async function completeSpecToolHandler(args: CompleteSpecArgs) {
   try {
-    // Load state
-    const stateFile = path.join(directory, '.stackshift-state.json');
-    const state = JSON.parse(await fs.readFile(stateFile, 'utf-8'));
+    // SECURITY: Validate directory parameter to prevent path traversal
+    const validator = createDefaultValidator();
+    const directory = validator.validateDirectory(args.directory || process.cwd());
+
+    // SECURITY: Validate clarifications array
+    const clarifications = args.clarifications || [];
+
+    // Prevent DoS with too many clarifications
+    if (clarifications.length > MAX_CLARIFICATIONS) {
+      throw new Error(
+        `Too many clarifications: ${clarifications.length} (max ${MAX_CLARIFICATIONS})`
+      );
+    }
+
+    // Validate each clarification
+    for (const [index, clarification] of clarifications.entries()) {
+      if (!clarification || typeof clarification !== 'object') {
+        throw new Error(`Invalid clarification at index ${index}: not an object`);
+      }
+
+      if (typeof clarification.question !== 'string') {
+        throw new Error(`Invalid clarification at index ${index}: question must be a string`);
+      }
+
+      if (typeof clarification.answer !== 'string') {
+        throw new Error(`Invalid clarification at index ${index}: answer must be a string`);
+      }
+
+      if (clarification.question.length === 0 || clarification.question.length > MAX_STRING_LENGTH) {
+        throw new Error(
+          `Invalid clarification question at index ${index}: length must be 1-${MAX_STRING_LENGTH} characters`
+        );
+      }
+
+      if (clarification.answer.length === 0 || clarification.answer.length > MAX_STRING_LENGTH) {
+        throw new Error(
+          `Invalid clarification answer at index ${index}: length must be 1-${MAX_STRING_LENGTH} characters`
+        );
+      }
+    }
+
+    // Load state using secure state manager
+    const stateManager = new StateManager(directory);
+    const state = await stateManager.load();
 
     const response = `# StackShift - Gear 5: Complete Specification
 
@@ -76,18 +130,22 @@ Use tool: \`stackshift_implement\`
 Then run: \`/speckit.tasks\` and \`/speckit.implement\`
 `;
 
-    // Update state
-    if (!state.completedSteps.includes('complete-spec')) {
-      state.completedSteps.push('complete-spec');
-    }
-    state.currentStep = 'implement';
-    state.stepDetails['complete-spec'] = {
-      completed: new Date().toISOString(),
-      status: 'completed',
-      clarifications: clarifications.length,
-    };
-    state.updated = new Date().toISOString();
-    await fs.writeFile(stateFile, JSON.stringify(state, null, 2));
+    // SECURITY: Update state using atomic operations
+    await stateManager.update(state => ({
+      ...state,
+      completedSteps: state.completedSteps.includes('complete-spec')
+        ? state.completedSteps
+        : [...state.completedSteps, 'complete-spec'],
+      currentStep: 'implement',
+      stepDetails: {
+        ...state.stepDetails,
+        'complete-spec': {
+          completed: new Date().toISOString(),
+          status: 'completed',
+          clarifications: clarifications.length,
+        },
+      },
+    }));
 
     return {
       content: [

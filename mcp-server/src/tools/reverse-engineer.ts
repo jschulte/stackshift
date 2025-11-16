@@ -2,30 +2,39 @@
  * Gear 2: Reverse Engineer Tool
  *
  * Extracts comprehensive documentation based on route
+ *
+ * SECURITY FIXES:
+ * - Fixed path traversal vulnerability (CWE-22) - added directory validation
+ * - Fixed TOCTOU race conditions (CWE-367) - using atomic state operations
+ * - Added input validation and safe JSON parsing
  */
 
 import * as fs from 'fs/promises';
 import * as path from 'path';
+import { createDefaultValidator } from '../utils/security.js';
+import { StateManager } from '../utils/state-manager.js';
 
 interface ReverseEngineerArgs {
   directory?: string;
 }
 
 export async function reverseEngineerToolHandler(args: ReverseEngineerArgs) {
-  const directory = args.directory || process.cwd();
-
   try {
-    // Load state to get route
-    const stateFile = path.join(directory, '.stackshift-state.json');
-    const state = JSON.parse(await fs.readFile(stateFile, 'utf-8'));
+    // SECURITY: Validate directory parameter to prevent path traversal
+    const validator = createDefaultValidator();
+    const directory = validator.validateDirectory(args.directory || process.cwd());
+
+    // Load state using secure state manager
+    const stateManager = new StateManager(directory);
+    const state = await stateManager.load();
     const route = state.path;
 
     if (!route) {
       throw new Error('Route not set. Run stackshift_analyze with route parameter first.');
     }
 
-    // Create docs directory
-    const docsDir = path.join(directory, 'docs', 'reverse-engineering');
+    // Create docs directory (validated path)
+    const docsDir = validator.validateFilePath(directory, 'docs/reverse-engineering');
     await fs.mkdir(docsDir, { recursive: true });
 
     const response = `# StackShift - Gear 2: Reverse Engineer
@@ -89,18 +98,8 @@ or manual prompts in \`prompts/${route}/\` directory.
 **Manual prompt:** \`prompts/${route}/02-reverse-engineer-${route === 'greenfield' ? 'business-logic' : 'full-stack'}.md\`
 `;
 
-    // Update state
-    state.completedSteps.push('analyze');
-    if (!state.completedSteps.includes('reverse-engineer')) {
-      state.completedSteps.push('reverse-engineer');
-    }
-    state.currentStep = 'create-specs';
-    state.stepDetails['reverse-engineer'] = {
-      completed: new Date().toISOString(),
-      status: 'completed',
-    };
-    state.updated = new Date().toISOString();
-    await fs.writeFile(stateFile, JSON.stringify(state, null, 2));
+    // SECURITY: Update state using atomic operations
+    await stateManager.completeStep('reverse-engineer');
 
     return {
       content: [
