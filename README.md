@@ -233,10 +233,10 @@ cat prompts/brownfield/02-reverse-engineer-full-stack.md
 
 ```bash
 # In Claude Code Web (https://claude.ai/code)
-1. Upload your project folder
-2. Copy-paste web/stackshift-web-orchestrator.md
-3. Answer configuration questions
-4. Shift through the gears! 🚗
+1. Connect to your GitHub account
+2. Select your repo from the dropdown
+3. Copy-paste web/WEB_BOOTSTRAP.md
+4. Hit enter and shift through the gears! 🚗
 ```
 
 See [`web/README.md`](web/README.md) for complete instructions.
