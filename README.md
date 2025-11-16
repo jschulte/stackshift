@@ -2,8 +2,6 @@
 
 <img src="public/stackshift-logo.png" alt="StackShift" width="400">
 
-# StackShift
-
 **A reverse engineering toolkit that lets you shift gears in your codebase.**
 
 Transform any application into a fully-specified, spec-driven project with complete control - whether you're shifting to a new tech stack or taking the wheel on existing code.
@@ -15,7 +13,13 @@ Transform any application into a fully-specified, spec-driven project with compl
 
 </div>
 
-> Like a stick shift gives you manual control, StackShift gives you complete control over your codebase transformation. Start in reverse (engineering), shift through 6 gears, and cruise into spec-driven development.
+> **Two paths, complete control:**
+>
+> **🔀 Greenfield:** Extract business logic from your legacy app, then rebuild in a modern stack using tech-agnostic specs.
+>
+> **⚙️ Brownfield:** Transform your existing codebase into a spec-driven project and manage it with GitHub Spec Kit going forward.
+>
+> Start in reverse (engineering), shift through 6 gears, and cruise into spec-driven development!
 >
 > *Free and open source. [Support development](https://github.com/sponsors/jschulte) to keep the gears turning!* ☕🚗
 
