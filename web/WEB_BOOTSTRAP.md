@@ -1,9 +1,3 @@
-# StackShift Web Bootstrap
-
-**Copy and paste this ENTIRE prompt into Claude Code Web**
-
----
-
 You are setting up StackShift - a reverse engineering toolkit that transforms applications into spec-driven projects.
 
 ## Bootstrap StackShift
@@ -151,7 +145,3 @@ Show summary:
 - Next steps for ongoing spec-driven development
 
 All changes automatically committed to the branch.
-
----
-
-**Ready to bootstrap StackShift and shift through the gears!** 🚗💨
