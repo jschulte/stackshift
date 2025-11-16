@@ -470,6 +470,6 @@ Once the report is generated and reviewed:
 1. **Review with user** - Present key findings
 2. **Confirm accuracy** - Ask if the analysis matches their understanding
 3. **Adjust estimates** - Update based on user feedback
-4. **Proceed to Step 2** - Use the `reverse-engineer` skill to generate comprehensive documentation
+4. **Proceed to Step 2** - Use the reverse-engineer skill to generate comprehensive documentation
 
 The analysis report serves as the foundation for the entire reverse engineering process.

@@ -361,7 +361,7 @@ Create `docs/gap-analysis-report.md` (supplementing Spec Kit's output):
 
 ## Next Steps
 
-1. Run `complete-spec` skill to resolve clarifications
+1. Run complete-spec skill to resolve clarifications
 2. Begin Phase 1 implementation
 3. Use `/speckit.implement` for each feature
 4. Update implementation status in specs
@@ -424,7 +424,7 @@ After running this skill, you should have:
 
 Once gap analysis is complete, proceed to:
 
-**Step 5: Complete Specification** - Use the `complete-spec` skill to resolve all `[NEEDS CLARIFICATION]` markers interactively.
+**Step 5: Complete Specification** - Use the complete-spec skill to resolve all `[NEEDS CLARIFICATION]` markers interactively.
 
 ---
 

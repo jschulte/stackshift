@@ -381,7 +381,7 @@ After running this skill, you should have:
 
 Once specifications are created in Spec Kit format, proceed to:
 
-**Step 4: Gap Analysis** - Use `/speckit.analyze` to identify inconsistencies and the `gap-analysis` skill to create prioritized implementation plan.
+**Step 4: Gap Analysis** - Use `/speckit.analyze` to identify inconsistencies and the gap-analysis skill to create prioritized implementation plan.
 
 ---
 

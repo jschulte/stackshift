@@ -208,7 +208,7 @@ After running this skill, you should have:
 
 Once specifications are complete and unambiguous, proceed to:
 
-**Step 6: Implement from Spec** - Use the `implement` skill to systematically build missing features.
+**Step 6: Implement from Spec** - Use the implement skill to systematically build missing features.
 
 ---
 

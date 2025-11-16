@@ -231,7 +231,7 @@ After running this skill, you should have:
 
 Once all documentation is generated and reviewed, proceed to:
 
-**Step 3: Create Specifications** - Use the `create-specs` skill to transform docs into formal specifications.
+**Step 3: Create Specifications** - Use the create-specs skill to transform docs into formal specifications.
 
 ---
 

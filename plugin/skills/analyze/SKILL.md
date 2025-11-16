@@ -375,7 +375,7 @@ After running this skill, you should have:
 
 Once `analysis-report.md` is created and reviewed, proceed to:
 
-**Step 2: Reverse Engineer** - Use the `reverse-engineer` skill to generate comprehensive documentation.
+**Step 2: Reverse Engineer** - Use the reverse-engineer skill to generate comprehensive documentation.
 
 ---
 
