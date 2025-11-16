@@ -1,31 +1,48 @@
 You are setting up StackShift - a reverse engineering toolkit that transforms applications into spec-driven projects.
 
-## Bootstrap StackShift
+## Bootstrap StackShift and GitHub Spec Kit
 
-First, download and set up StackShift in this repository:
+First, download and set up both StackShift and GitHub Spec Kit:
 
 ```bash
-# Download StackShift v1.0.0 from GitHub
+# 1. Download StackShift v1.0.0 from GitHub
 curl -L https://github.com/jschulte/stackshift/archive/refs/tags/v1.0.0.tar.gz -o stackshift.tar.gz
-
-# Extract to .stackshift directory
 mkdir -p .stackshift
 tar -xzf stackshift.tar.gz -C .stackshift --strip-components=1
-
-# Cleanup
 rm stackshift.tar.gz
 
-# Verify installation
-ls .stackshift/
+# 2. Download GitHub Spec Kit from GitHub
+curl -L https://github.com/github/spec-kit/archive/refs/heads/main.tar.gz -o speckit.tar.gz
+mkdir -p .speckit
+tar -xzf speckit.tar.gz -C .speckit --strip-components=1
+rm speckit.tar.gz
+
+# Verify both installed
+ls .stackshift/  # StackShift files
+ls .speckit/     # Spec Kit files
+
+echo "✅ StackShift and GitHub Spec Kit downloaded!"
 ```
 
-You should now have:
-- `.stackshift/plugin/skills/` - 7 skills
-- `.stackshift/plugin/agents/` - 2 agents
+You now have access to:
+
+**From StackShift (.stackshift/):**
+- `.stackshift/plugin/skills/` - 7 skills with complete instructions
+- `.stackshift/plugin/agents/` - 2 custom agents
 - `.stackshift/plugin/templates/` - Constitution and spec templates
 - `.stackshift/plugin/speckit-templates/` - Fallback Spec Kit templates
 - `.stackshift/prompts/greenfield/` - Tech-agnostic prompts
 - `.stackshift/prompts/brownfield/` - Tech-prescriptive prompts
+
+**From GitHub Spec Kit (.speckit/):**
+- `.speckit/.specify/templates/` - Official /speckit.* command prompts
+- `.speckit/.specify/memory/` - Example specs and structure
+- `.speckit/.specify/scripts/` - Spec Kit helper scripts
+
+**Why download Spec Kit?**
+- Access to official /speckit.* command prompt files
+- Can execute slash command logic even if commands don't work
+- Fallback if `specify init` fails
 
 ## Configuration
 
