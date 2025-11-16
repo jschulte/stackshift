@@ -2,22 +2,31 @@
  * Gear 3: Create Specs Tool
  *
  * Generates GitHub Spec Kit specifications
+ *
+ * SECURITY FIXES:
+ * - Fixed path traversal vulnerability (CWE-22) - added directory validation
+ * - Fixed TOCTOU race conditions (CWE-367) - using atomic state operations
+ * - Added input validation and safe JSON parsing
  */
 
 import * as fs from 'fs/promises';
 import * as path from 'path';
+import { createDefaultValidator } from '../utils/security.js';
+import { StateManager } from '../utils/state-manager.js';
 
 interface CreateSpecsArgs {
   directory?: string;
 }
 
 export async function createSpecsToolHandler(args: CreateSpecsArgs) {
-  const directory = args.directory || process.cwd();
-
   try {
-    // Load state
-    const stateFile = path.join(directory, '.stackshift-state.json');
-    const state = JSON.parse(await fs.readFile(stateFile, 'utf-8'));
+    // SECURITY: Validate directory parameter to prevent path traversal
+    const validator = createDefaultValidator();
+    const directory = validator.validateDirectory(args.directory || process.cwd());
+
+    // Load state using secure state manager
+    const stateManager = new StateManager(directory);
+    const state = await stateManager.load();
     const route = state.path;
 
     if (!route) {
@@ -114,17 +123,8 @@ Then run: \`/speckit.analyze\` to validate specs
 **Manual prompt:** \`prompts/${route}/03-create-${route === 'greenfield' ? 'agnostic' : 'prescriptive'}-specs.md\`
 `;
 
-    // Update state
-    if (!state.completedSteps.includes('create-specs')) {
-      state.completedSteps.push('create-specs');
-    }
-    state.currentStep = 'gap-analysis';
-    state.stepDetails['create-specs'] = {
-      completed: new Date().toISOString(),
-      status: 'completed',
-    };
-    state.updated = new Date().toISOString();
-    await fs.writeFile(stateFile, JSON.stringify(state, null, 2));
+    // SECURITY: Update state using atomic operations
+    await stateManager.completeStep('create-specs');
 
     return {
       content: [

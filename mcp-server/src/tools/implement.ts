@@ -2,24 +2,55 @@
  * Gear 6: Implement Tool
  *
  * Use /speckit.implement to build features
+ *
+ * SECURITY FIXES:
+ * - Fixed path traversal vulnerability (CWE-22) - added directory validation
+ * - Fixed TOCTOU race conditions (CWE-367) - using atomic state operations
+ * - Added input validation for feature parameter
  */
 
 import * as fs from 'fs/promises';
 import * as path from 'path';
+import { createDefaultValidator } from '../utils/security.js';
+import { StateManager } from '../utils/state-manager.js';
 
 interface ImplementArgs {
   directory?: string;
   feature?: string;
 }
 
-export async function implementToolHandler(args: ImplementArgs) {
-  const directory = args.directory || process.cwd();
-  const feature = args.feature;
+const MAX_FEATURE_NAME_LENGTH = 200;
 
+export async function implementToolHandler(args: ImplementArgs) {
   try {
-    // Load state
-    const stateFile = path.join(directory, '.stackshift-state.json');
-    const state = JSON.parse(await fs.readFile(stateFile, 'utf-8'));
+    // SECURITY: Validate directory parameter to prevent path traversal
+    const validator = createDefaultValidator();
+    const directory = validator.validateDirectory(args.directory || process.cwd());
+
+    // SECURITY: Validate feature parameter
+    let feature: string | undefined = args.feature;
+    if (feature !== undefined) {
+      if (typeof feature !== 'string') {
+        throw new Error(`Invalid feature parameter: must be a string`);
+      }
+
+      if (feature.length === 0 || feature.length > MAX_FEATURE_NAME_LENGTH) {
+        throw new Error(
+          `Invalid feature name length: must be 1-${MAX_FEATURE_NAME_LENGTH} characters`
+        );
+      }
+
+      // Check for path traversal attempts in feature name
+      if (feature.includes('..') || feature.includes('/') || feature.includes('\\')) {
+        throw new Error(
+          `Invalid feature name: cannot contain path separators or '..'`
+        );
+      }
+    }
+
+    // Load state using secure state manager
+    const stateManager = new StateManager(directory);
+    const state = await stateManager.load();
     const route = state.path;
 
     const response = `# StackShift - Gear 6: Implement from Spec 🚀
@@ -136,18 +167,22 @@ Continue using GitHub Spec Kit:
 - \`/speckit.analyze\` - Continuous validation
 `;
 
-    // Update state
-    if (!state.completedSteps.includes('implement')) {
-      state.completedSteps.push('implement');
-    }
-    state.currentStep = null; // All complete!
-    state.stepDetails['implement'] = {
-      completed: new Date().toISOString(),
-      status: 'completed',
-      feature: feature || 'all',
-    };
-    state.updated = new Date().toISOString();
-    await fs.writeFile(stateFile, JSON.stringify(state, null, 2));
+    // SECURITY: Update state using atomic operations
+    await stateManager.update(state => ({
+      ...state,
+      completedSteps: state.completedSteps.includes('implement')
+        ? state.completedSteps
+        : [...state.completedSteps, 'implement'],
+      currentStep: null, // All complete!
+      stepDetails: {
+        ...state.stepDetails,
+        implement: {
+          completed: new Date().toISOString(),
+          status: 'completed',
+          feature: feature || 'all',
+        },
+      },
+    }));
 
     return {
       content: [
