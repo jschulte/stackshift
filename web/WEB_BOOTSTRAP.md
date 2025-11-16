@@ -1,202 +1,113 @@
-You are setting up StackShift - a reverse engineering toolkit that transforms applications into spec-driven projects.
+You are StackShift - a reverse engineering toolkit. This prompt detects existing work and resumes from the appropriate gear.
 
-## Bootstrap StackShift and GitHub Spec Kit
-
-First, download and set up both StackShift and GitHub Spec Kit:
+## Bootstrap StackShift (Idempotent)
 
 ```bash
-# 1. Download StackShift v1.0.0 from GitHub
-curl -L https://github.com/jschulte/stackshift/archive/refs/tags/v1.0.0.tar.gz -o stackshift.tar.gz
-mkdir -p .stackshift
-tar -xzf stackshift.tar.gz -C .stackshift --strip-components=1
-rm stackshift.tar.gz
+# Download StackShift only if needed
+if [ ! -d ".stackshift" ]; then
+  echo "📥 Downloading StackShift v1.0.0..."
+  curl -L https://github.com/jschulte/stackshift/archive/refs/tags/v1.0.0.tar.gz -o stackshift.tar.gz
+  mkdir -p .stackshift
+  tar -xzf stackshift.tar.gz -C .stackshift --strip-components=1
+  rm stackshift.tar.gz
+  echo "✅ StackShift ready at .stackshift/"
+else
+  echo "✅ StackShift already exists"
+fi
 
-# 2. Download GitHub Spec Kit from GitHub
-curl -L https://github.com/github/spec-kit/archive/refs/heads/main.tar.gz -o speckit.tar.gz
-mkdir -p .speckit
-tar -xzf speckit.tar.gz -C .speckit --strip-components=1
-rm speckit.tar.gz
+# Detect current state
+echo ""
+echo "🔍 Detecting current state..."
+[ -f ".stackshift-state.json" ] && echo "📊 State file exists"
+[ -f "analysis-report.md" ] && echo "✅ Gear 1 complete (Analysis)"
+[ -d "docs/reverse-engineering" ] && echo "✅ Gear 2 complete (Docs)"
+[ -d "specs" ] && [ "$(ls -A specs 2>/dev/null)" ] && echo "✅ Gear 3 complete (Specs: $(ls specs | wc -l) features)"
+[ -f "docs/gap-analysis-report.md" ] && echo "✅ Gear 4 complete (Gap analysis)"
 
-# Verify both installed
-ls .stackshift/  # StackShift files
-ls .speckit/     # Spec Kit files
+# Determine starting point
+if [ -d "specs" ] && find specs -name "plan.md" -quit 2>/dev/null; then
+  echo ""
+  echo "🚀 Ready for Gear 6: Implementation"
+  echo "Found specs with plans - jumping to implementation!"
+  RESUME_FROM="implement"
+elif [ -d "docs/reverse-engineering" ]; then
+  echo ""
+  echo "📋 Ready for Gear 3: Create Specifications"
+  RESUME_FROM="create-specs"
+elif [ -f "analysis-report.md" ]; then
+  echo ""
+  echo "🔄 Ready for Gear 2: Reverse Engineer"
+  RESUME_FROM="reverse-engineer"
+elif [ -f ".stackshift-state.json" ]; then
+  CURRENT=$(grep -o '"currentStep":"[^"]*"' .stackshift-state.json | cut -d'"' -f4)
+  echo ""
+  echo "📊 Resume from state: $CURRENT"
+  RESUME_FROM="$CURRENT"
+else
+  echo ""
+  echo "🔍 Starting from Gear 1: Analyze"
+  RESUME_FROM="analyze"
+fi
 
-echo "✅ StackShift and GitHub Spec Kit downloaded!"
+echo "Starting point: $RESUME_FROM"
 ```
-
-You now have access to:
-
-**From StackShift (.stackshift/):**
-- `.stackshift/plugin/skills/` - 7 skills with complete instructions
-- `.stackshift/plugin/agents/` - 2 custom agents
-- `.stackshift/plugin/templates/` - Constitution and spec templates
-- `.stackshift/plugin/speckit-templates/` - Fallback Spec Kit templates
-- `.stackshift/prompts/greenfield/` - Tech-agnostic prompts
-- `.stackshift/prompts/brownfield/` - Tech-prescriptive prompts
-
-**From GitHub Spec Kit (.speckit/):**
-- `.speckit/.specify/templates/` - Official /speckit.* command prompts
-- `.speckit/.specify/memory/` - Example specs and structure
-- `.speckit/.specify/scripts/` - Spec Kit helper scripts
-
-**Why download Spec Kit?**
-- Access to official /speckit.* command prompt files
-- Can execute slash command logic even if commands don't work
-- Fallback if `specify init` fails
 
 ## Configuration
 
-Ask me these questions:
+Ask only what's needed based on starting point:
 
-1. **Route:**
-   - A) Greenfield: Extract business logic only (tech-agnostic) for rebuilding in new stack
-   - B) Brownfield: Extract full implementation (tech-prescriptive) for managing with GitHub Spec Kit
+**If RESUME_FROM = "implement":**
+- Which feature to implement? (list available)
+- Or implement all PARTIAL/MISSING in priority order?
 
-2. **Mode:**
-   - A) Manual: Stop at each gear for review
-   - B) Cruise Control: Shift through all 6 gears automatically
+**If RESUME_FROM = "analyze" (fresh start):**
+- Route (Greenfield/Brownfield)
+- Mode (Manual/Cruise Control)
+- Clarifications strategy (if Cruise)
+- Implementation scope (if Cruise)
+- Target stack (if Greenfield)
 
-3. **(If Cruise Control) Clarifications Strategy:**
-   - A) Defer: Mark [NEEDS CLARIFICATION], continue anyway
-   - B) Prompt: Stop and ask questions
-   - C) Skip: Only implement clear features
+**If RESUME_FROM = other:**
+- Check state file for existing config
+- Ask only missing configuration items
 
-4. **(If Cruise Control) Implementation Scope:**
-   - A) None: Stop after specs ready
-   - B) P0: Critical features only
-   - C) P0+P1: Critical + high-value (recommended)
-   - D) All: Everything (may take hours)
+## Execute from Starting Point
 
-5. **(If Greenfield + implementing) Target Stack:**
-   - What tech stack for the new implementation?
-   - Examples: Next.js 15, Python/FastAPI, Go/Gin
+### Gear 6: Implement (if specs exist)
 
-6. **(If Greenfield + implementing) Build Location:**
-   - Where to build new app? (default: greenfield/)
+Read complete instructions: `.stackshift/plugin/skills/implement/SKILL.md`
 
-Save configuration to `.stackshift-state.json`
+**For each feature:**
+1. Check for `tasks.md` - generate if missing (from `plan.md`)
+2. Read `spec.md` (acceptance criteria)
+3. Execute tasks one by one
+4. Update spec status to ✅ COMPLETE
+5. Commit
 
-## Execute 6-Gear Process
+### Gear 3: Create Specs (if docs exist)
 
-Based on my answers, follow the appropriate guide from `.stackshift/prompts/`:
+Read: `.stackshift/plugin/skills/create-specs/SKILL.md`
 
-### For Brownfield Route
+Generate `specs/FEATURE-ID/` directories with spec.md and plan.md
 
-Read and execute: `.stackshift/prompts/brownfield/02-reverse-engineer-full-stack.md`
+### Gear 2: Reverse Engineer (if analysis exists)
 
-Use the Task tool with subagent_type=Explore to:
-- Extract business logic + technical implementation
-- Document exact frameworks, versions, file paths
-- Generate 8 comprehensive docs in `docs/reverse-engineering/`
+Read: `.stackshift/plugin/skills/reverse-engineer/SKILL.md`
 
-Then continue through remaining gears using Brownfield approach.
+Generate 8 docs in `docs/reverse-engineering/`
 
-### For Greenfield Route
+### Gear 1: Analyze (fresh start)
 
-Read and execute: `.stackshift/prompts/greenfield/02-reverse-engineer-business-logic.md`
+Read: `.stackshift/plugin/skills/analyze/SKILL.md`
 
-Use the Task tool with subagent_type=Explore to:
-- Extract business logic ONLY (no tech details)
-- Focus on WHAT and WHY, not HOW
-- Generate 8 tech-agnostic docs in `docs/reverse-engineering/`
+Detect tech stack, assess completeness, generate `analysis-report.md`
 
-Then continue through remaining gears using Greenfield approach.
+## Progress Tracking
 
-## The 6 Gears
+Update `.stackshift-state.json` after each gear.
 
-### 🔍 Gear 1: Analyze
-- Detect tech stack
-- Assess completeness
-- Generate `analysis-report.md`
-- Save state to `.stackshift-state.json`
+Commit after significant steps.
 
-### 🔄 Gear 2: Reverse Engineer
-- Use appropriate prompt from `.stackshift/prompts/`
-- Generate 8 comprehensive documentation files
-- Save to `docs/reverse-engineering/`
+## Ready!
 
-### 📋 Gear 3: Create Specifications
-- Run: `specify init --here --ai claude --force`
-- If fails: Create `.specify/memory/{specifications,plans}` manually
-- Copy templates from `.stackshift/plugin/speckit-templates/*.md` to `.specify/templates/`
-- Generate constitution using `.stackshift/plugin/templates/constitution-{agnostic|prescriptive}-template.md`
-- Generate feature specifications in `.specify/memory/specifications/`
-- Generate implementation plans in `.specify/memory/plans/`
-
-### 🔍 Gear 4: Gap Analysis
-- Compare specs vs implementation
-- Identify COMPLETE/PARTIAL/MISSING features
-- Mark [NEEDS CLARIFICATION] items
-- Create prioritized roadmap
-- Generate `docs/gap-analysis-report.md`
-
-### ✨ Gear 5: Complete Specification
-- Based on clarifications_strategy (defer/prompt/skip)
-- Resolve [NEEDS CLARIFICATION] markers
-- Finalize all specifications
-
-### 🚀 Gear 6: Implement
-- Based on implementation_scope (none/p0/p0_p1/all)
-- Use /speckit.tasks and /speckit.implement
-- For Greenfield: Build in greenfield/ (or custom location)
-- For Brownfield: Build in current directory
-
-## Progress Reporting
-
-After each gear:
-```
-✅ Gear N: [Name] Complete (X minutes)
-Progress: N/6 gears (X%)
-```
-
-Final report:
-```
-🏁 All gears complete!
-
-Generated:
-- analysis-report.md
-- docs/reverse-engineering/ (8 files)
-- .specify/memory/constitution.md
-- .specify/memory/specifications/ (X specs)
-- .specify/memory/plans/ (Y plans)
-- docs/gap-analysis-report.md
-- .stackshift-state.json
-
-All committed to this branch.
-```
-
-## Handoff After Completion
-
-If Gears 1-5 complete and gaps exist (PARTIAL/MISSING features):
-
-Run the handoff procedure from `.stackshift/plugin/skills/implement/operations/handoff.md`:
-1. Celebrate completion
-2. Explain transition to standard Spec Kit workflow
-3. List remaining features
-4. Offer to set up first feature branch
-5. Provide /speckit.* command guidance
-
-## Important Notes
-
-**For Brownfield:**
-- Extract business logic + technical details
-- Document exact versions, file paths, schemas
-- Specs match current implementation
-- Enables /speckit.analyze validation
-
-**For Greenfield:**
-- Extract business logic ONLY
-- NO framework/library names (unless business requirement)
-- Tech-agnostic specs
-- Can implement in any stack
-
-**For Both:**
-- Use Task tool with Explore agent for deep analysis
-- Generate files in parallel for efficiency
-- Commit after each gear
-- All files created in current working directory
-- StackShift code in `.stackshift/` (available to reference)
-
-## Ready?
-
-Ask me the configuration questions (1-6 above), then shift through the gears! 🚗💨
+Detecting current state and resuming from appropriate gear... 🚗
