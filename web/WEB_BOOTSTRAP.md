@@ -26,6 +26,25 @@ You should see:
 - StackShift skills: analyze/, reverse-engineer/, create-specs/, etc.
 - Spec Kit templates: tasks-template.md, plan-template.md, etc.
 
+## Configure .gitignore
+
+Add StackShift working directories and state files to .gitignore (these are session-specific and should not be committed):
+
+```bash
+# Add to .gitignore if not already present
+echo -e "\n# StackShift working directories (session-specific)\n.stackshift/\n.speckit/\n.stackshift-state.json" >> .gitignore
+```
+
+Verify the entries were added:
+```bash
+tail -5 .gitignore
+```
+
+These files/directories should not be committed because:
+- `.stackshift/` - Downloaded toolkit, not part of your project
+- `.speckit/` - Downloaded templates, not part of your project
+- `.stackshift-state.json` - Session-specific state, only needed during active StackShift runs
+
 ## Detect Current State
 
 Tell me what you see when you run these commands:
