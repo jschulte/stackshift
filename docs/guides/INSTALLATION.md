@@ -83,7 +83,7 @@ Once the repository is public and configured:
 
 ```bash
 # Add the marketplace
-> /plugin marketplace add jschulte
+> /plugin marketplace add jschulte/claude-plugins
 
 # Install StackShift
 > /plugin install stackshift
@@ -190,7 +190,7 @@ On GitHub:
 
    ### Installation
    ```
-   /plugin marketplace add jschulte
+   /plugin marketplace add jschulte/claude-plugins
    /plugin install reverse-engineering-toolkit
    ```
 

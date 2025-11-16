@@ -14,7 +14,7 @@ StackShift transforms reverse engineering into an interactive, guided experience
 
 ```bash
 # In Claude Code
-> /plugin marketplace add jschulte
+> /plugin marketplace add jschulte/claude-plugins
 > /plugin install stackshift
 ```
 

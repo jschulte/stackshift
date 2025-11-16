@@ -145,7 +145,7 @@ Install as a Claude Code plugin for interactive skills and workflow tracking:
 
 ```bash
 # In Claude Code
-> /plugin marketplace add jschulte
+> /plugin marketplace add jschulte/claude-plugins
 > /plugin install stackshift
 ```
 
