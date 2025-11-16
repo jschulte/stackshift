@@ -40,12 +40,12 @@ Transform any application into a fully-specified, spec-driven project with compl
 
 **Reverse Engineering Meets Manual Control** - StackShift provides a **systematic, 6-gear process** to:
 
-1. **🔄 First Gear (Reverse):** Reverse-engineer existing codebases (even incomplete ones)
-2. **📚 Second Gear:** Generate comprehensive documentation automatically
-3. **📋 Third Gear:** Transform into formal specifications (GitHub Spec Kit format)
-4. **🔍 Fourth Gear:** Identify feature gaps clearly
-5. **✨ Fifth Gear:** Complete missing implementations systematically
-6. **🚀 Sixth Gear:** Kick it into high gear - implement from specs and establish spec-driven development!
+1. **🔍 First Gear:** Analyze - Detect tech stack and assess completeness
+2. **🔄 Second Gear (Reverse!):** Reverse Engineer - Extract comprehensive documentation
+3. **📋 Third Gear:** Create Specifications - Transform into GitHub Spec Kit format
+4. **🔎 Fourth Gear:** Gap Analysis - Identify what's missing or incomplete
+5. **✨ Fifth Gear:** Complete Specification - Resolve ambiguities and clarifications
+6. **🚀 Sixth Gear:** Implement - Build features from specs!
 
 **Two Paths - Choose Your Route:**
 
