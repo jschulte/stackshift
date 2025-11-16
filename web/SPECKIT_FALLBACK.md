@@ -40,7 +40,7 @@ name: speckit.analyze
 description: Validate specifications against implementation
 ---
 
-Analyze the codebase and compare against specifications in .specify/memory/specifications/:
+Analyze the codebase and compare against specifications in specs/:
 
 1. For each specification:
    - Check if marked COMPLETE but implementation missing
@@ -63,7 +63,7 @@ name: speckit.tasks
 description: Generate actionable tasks from implementation plan
 ---
 
-Read the implementation plan: .specify/memory/plans/{{PLAN_NAME}}.md
+Read the implementation plan: specs/{{PLAN_NAME}}.md
 
 Generate actionable task list:
 1. Break down plan into atomic tasks
@@ -86,8 +86,8 @@ description: Implement feature from specification and plan
 
 Implement feature: {{FEATURE_NAME}}
 
-1. Read specification: .specify/memory/specifications/{{FEATURE_NAME}}.md
-2. Read implementation plan: .specify/memory/plans/{{FEATURE_NAME}}.md
+1. Read specification: specs/{{FEATURE_NAME}}.md
+2. Read implementation plan: specs/{{FEATURE_NAME}}.md
 3. Execute each task from the plan
 4. Test against acceptance criteria
 5. Update specification status markers
@@ -103,7 +103,7 @@ name: speckit.clarify
 description: Resolve [NEEDS CLARIFICATION] markers
 ---
 
-Find all [NEEDS CLARIFICATION] markers in .specify/memory/specifications/
+Find all [NEEDS CLARIFICATION] markers in specs/
 
 For each clarification:
 1. Ask user the question
@@ -166,14 +166,14 @@ If slash commands don't work at all, use direct prompts:
 
 **Instead of `/speckit.analyze`:**
 ```
-Analyze specifications in .specify/memory/specifications/ against the codebase.
+Analyze specifications in specs/ against the codebase.
 For each spec, check if implementation matches status markers.
 Report inconsistencies.
 ```
 
 **Instead of `/speckit.tasks feature-name`:**
 ```
-Read .specify/memory/plans/feature-name.md and generate
+Read specs/feature-name.md and generate
 actionable task checklist with specific file changes needed.
 ```
 

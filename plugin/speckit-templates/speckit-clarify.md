@@ -11,10 +11,10 @@ Find and resolve all `[NEEDS CLARIFICATION]` markers in specifications.
 
 ### Step 1: Find All Clarifications
 
-Scan `.specify/memory/specifications/` for `[NEEDS CLARIFICATION]` markers:
+Scan `specs/` for `[NEEDS CLARIFICATION]` markers:
 
 ```bash
-grep -r "\[NEEDS CLARIFICATION\]" .specify/memory/specifications/
+grep -r "\[NEEDS CLARIFICATION\]" specs/
 ```
 
 Create a list:
@@ -113,7 +113,7 @@ After all clarifications:
 
 ```bash
 # Check no markers remain
-grep -r "\[NEEDS CLARIFICATION\]" .specify/memory/specifications/
+grep -r "\[NEEDS CLARIFICATION\]" specs/
 
 # Should return: No matches (or only in comments/examples)
 ```

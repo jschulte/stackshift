@@ -1,6 +1,6 @@
 ---
 name: implement
-description: Use GitHub Spec Kit's /speckit.implement and /speckit.tasks to systematically build missing features from specifications. Leverages implementation plans in .specify/memory/plans/, validates against acceptance criteria, and achieves 100% spec completion. This is Step 6 of 6 in the reverse engineering process.
+description: Use GitHub Spec Kit's /speckit.implement and /speckit.tasks to systematically build missing features from specifications. Leverages implementation plans in specs/, validates against acceptance criteria, and achieves 100% spec completion. This is Step 6 of 6 in the reverse engineering process.
 ---
 
 # Implement from Spec (with GitHub Spec Kit)
@@ -17,8 +17,8 @@ description: Use GitHub Spec Kit's /speckit.implement and /speckit.tasks to syst
 
 Use this skill when:
 - You've completed Step 5 (Complete Specification)
-- All specifications in `.specify/memory/specifications/` are finalized
-- Implementation plans exist in `.specify/memory/plans/`
+- All specifications in `specs/` are finalized
+- Implementation plans exist in `specs/`
 - Ready to use `/speckit.implement` to build features
 
 **Trigger Phrases:**
@@ -116,7 +116,7 @@ Use `/speckit.tasks` to generate actionable tasks from implementation plan:
 ```
 
 **What this does:**
-- Reads `.specify/memory/plans/user-authentication-frontend.md`
+- Reads `specs/user-authentication-frontend.md`
 - Breaks down plan into specific, actionable tasks
 - Creates task checklist
 
@@ -124,7 +124,7 @@ Use `/speckit.tasks` to generate actionable tasks from implementation plan:
 ```markdown
 # Tasks: User Authentication Frontend
 
-Based on implementation plan in `.specify/memory/plans/user-authentication-frontend.md`
+Based on implementation plan in `specs/user-authentication-frontend.md`
 
 ## Tasks
 - [ ] Create LoginPage component (app/login/page.tsx)
@@ -176,7 +176,7 @@ Use `/speckit.implement` to execute the implementation plan:
 > /speckit.implement user-authentication-frontend
 
 Starting implementation of: User Authentication Frontend
-Plan: .specify/memory/plans/user-authentication-frontend.md
+Plan: specs/user-authentication-frontend.md
 
 Task 1/10: Create LoginPage component
 
@@ -471,7 +471,7 @@ After completing the reverse engineering process:
 - `/speckit.tasks` output can be refined if tasks are too broad
 - Use `/speckit.clarify` if you discover ambiguities during implementation
 - Keep `.specify/memory/` in version control
-- `.specify/memory/specifications/` is the source of truth
+- `specs/` is the source of truth
 
 ---
 

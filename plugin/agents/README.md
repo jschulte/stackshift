@@ -8,7 +8,7 @@ Custom AI agents for StackShift tasks. These agents are included with the plugin
 **Purpose:** Generate technical documentation and specifications
 
 **Use cases:**
-- Creating feature specifications in .specify/memory/specifications/
+- Creating feature specifications in specs/
 - Writing constitution.md
 - Generating implementation plans
 - Creating comprehensive documentation

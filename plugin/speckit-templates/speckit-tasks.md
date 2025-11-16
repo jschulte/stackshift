@@ -9,13 +9,13 @@ Read implementation plan and generate atomic, actionable task list.
 
 ## Input
 
-**Implementation plan:** `.specify/memory/plans/{{PLAN_NAME}}.md`
+**Implementation plan:** `specs/{{PLAN_NAME}}.md`
 
 ## Process
 
 ### Step 1: Read the Plan
 
-Load `.specify/memory/plans/{{PLAN_NAME}}.md`:
+Load `specs/{{PLAN_NAME}}.md`:
 - Understand the goal
 - Review current vs target state
 - Read technical approach
@@ -102,7 +102,7 @@ For each task, define how to know it's done:
 ```markdown
 # Tasks: {{FEATURE_NAME}}
 
-**Based on:** `.specify/memory/plans/{{PLAN_NAME}}.md`
+**Based on:** `specs/{{PLAN_NAME}}.md`
 **Generated:** {{DATE}}
 
 ## Tasks Checklist

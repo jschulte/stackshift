@@ -9,7 +9,7 @@ description: Interactive conversation to resolve [NEEDS CLARIFICATION] markers u
 
 **Estimated Time:** 30-60 minutes (interactive)
 **Prerequisites:** Step 4 completed (`docs/gap-analysis-report.md` exists with clarifications list)
-**Output:** Updated specs in `.specify/memory/specifications/` with all `[NEEDS CLARIFICATION]` markers resolved
+**Output:** Updated specs in `specs/` with all `[NEEDS CLARIFICATION]` markers resolved
 
 ---
 
@@ -35,9 +35,9 @@ Uses `/speckit.clarify` and **interactive conversation** to fill specification g
 
 1. **Use /speckit.clarify** - GitHub Spec Kit's built-in clarification tool
 2. **Interactive Q&A** - Ask questions about missing features and details
-3. **Update Specifications** - Add answers to specs in `.specify/memory/specifications/`
+3. **Update Specifications** - Add answers to specs in `specs/`
 4. **Resolve Ambiguities** - Remove all `[NEEDS CLARIFICATION]` markers
-5. **Update Implementation Plans** - Refine plans in `.specify/memory/plans/`
+5. **Update Implementation Plans** - Refine plans in `specs/`
 6. **Finalize for Implementation** - Ready for `/speckit.tasks` and `/speckit.implement`
 
 **Note:** `/speckit.clarify` provides structured clarification workflow. This skill can also supplement with custom Q&A for project-specific needs.

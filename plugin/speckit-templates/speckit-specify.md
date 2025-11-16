@@ -90,7 +90,7 @@ Skip implementation details, focus on business requirements only.
 
 ### Step 6: Create Specification File
 
-Save to: `.specify/memory/specifications/{{FEATURE_NAME}}.md`
+Save to: `specs/{{FEATURE_NAME}}.md`
 
 **Template:**
 
@@ -155,7 +155,7 @@ model Name {
 - [related-spec.md]
 
 ## Implementation Plan
-See: `.specify/memory/plans/{{FEATURE_NAME}}-impl.md`
+See: `specs/{{FEATURE_NAME}}-impl.md`
 
 ## Notes
 [Any additional context, gotchas, or considerations]
@@ -165,7 +165,7 @@ See: `.specify/memory/plans/{{FEATURE_NAME}}-impl.md`
 
 If status is not COMPLETE, create implementation plan:
 
-`.specify/memory/plans/{{FEATURE_NAME}}-impl.md`
+`specs/{{FEATURE_NAME}}-impl.md`
 
 See `/speckit.plan` for implementation plan template.
 
@@ -176,7 +176,7 @@ See `/speckit.plan` for implementation plan template.
 ```markdown
 ✅ Feature specification created
 
-**File:** `.specify/memory/specifications/{{FEATURE_NAME}}.md`
+**File:** `specs/{{FEATURE_NAME}}.md`
 **Status:** {{STATUS}}
 **Priority:** {{PRIORITY}}
 
@@ -189,7 +189,7 @@ See `/speckit.plan` for implementation plan template.
 {{/if}}
 
 {{#if status != 'COMPLETE'}}
-**Implementation Plan:** `.specify/memory/plans/{{FEATURE_NAME}}-impl.md`
+**Implementation Plan:** `specs/{{FEATURE_NAME}}-impl.md`
 {{/if}}
 
 **Next Steps:**

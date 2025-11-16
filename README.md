@@ -4,13 +4,13 @@
 
 # StackShift
 
-**A reverse engineering toolkit that lets you shift gears in your codebase.**
+**A reverse engineering toolkit that lets you shift gears smoothly in your codebase.**
 
-Transform any application into a fully-specified, spec-driven project with complete control - whether you're shifting to a new tech stack or taking the wheel on existing code.
+Transform any application into a fully-specified, Google spec kit spec-driven project with complete control - whether you're shifting to a new tech stack or taking the wheel on existing code.
 
 </div>
 
-> Like a stick shift gives you manual control, StackShift gives you complete control over your codebase transformation. Start in reverse (engineering), shift through 6 gears, and cruise into spec-driven development.
+> Like a stick shift puts you in control, StackShift gives you complete control over your codebase transformation. Start in reverse (engineering), shift like butter through the 6 gears of modernization, and cruise into spec-driven development.
 
 ---
 

@@ -5,13 +5,13 @@ description: Validate specifications against implementation
 
 # Spec Kit: Analyze Specifications
 
-Compare specifications in `.specify/memory/specifications/` against the actual codebase implementation.
+Compare specifications in `specs/` against the actual codebase implementation.
 
 ## Analysis Steps
 
 ### 1. Load All Specifications
 
-Read all files in `.specify/memory/specifications/`:
+Read all files in `specs/`:
 - Note status markers (✅ COMPLETE / ⚠️ PARTIAL / ❌ MISSING)
 - Identify dependencies between specs
 - List acceptance criteria

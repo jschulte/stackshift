@@ -45,13 +45,13 @@ stackshift sync ~/git/legacy-app ~/git/new-app
 **Read specs from both repos:**
 
 ```
-Legacy: ~/git/legacy-app/.specify/memory/specifications/
+Legacy: ~/git/legacy-app/specs/
 - user-authentication.md (prescriptive - Rails)
 - payments.md (prescriptive - Stripe gem)
 - inventory.md (prescriptive - Rails)
 - reporting.md (NOT IN NEW APP)
 
-New: ~/git/new-app/.specify/memory/specifications/
+New: ~/git/new-app/specs/
 - user-authentication.md (agnostic - JWT)
 - payments.md (agnostic - Payment processor)
 - inventory.md (agnostic - Inventory system)

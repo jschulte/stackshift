@@ -17,7 +17,7 @@ description: Use /speckit.analyze to compare specifications against implementati
 
 Use this skill when:
 - You've completed Step 3 (Create Specifications)
-- Have specifications in `.specify/memory/specifications/`
+- Have specifications in `specs/`
 - Ready to identify what's missing or incomplete
 - Want to validate specs against actual implementation
 
@@ -228,7 +228,7 @@ Create `docs/gap-analysis-report.md` (supplementing Spec Kit's output):
 ### Missing Features (❌ 5 features)
 
 #### F003: Analytics Dashboard [P1]
-**Specification:** `.specify/memory/specifications/analytics-dashboard.md`
+**Specification:** `specs/analytics-dashboard.md`
 **Status:** ❌ MISSING (not started)
 **Impact:** Users cannot track metrics over time
 **Effort:** ~8 hours
@@ -245,7 +245,7 @@ Create `docs/gap-analysis-report.md` (supplementing Spec Kit's output):
 ### Partial Features (⚠️ 4 features)
 
 #### F002: Fish Management [P0]
-**Specification:** `.specify/memory/specifications/fish-management.md`
+**Specification:** `specs/fish-management.md`
 **Status:** ⚠️ PARTIAL
 
 **Implemented:**

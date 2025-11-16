@@ -88,7 +88,7 @@ cd greenfield
 npm create next-app@latest . --typescript --tailwind --app
 
 # Then implements features from specs
-# Each feature from .specify/memory/specifications/
+# Each feature from specs/
 # Built in new stack (Next.js, Python, whatever)
 ```
 
@@ -127,10 +127,10 @@ Reference old app for patterns:
 
 ### Step 3: Implement from Specs
 
-For each spec in `.specify/memory/specifications/`:
+For each spec in `specs/`:
 ```bash
 # Read spec (tech-agnostic)
-cat .specify/memory/specifications/user-authentication.md
+cat specs/user-authentication.md
 
 # Implement in new stack
 # - Use /speckit.tasks to generate task list

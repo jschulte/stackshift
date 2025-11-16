@@ -144,7 +144,7 @@ cd ~/git/legacy-app
 
 # Copy to new repo
 cp .specify-greenfield/specifications/inventory-management.md \
-   ~/git/new-app/.specify/memory/specifications/
+   ~/git/new-app/specs/
 
 # In new app
 cd ~/git/new-app
@@ -165,7 +165,7 @@ cd ~/git/new-app
 # Add business rule: "Refunds capped at $10,000 per transaction"
 
 # Copy back to legacy
-cp .specify/memory/specifications/payments.md \
+cp specs/payments.md \
    ~/git/legacy-app/.specify-greenfield/specifications/
 
 # Convert to prescriptive and apply to legacy

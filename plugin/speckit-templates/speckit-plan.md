@@ -10,7 +10,7 @@ Generate detailed implementation plan for a feature.
 ## Input
 
 **Feature name:** {{FEATURE_NAME}}
-**Specification:** `.specify/memory/specifications/{{FEATURE_NAME}}.md`
+**Specification:** `specs/{{FEATURE_NAME}}.md`
 
 ## Process
 
@@ -117,12 +117,12 @@ What should exist after implementation?
 
 ## Output Template
 
-Save to: `.specify/memory/plans/{{FEATURE_NAME}}-impl.md`
+Save to: `specs/{{FEATURE_NAME}}-impl.md`
 
 ```markdown
 # Implementation Plan: {{FEATURE_NAME}}
 
-**Feature Spec:** `.specify/memory/specifications/{{FEATURE_NAME}}.md`
+**Feature Spec:** `specs/{{FEATURE_NAME}}.md`
 **Created:** {{DATE}}
 **Status:** {{CURRENT_STATUS}}
 **Target:** ✅ COMPLETE

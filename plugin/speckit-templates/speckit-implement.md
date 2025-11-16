@@ -12,14 +12,14 @@ Systematically implement a feature from its specification and implementation pla
 **Feature name:** {{FEATURE_NAME}}
 
 **Files to read:**
-- Specification: `.specify/memory/specifications/{{FEATURE_NAME}}.md`
-- Implementation Plan: `.specify/memory/plans/{{FEATURE_NAME}}.md`
+- Specification: `specs/{{FEATURE_NAME}}.md`
+- Implementation Plan: `specs/{{FEATURE_NAME}}.md`
 
 ## Implementation Process
 
 ### Step 1: Review Specification
 
-Read `.specify/memory/specifications/{{FEATURE_NAME}}.md`:
+Read `specs/{{FEATURE_NAME}}.md`:
 
 - Understand the feature overview
 - Read all user stories
@@ -29,7 +29,7 @@ Read `.specify/memory/specifications/{{FEATURE_NAME}}.md`:
 
 ### Step 2: Review Implementation Plan
 
-Read `.specify/memory/plans/{{FEATURE_NAME}}.md`:
+Read `specs/{{FEATURE_NAME}}.md`:
 
 - Understand current vs target state
 - Review technical approach
@@ -102,7 +102,7 @@ Report test results:
 
 ### Step 6: Update Specification Status
 
-Update `.specify/memory/specifications/{{FEATURE_NAME}}.md`:
+Update `specs/{{FEATURE_NAME}}.md`:
 
 **If fully implemented:**
 ```markdown
@@ -141,7 +141,7 @@ Create commit with reference to specification:
 git add .
 git commit -m "feat: implement {{FEATURE_NAME}} ({{FEATURE_NAME}}.md)
 
-Implemented from specification: .specify/memory/specifications/{{FEATURE_NAME}}.md
+Implemented from specification: specs/{{FEATURE_NAME}}.md
 
 Completed:
 - [Task 1]

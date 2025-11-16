@@ -192,11 +192,13 @@ Users must be able to securely authenticate with email and password.
 
 1. **Check route** from `.stackshift-state.json`
 2. **Load reverse-engineering docs** from `docs/reverse-engineering/`
-3. **Generate specs** appropriate for route:
-   - Greenfield: Use agnostic template
-   - Brownfield: Use prescriptive template
-4. **Create multiple specs in parallel** (efficiency)
-5. **Ensure GitHub Spec Kit compliance**
+3. **Create feature directories** in `specs/FEATURE-ID/` format
+4. **Generate spec.md and plan.md** for each feature
+5. **Use appropriate template** for route:
+   - Greenfield: Tech-agnostic
+   - Brownfield: Tech-prescriptive
+6. **Create multiple features in parallel** (efficiency)
+7. **Ensure GitHub Spec Kit compliance**
 
 ### Typical Invocation
 
@@ -207,7 +209,7 @@ Task({
 
 Route: brownfield (tech-prescriptive)
 
-Create individual feature specs in .specify/memory/specifications/:
+Create individual feature specs in specs/:
 - Extract each feature from functional spec
 - Include business requirements
 - Include technical implementation details (frameworks, versions, file paths)
@@ -348,7 +350,7 @@ model Photo {
 
 ## Implementation Plan
 
-See: `.specify/memory/plans/photo-upload-frontend.md`
+See: `specs/photo-upload-frontend.md`
 
 ## Dependencies
 - User Authentication (complete)
@@ -373,9 +375,9 @@ Always respond with markdown containing:
 
 ## Files Created
 
-1. .specify/memory/specifications/user-authentication.md (156 lines)
-2. .specify/memory/specifications/fish-management.md (243 lines)
-3. .specify/memory/specifications/photo-upload.md (198 lines)
+1. specs/user-authentication.md (156 lines)
+2. specs/fish-management.md (243 lines)
+3. specs/photo-upload.md (198 lines)
 ...
 
 ## Summary
