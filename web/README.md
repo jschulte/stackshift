@@ -4,22 +4,29 @@
 
 ---
 
-## Quick Start
+## Quick Start (Recommended: WEB_BOOTSTRAP.md)
 
-### 1. Upload Your Project
+**This downloads the full StackShift from GitHub - giving you the complete plugin experience!**
 
-In Claude Code Web:
-- Click "Upload Folder" or drag-and-drop
-- Select your project directory
-- Wait for upload to complete
+### 1. Open Claude Code Web
 
-### 2. Copy the Orchestrator Prompt
+- Go to: https://claude.ai/code
+- Connect to your GitHub repository
 
-Open [`stackshift-web-orchestrator.md`](stackshift-web-orchestrator.md) and copy the entire prompt (from "You are StackShift..." to the end).
+### 2. Copy the Bootstrap Prompt
 
-### 3. Paste and Configure
+Open [`WEB_BOOTSTRAP.md`](WEB_BOOTSTRAP.md) and copy the entire prompt.
 
-Paste into Claude Code Web. Answer the configuration questions:
+### 3. Paste into Claude Code Web
+
+Claude will:
+- Download StackShift v1.0.0 from GitHub
+- Extract to `.stackshift/` directory
+- Now has access to ALL skills, agents, templates!
+
+### 4. Answer Configuration Questions
+
+Answer the configuration questions:
 - Route: Greenfield or Brownfield?
 - Mode: Manual or Cruise Control?
 - (If cruise control) Clarifications strategy?
