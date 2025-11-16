@@ -88,6 +88,25 @@ Each SKILL.md has complete step-by-step instructions, templates, and examples.
 
 I'll update `.stackshift-state.json` as I complete each gear and commit changes to the branch.
 
+## Cleanup Before Final Push
+
+**IMPORTANT:** Before your final commit and push, remove the scaffolding directories:
+
+```bash
+# Remove downloaded toolkits and session state
+rm -rf .stackshift .speckit .stackshift-state.json
+
+# Verify they're gone
+ls -la | grep -E '\.(stackshift|speckit)'
+```
+
+These directories contain only scaffolding (skills, templates, state tracking). Your actual project artifacts are in:
+- `docs/` - All documentation
+- `specs/` - All specifications
+- `analysis-report.md` - Analysis results
+
+The scaffolding is already in `.gitignore`, but explicitly removing it ensures a clean repository with only the meaningful project outputs.
+
 ## Ready!
 
 Let me detect the current state and start from the appropriate gear... 🚗💨
