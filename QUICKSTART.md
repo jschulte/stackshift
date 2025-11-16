@@ -33,23 +33,14 @@ cd stackshift
 
 **Best for:** Quick analysis, any device, no installation
 
-**1. Upload project to Claude Code Web**
 ```
-https://claude.ai/code
-→ Upload folder or connect GitHub repo
-```
-
-**2. Copy-paste orchestrator:**
-```
-Open: web/stackshift-web-orchestrator.md
-Copy entire prompt
-Paste into Claude Code Web
-```
-
-**3. Run:**
-```
-Answer configuration questions
-→ Cruise control shifts through all 6 gears automatically!
+1. Go to: https://claude.ai/code
+2. Connect to GitHub
+3. Select your repo from dropdown
+4. Copy-paste web/WEB_BOOTSTRAP.md (entire file)
+5. Hit enter
+6. Answer questions (route, mode, scope)
+7. StackShift runs automatically! 🚗
 ```
 
 ---
