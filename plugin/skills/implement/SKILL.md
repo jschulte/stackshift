@@ -44,6 +44,24 @@ Uses **GitHub Spec Kit's implementation workflow** to systematically build featu
 
 ---
 
+## ⚠️ Two Contexts: Handoff vs Standard Implementation
+
+**This skill works differently based on context:**
+
+### Context A: Handoff (After Reverse Engineering)
+**When:** Just completed Gears 1-5, on main branch, gaps identified
+**What happens:** Handoff procedure (celebrate, explain transition, offer feature branch setup)
+**See:** [operations/handoff.md](operations/handoff.md)
+
+### Context B: Standard Implementation (Ongoing)
+**When:** On feature branch (002-*, 003-*), working on specific feature
+**What happens:** Standard GitHub Spec Kit implementation workflow
+**See:** Process Overview below
+
+**The handoff only happens ONCE** (after initial reverse engineering). After that, you always use standard /speckit.* workflow on feature branches.
+
+---
+
 ## GitHub Spec Kit Implementation Workflow
 
 The standard Spec Kit workflow is:
