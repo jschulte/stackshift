@@ -2,10 +2,17 @@
  * Cruise Control Tool
  *
  * Automatic mode - runs all 6 gears sequentially
+ *
+ * SECURITY FIXES:
+ * - Fixed path traversal vulnerability (CWE-22) - added directory validation
+ * - Fixed TOCTOU race conditions (CWE-367) - using atomic state operations
+ * - Added input validation for all parameters
  */
 
 import * as fs from 'fs/promises';
 import * as path from 'path';
+import { createDefaultValidator, validateRoute, validateClarificationsStrategy, validateImplementationScope } from '../utils/security.js';
+import { StateManager } from '../utils/state-manager.js';
 
 interface CruiseControlArgs {
   directory?: string;
@@ -15,43 +22,49 @@ interface CruiseControlArgs {
 }
 
 export async function cruiseControlToolHandler(args: CruiseControlArgs) {
-  const directory = args.directory || process.cwd();
-  const route = args.route;
-  const clarifications_strategy = args.clarifications_strategy || 'defer';
-  const implementation_scope = args.implementation_scope || 'none';
-
-  if (!route) {
-    throw new Error('Route required. Specify: greenfield or brownfield');
-  }
-
   try {
-    // Initialize or update state with cruise control config
-    const stateFile = path.join(directory, '.stackshift-state.json');
+    // SECURITY: Validate route parameter (required)
+    const route = validateRoute(args.route);
+    if (!route) {
+      throw new Error('Route required. Specify: greenfield or brownfield');
+    }
 
+    // SECURITY: Validate directory parameter to prevent path traversal
+    const validator = createDefaultValidator();
+    const directory = validator.validateDirectory(args.directory || process.cwd());
+
+    // SECURITY: Validate optional parameters
+    const clarifications_strategy = args.clarifications_strategy
+      ? validateClarificationsStrategy(args.clarifications_strategy)
+      : 'defer';
+
+    const implementation_scope = args.implementation_scope
+      ? validateImplementationScope(args.implementation_scope)
+      : 'none';
+
+    // Initialize state using secure state manager
+    const stateManager = new StateManager(directory);
+
+    // Create initial state with cruise control config
+    const initialState = stateManager.createInitialState(directory, route);
     const state = {
-      version: '1.0.0',
-      created: new Date().toISOString(),
-      updated: new Date().toISOString(),
-      path: route,
+      ...initialState,
       auto_mode: true,
-      currentStep: 'analyze',
-      completedSteps: [],
-      metadata: {
-        projectName: path.basename(directory),
-        projectPath: directory,
-        pathDescription: route === 'greenfield'
-          ? 'Build new app from business logic (tech-agnostic)'
-          : 'Manage existing app with Spec Kit (tech-prescriptive)',
-      },
       auto_config: {
         clarifications_strategy,
         implementation_scope,
         pause_between_gears: false,
       },
-      stepDetails: {},
+      metadata: {
+        ...initialState.metadata,
+        pathDescription: route === 'greenfield'
+          ? 'Build new app from business logic (tech-agnostic)'
+          : 'Manage existing app with Spec Kit (tech-prescriptive)',
+      },
     };
 
-    await fs.writeFile(stateFile, JSON.stringify(state, null, 2));
+    // Write state atomically
+    await stateManager.update(() => state);
 
     const response = `# StackShift - Cruise Control Engaged! 🚗💨
 
