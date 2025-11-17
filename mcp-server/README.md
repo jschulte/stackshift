@@ -380,6 +380,76 @@ npx stackshift-mcp
 
 ---
 
+## Testing
+
+[![Coverage](https://img.shields.io/badge/coverage-84.97%25-yellow)](https://github.com/jschulte/stackshift/actions)
+
+### Running Tests
+
+```bash
+# Run all tests
+npm test
+
+# Run tests with coverage
+npm run test:coverage
+
+# Run tests in watch mode
+npm run test:watch
+
+# Run specific test file
+npm test -- src/tools/__tests__/analyze.test.ts
+```
+
+### Coverage Thresholds
+
+The project enforces strict coverage thresholds:
+- **Lines**: 85%
+- **Functions**: 85%
+- **Branches**: 80%
+- **Statements**: 85%
+
+CI builds will fail if coverage drops below these thresholds.
+
+### Test Organization
+
+```
+src/
+├── __tests__/              # Main server & integration tests
+│   ├── index.test.ts       # MCP server initialization
+│   ├── integration.test.ts # E2E workflows
+│   └── fixtures/           # Test data
+├── tools/__tests__/        # Tool handler tests (6 gears)
+├── resources/__tests__/    # Resource handler tests
+└── utils/__tests__/        # Utility tests
+    ├── state-manager.test.ts
+    ├── state-recovery.test.ts
+    └── security.test.ts
+```
+
+### Writing Tests
+
+See [docs/guides/TESTING.md](./docs/guides/TESTING.md) for detailed testing patterns and examples.
+
+**Quick example:**
+```typescript
+import { describe, it, expect } from 'vitest';
+import { analyzeToolHandler } from '../analyze.js';
+
+describe('analyzeToolHandler', () => {
+  it('should analyze project directory', async () => {
+    const result = await analyzeToolHandler({
+      directory: '/test/path',
+      route: 'greenfield'
+    });
+
+    expect(result.content).toBeDefined();
+    expect(result.content[0].text).toContain('Analysis Complete');
+  });
+});
+```
+
+---
+
 ## Troubleshooting
 
 ### Server Not Starting
