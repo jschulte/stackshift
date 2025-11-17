@@ -37,6 +37,11 @@ Transform StackShift Gear 3 from guidance-only to full automation: automatically
 - `plugin/templates/constitution-agnostic-template.md`
 - `plugin/templates/constitution-prescriptive-template.md`
 - `plugin/templates/feature-spec-template.md`
+- `plugin/templates/tasks-template.md`
+
+✅ **Workflow Scripts** (ready to use):
+- `scripts/bash/check-prerequisites.sh` - Validate feature directory and docs
+- `scripts/powershell/check-prerequisites.ps1` - PowerShell version
 
 ✅ **Input Documentation** (from Gear 2):
 - `docs/reverse-engineering/functional-specification.md` - Main source
