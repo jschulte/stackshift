@@ -9,7 +9,7 @@
 
 ### 1. CONTRIBUTING.md (CRITICAL - 2-3 hours)
 
-**Location:** `/Users/jonahschulte/git/stackshift/CONTRIBUTING.md`
+**Location:** `~/git/stackshift/CONTRIBUTING.md`
 
 **Template:**
 
@@ -155,7 +155,7 @@ npm run test:coverage   # With coverage report
 
 ### 2. SECURITY.md (CRITICAL - 2 hours)
 
-**Location:** `/Users/jonahschulte/git/stackshift/SECURITY.md`
+**Location:** `~/git/stackshift/SECURITY.md`
 
 **Template:**
 
@@ -307,7 +307,7 @@ For non-security issues, use [GitHub Issues](https://github.com/jschulte/stacksh
 
 ### 3. CHANGELOG.md (CRITICAL - 1-2 hours)
 
-**Location:** `/Users/jonahschulte/git/stackshift/CHANGELOG.md`
+**Location:** `~/git/stackshift/CHANGELOG.md`
 
 **Template:**
 
@@ -413,7 +413,7 @@ See [SECURITY.md](SECURITY.md) for security policy and reporting vulnerabilities
 
 ### 4. DEVELOPMENT.md (HIGH - 2-3 hours)
 
-**Location:** `/Users/jonahschulte/git/stackshift/docs/developer-guides/DEVELOPMENT.md` (create folder)
+**Location:** `~/git/stackshift/docs/developer-guides/DEVELOPMENT.md` (create folder)
 
 **Key Sections:**
 
@@ -606,7 +606,7 @@ All must pass before PR submission!
 
 ### 5. TESTING.md (HIGH - 2-3 hours)
 
-**Location:** `/Users/jonahschulte/git/stackshift/docs/developer-guides/TESTING.md`
+**Location:** `~/git/stackshift/docs/developer-guides/TESTING.md`
 
 **Key Sections:**
 

@@ -168,7 +168,7 @@ Not ready for a full documentation overhaul? Do these 4 quick wins:
 All review documents are in the root of your repository:
 
 ```
-/Users/jonahschulte/git/stackshift/
+~/git/stackshift/
 ├── START_HERE_DOCUMENTATION_REVIEW.md  ← You are here
 ├── DOCUMENTATION_REVIEW.md             ← Full analysis
 ├── DOCUMENTATION_ACTION_PLAN.md        ← Templates
@@ -178,7 +178,7 @@ All review documents are in the root of your repository:
 
 ### Existing Documentation
 ```
-/Users/jonahschulte/git/stackshift/
+~/git/stackshift/
 ├── README.md                           ← Main overview (95% complete)
 ├── QUICKSTART.md                       ← Quick start (90% complete)
 ├── LICENSE                             ← MIT license (done)
