@@ -617,36 +617,40 @@ export class SpecGenerator {
 
   private extractQualityMetrics(nodes: MarkdownNode[]): QualityMetric[] {
     const metrics: QualityMetric[] = [];
+    let inPerformanceSection = false;
+    let inScalabilitySection = false;
 
-    // Look for Performance section
-    const perfSection = this.parser.findSection(nodes, /^Performance$/i);
-    if (perfSection) {
-      const content = this.getSectionContent(perfSection);
-      const lines = content.split('\n');
-      for (const line of lines) {
-        if (line.includes(':')) {
-          const [name, target] = line.split(':').map((s) => s.trim());
-          if (name && target) {
+    for (const node of nodes) {
+      // Track which section we're in
+      if (node.type === 'heading') {
+        inPerformanceSection = /^Performance$/i.test(node.content);
+        inScalabilitySection = /^Scalability$/i.test(node.content);
+        continue;
+      }
+
+      // Extract performance metrics from list items or paragraphs
+      if (inPerformanceSection) {
+        const content = node.content || '';
+        if (content.includes(':')) {
+          const [name, target] = content.split(':').map((s) => s.trim());
+          if (name && target && name.length > 0 && target.length > 0) {
             metrics.push({
-              name,
+              name: name.replace(/^[-*+]\s*/, ''), // Remove list marker
               target,
               measurement: 'Manual testing or monitoring',
             });
           }
         }
       }
-    }
 
-    // Look for Scalability section
-    const scaleSection = this.parser.findSection(nodes, /^Scalability$/i);
-    if (scaleSection) {
-      const content = this.getSectionContent(scaleSection);
-      if (content.length > 0) {
+      // Extract scalability as a metric
+      if (inScalabilitySection && node.type === 'paragraph' && node.content.length > 0) {
         metrics.push({
           name: 'Scalability',
-          target: content.substring(0, 100),
+          target: node.content.substring(0, 100),
           measurement: 'Load testing',
         });
+        inScalabilitySection = false; // Only take first paragraph
       }
     }
 
@@ -692,6 +696,7 @@ export class SpecGenerator {
     const userStoryPattern = /As (?:a|an) (.+?), I want (.+?), so that (.+?)\.?$/i;
 
     for (const node of nodes) {
+      // Check paragraphs
       if (node.type === 'paragraph') {
         const match = node.content.match(userStoryPattern);
         if (match) {
@@ -703,18 +708,16 @@ export class SpecGenerator {
           });
         }
       }
-      // Also check list items
-      if (node.type === 'list' && node.children) {
-        for (const item of node.children) {
-          const match = item.content.match(userStoryPattern);
-          if (match) {
-            stories.push({
-              role: match[1].trim(),
-              goal: match[2].trim(),
-              benefit: match[3].trim(),
-              raw: item.content.trim(),
-            });
-          }
+      // Check flat list-item nodes
+      if (node.type === 'list-item') {
+        const match = node.content.match(userStoryPattern);
+        if (match) {
+          stories.push({
+            role: match[1].trim(),
+            goal: match[2].trim(),
+            benefit: match[3].trim(),
+            raw: node.content.trim(),
+          });
         }
       }
     }
@@ -726,43 +729,41 @@ export class SpecGenerator {
     const criteria: AcceptanceCriterion[] = [];
 
     // Look for "Acceptance Criteria" section
-    for (let i = 0; i < nodes.length; i++) {
-      const node = nodes[i];
+    let foundCriteriaHeading = false;
+    for (const node of nodes) {
       if (node.type === 'heading' && /Acceptance Criteria/i.test(node.content)) {
-        // Look at subsequent nodes until we hit another heading
-        for (let j = i + 1; j < nodes.length; j++) {
-          const nextNode = nodes[j];
+        foundCriteriaHeading = true;
+        continue;
+      }
 
-          // Stop if we hit another heading
-          if (nextNode.type === 'heading') {
-            break;
-          }
+      // After finding heading, collect flat list-item nodes
+      if (foundCriteriaHeading) {
+        if (node.type === 'heading') {
+          // Stop at next heading
+          break;
+        }
 
-          if (nextNode.type === 'list') {
-            const items = this.parser.extractListItems(nextNode);
-            for (const item of items) {
-              // Handle checkbox syntax: [ ] or [x] or [X]
-              const checkboxMatch = item.match(/^\[([xX ])\]\s*(.+)$/);
-              if (checkboxMatch) {
-                const checked = checkboxMatch[1].toLowerCase() === 'x';
-                const description = checkboxMatch[2].trim();
-                criteria.push({
-                  description,
-                  checked,
-                  testable: true,
-                });
-              } else {
-                // No checkbox, treat as unchecked
-                criteria.push({
-                  description: item.trim(),
-                  checked: false,
-                  testable: true,
-                });
-              }
-            }
+        if (node.type === 'list-item') {
+          const item = node.content.trim();
+          // Handle checkbox syntax: [ ] or [x] or [X]
+          const checkboxMatch = item.match(/^\[([xX ])\]\s*(.+)$/);
+          if (checkboxMatch) {
+            const checked = checkboxMatch[1].toLowerCase() === 'x';
+            const description = checkboxMatch[2].trim();
+            criteria.push({
+              description,
+              checked,
+              testable: true,
+            });
+          } else {
+            // No checkbox, treat as unchecked
+            criteria.push({
+              description: item,
+              checked: false,
+              testable: true,
+            });
           }
         }
-        break; // Only process first "Acceptance Criteria" section
       }
     }
 
