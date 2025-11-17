@@ -240,3 +240,32 @@ export interface ClassDiagram {
     label?: string;
   }>;
 }
+
+/**
+ * Sequence step in a sequence diagram
+ */
+export type SequenceStep =
+  | { type: 'message'; from: string; to: string; message: string; async: boolean }
+  | { type: 'note'; participant: string; message: string }
+  | { type: 'activate'; participant: string }
+  | { type: 'deactivate'; participant: string };
+
+/**
+ * Sequence diagram structure
+ */
+export interface SequenceDiagram {
+  /** Diagram type */
+  type: 'sequence';
+
+  /** Gear name */
+  gearName: GearState;
+
+  /** Participants in the sequence */
+  participants: Array<{
+    id: string;
+    label: string;
+  }>;
+
+  /** Interaction steps */
+  steps: SequenceStep[];
+}

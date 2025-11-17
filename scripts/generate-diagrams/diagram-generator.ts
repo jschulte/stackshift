@@ -4,18 +4,22 @@
  */
 
 import { join } from 'path';
+import { promises as fs } from 'fs';
 import { DiagramWriter } from './diagram-writer.js';
 import { DiagramValidator } from './diagram-validator.js';
 import { DocumentationEmbedder } from './embedders/doc-embedder.js';
+import { MetadataWriter } from './metadata-writer.js';
 import { WorkflowDiagramGenerator } from './generators/workflow-diagram.js';
 import { ArchitectureDiagramGenerator } from './generators/architecture-diagram.js';
 import { ClassDiagramGenerator } from './generators/class-diagram.js';
+import { SequenceDiagramGenerator } from './generators/sequence-diagram.js';
 import type {
   GenerationOptions,
   GenerationResult,
   GenerationError,
   DiagramMetadata,
-  MermaidCode
+  MermaidCode,
+  GearState
 } from './types.js';
 
 /**
@@ -25,6 +29,7 @@ export class DiagramGenerator {
   private writer: DiagramWriter;
   private validator: DiagramValidator;
   private embedder: DocumentationEmbedder;
+  private metadataWriter: MetadataWriter;
   private options: GenerationOptions;
 
   constructor(options: GenerationOptions) {
@@ -32,6 +37,7 @@ export class DiagramGenerator {
     this.writer = new DiagramWriter();
     this.validator = new DiagramValidator();
     this.embedder = new DocumentationEmbedder(options.rootDir);
+    this.metadataWriter = new MetadataWriter();
   }
 
   /**
@@ -57,14 +63,30 @@ export class DiagramGenerator {
     if (this.options.verbose) {
       console.log('📊 Generating workflow diagram...');
     }
+    const workflowStart = Date.now();
     try {
       const workflowGen = new WorkflowDiagramGenerator();
       const stateFile = join(this.options.rootDir, '.stackshift-state.json');
+
+      // Check if state file exists
+      try {
+        await fs.access(stateFile);
+      } catch {
+        if (this.options.verbose) {
+          console.log('  ⚠️  .stackshift-state.json not found, skipping workflow diagram');
+        }
+        throw new Error('.stackshift-state.json not found');
+      }
+
       const diagram = await workflowGen.parse(stateFile);
       const mermaid = workflowGen.toMermaid(diagram);
       mermaid.outputPath = join(this.options.rootDir, mermaid.outputPath);
       await this.validateAndWrite(mermaid);
       result.workflow = mermaid;
+
+      if (this.options.verbose) {
+        console.log(`    (${Date.now() - workflowStart}ms)`);
+      }
     } catch (error: any) {
       result.errors.push({
         type: 'generate',
@@ -123,7 +145,23 @@ export class DiagramGenerator {
     if (this.options.verbose) {
       console.log('🔄 Generating sequence diagrams...');
     }
-    // Will be implemented in Phase 7
+    const seqGen = new SequenceDiagramGenerator();
+    const gears: GearState[] = ['analyze', 'reverse-engineer', 'create-specs'];
+
+    for (const gear of gears) {
+      try {
+        const diagram = seqGen.analyze(gear);
+        const mermaid = seqGen.toMermaid(diagram);
+        mermaid.outputPath = join(this.options.rootDir, mermaid.outputPath);
+        await this.validateAndWrite(mermaid);
+        result.sequenceDiagrams.push(mermaid);
+      } catch (error: any) {
+        result.errors.push({
+          type: 'generate',
+          message: `Failed to generate sequence diagram for ${gear}: ${error.message}`
+        });
+      }
+    }
 
     // Embed diagrams in documentation
     if (this.options.verbose) {
@@ -149,7 +187,7 @@ export class DiagramGenerator {
       });
     }
 
-    // Generate metadata
+    // Generate and write metadata
     const endTime = Date.now();
     result.metadata = {
       diagrams: [],
@@ -163,8 +201,26 @@ export class DiagramGenerator {
       }
     };
 
+    // Write metadata file
+    try {
+      const metadataPath = join(this.options.rootDir, 'docs', 'diagrams', 'diagram-metadata.json');
+      await this.metadataWriter.write(result, metadataPath);
+      if (this.options.verbose) {
+        console.log('\n📄 Metadata written to docs/diagrams/diagram-metadata.json');
+      }
+    } catch (error: any) {
+      result.errors.push({
+        type: 'write',
+        message: `Failed to write metadata: ${error.message}`
+      });
+    }
+
     if (this.options.verbose) {
       console.log(`\n✅ Generation complete in ${endTime - startTime}ms`);
+      console.log(`📊 Generated ${result.classDiagrams.length + result.sequenceDiagrams.length + (result.workflow ? 1 : 0) + (result.architecture ? 1 : 0)} diagrams`);
+      if (result.errors.length > 0) {
+        console.log(`⚠️  ${result.errors.length} errors encountered`);
+      }
     }
 
     return result;
