@@ -217,22 +217,21 @@ node ~/.claude/plugins/stackshift/plugin/scripts/state-manager.js progress
 
 **Without Plugin (Manual):**
 
-If not using the plugin, you can still use the prompts directly:
+If not using the plugin, use the web bootstrap for manual execution:
 
 ```bash
 # 1. Clone StackShift
 git clone https://github.com/jschulte/stackshift.git
 
-# 2. Copy prompts to your project
-cp -r stackshift/prompts /path/to/your/project/
+# 2. Use web bootstrap prompt
+cat web/WEB_BOOTSTRAP.md
+# Copy and paste into Claude.ai or Claude Code Web
 
-# 3. Choose your path
-# Greenfield (business logic only):
-cat prompts/greenfield/02-reverse-engineer-business-logic.md
-
-# Brownfield (business + technical):
-cat prompts/brownfield/02-reverse-engineer-full-stack.md
+# Or use the legacy prompts (for reference):
+cat legacy/original-prompts/01-initial-analysis.md
 ```
+
+**Recommended**: Use the web bootstrap or plugin for the best experience.
 
 #### Option 2: Claude Code Web (Browser - No Install!)
 
@@ -357,14 +356,16 @@ stackshift/
 │   │   └── implement/                 ← Step 6: Implement from Spec
 │   ├── templates/                     ← Spec templates
 │   │   ├── feature-spec-template.md
-│   │   ├── constitution-template.md
+│   │   ├── constitution-agnostic-template.md
+│   │   ├── constitution-prescriptive-template.md
 │   │   └── implementation-status-template.md
 │   └── scripts/
 │       └── state-manager.js           ← Progress tracking
-└── prompts/                           ← Original prompts (for manual use)
-    ├── 01-initial-analysis.md
-    ├── 02-reverse-engineer.md
-    └── ...
+├── web/                               ← Web prompts (for manual use)
+│   ├── WEB_BOOTSTRAP.md               ← Bootstrap for claude.ai
+│   └── convert-reverse-engineering-to-speckit.md
+└── legacy/
+    └── original-prompts/              ← Legacy manual prompts (archived)
 ```
 
 ### Plugin Benefits
@@ -396,7 +397,8 @@ stackshift/
 - `analysis-report.md` with tech stack summary
 - Quick assessment of what exists
 
-**Prompt:** `prompts/01-initial-analysis.md`
+**Plugin Skill:** `/stackshift:analyze`
+**Manual:** Use `web/WEB_BOOTSTRAP.md` (Gear 1)
 
 ---
 
@@ -422,7 +424,8 @@ docs/reverse-engineering/
 └── test-documentation.md           (Testing requirements)
 ```
 
-**Prompt:** `prompts/02-reverse-engineer.md`
+**Plugin Skill:** `/stackshift:reverse-engineer`
+**Manual:** Use `web/WEB_BOOTSTRAP.md` (Gear 2)
 
 ---
 
@@ -452,7 +455,8 @@ specs/
 └── constitution.md                     (Project principles)
 ```
 
-**Prompt:** `prompts/03-create-specifications.md`
+**Plugin Skill:** `/stackshift:create-specs`
+**Manual:** Use `web/WEB_BOOTSTRAP.md` (Gear 3)
 
 ---
 
@@ -476,7 +480,8 @@ specs/gap-analysis.md
 └── Prioritized Implementation Plan
 ```
 
-**Prompt:** `prompts/04-gap-analysis.md`
+**Plugin Skill:** `/stackshift:gap-analysis`
+**Manual:** Use `web/WEB_BOOTSTRAP.md` (Gear 4)
 
 ---
 
@@ -502,7 +507,8 @@ specs/gap-analysis.md
 - Clear implementation roadmap
 - Prioritized feature list
 
-**Prompt:** `prompts/05-complete-specification.md`
+**Plugin Skill:** `/stackshift:complete-spec`
+**Manual:** Use `web/WEB_BOOTSTRAP.md` (Gear 5)
 
 ---
 
@@ -531,7 +537,8 @@ specs/gap-analysis.md
 - Test coverage at target levels
 - Production-ready codebase
 
-**Prompt:** `prompts/06-implement-from-spec.md`
+**Plugin Skill:** `/stackshift:implement`
+**Manual:** Use `web/WEB_BOOTSTRAP.md` (Gear 6)
 
 ---
 
