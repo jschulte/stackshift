@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
-	"strings"
+	"time"
 
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
@@ -45,6 +45,7 @@ type model struct {
 	orchestrator     *Orchestrator
 	runningTasks     []Task
 	logs             []string
+	executionDone    bool
 
 	// Results
 	results []GearResult
@@ -73,6 +74,23 @@ type GearResult struct {
 	Success bool
 	Message string
 	Files   []string
+}
+
+// Message types for execution updates
+type executionStartedMsg struct{}
+
+type taskUpdateMsg struct {
+	repo   string
+	gear   int
+	status string
+}
+
+type executionCompleteMsg struct {
+	results []GearResult
+}
+
+type logMsg struct {
+	message string
 }
 
 var (
@@ -194,8 +212,17 @@ func checkProgress(repoPath string) (int, string) {
 }
 
 func (m model) Init() tea.Cmd {
-	return nil
+	return tickCmd()
 }
+
+// Ticker for spinner animation
+func tickCmd() tea.Cmd {
+	return tea.Tick(time.Millisecond*100, func(t time.Time) tea.Msg {
+		return tickMsg(t)
+	})
+}
+
+type tickMsg time.Time
 
 func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	switch msg := msg.(type) {
@@ -205,6 +232,51 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	case tea.WindowSizeMsg:
 		m.width = msg.Width
 		m.height = msg.Height
+
+	case tickMsg:
+		// Update spinner frame
+		m.spinnerFrame++
+		if m.mode == ExecutingMode && !m.executionDone {
+			return m, tickCmd()
+		}
+		return m, nil
+
+	case executionStartedMsg:
+		// Clear previous results
+		m.runningTasks = []Task{}
+		m.logs = []string{}
+		m.results = []GearResult{}
+		m.executionDone = false
+
+	case taskUpdateMsg:
+		// Update task status
+		found := false
+		for i, task := range m.runningTasks {
+			if task.Repo == msg.repo && task.Gear == msg.gear {
+				m.runningTasks[i].Status = msg.status
+				found = true
+				break
+			}
+		}
+		if !found {
+			m.runningTasks = append(m.runningTasks, Task{
+				Repo:   msg.repo,
+				Gear:   msg.gear,
+				Status: msg.status,
+			})
+		}
+
+	case executionCompleteMsg:
+		m.results = msg.results
+		m.executionDone = true
+		m.mode = ResultsMode
+
+	case logMsg:
+		m.logs = append(m.logs, msg.message)
+		// Keep only last 50 logs
+		if len(m.logs) > 50 {
+			m.logs = m.logs[len(m.logs)-50:]
+		}
 	}
 
 	return m, nil
@@ -365,9 +437,34 @@ func (m model) handleResultsMode(key string) (tea.Model, tea.Cmd) {
 }
 
 func (m model) startExecution() tea.Cmd {
-	// This would actually start the orchestration
-	// For now, just a placeholder
-	return nil
+	return func() tea.Msg {
+		// Collect selected repositories
+		selectedRepos := []Repository{}
+		for _, repo := range m.repos {
+			if m.selectedRepos[repo.Name] {
+				selectedRepos = append(selectedRepos, repo)
+			}
+		}
+
+		// Create orchestrator
+		settings := Settings{
+			Route:          m.route,
+			Transmission:   m.transmission,
+			Clarification:  m.clarification,
+			Implementation: m.implementation,
+			TargetStack:    m.targetStack,
+		}
+
+		orchestrator := NewOrchestrator(selectedRepos, settings, m.parallelLimit, m.useClaudeCode)
+
+		// Run in background and collect results
+		results, err := orchestrator.Run()
+		if err != nil {
+			return logMsg{message: fmt.Sprintf("Execution error: %v", err)}
+		}
+
+		return executionCompleteMsg{results: results}
+	}
 }
 
 func (m model) View() string {
@@ -524,18 +621,64 @@ func (m model) viewConfirmMode() string {
 func (m model) viewExecutingMode() string {
 	s := titleStyle.Render("🚗 SHIFTING GEARS...") + "\n\n"
 
-	// Show progress for each running task
-	for _, task := range m.runningTasks {
-		s += fmt.Sprintf("Gear %d: %s - %s (%d%%)\n",
-			task.Gear,
-			task.Repo,
-			task.Status,
-			task.Progress,
-		)
+	// Add a simple spinner animation
+	spinners := []string{"⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏"}
+	spinner := spinners[m.spinnerFrame%len(spinners)]
+
+	if len(m.runningTasks) == 0 {
+		s += fmt.Sprintf("%s Starting execution...\n", spinner)
+	} else {
+		// Show progress for each running task
+		gearIcons := map[int]string{
+			1: "🔍", // Analyze
+			2: "📐", // Reverse Engineer
+			3: "📝", // Create Specs
+			4: "🔎", // Gap Analysis
+			5: "✍️", // Complete Spec
+			6: "🔨", // Implement
+		}
+
+		for _, task := range m.runningTasks {
+			icon := gearIcons[task.Gear]
+			if icon == "" {
+				icon = "⚙️"
+			}
+
+			statusIcon := spinner
+			if task.Status == "complete" {
+				statusIcon = "✅"
+			} else if task.Status == "failed" {
+				statusIcon = "❌"
+			}
+
+			s += fmt.Sprintf("%s %s Gear %d: %s - %s\n",
+				statusIcon,
+				icon,
+				task.Gear,
+				task.Repo,
+				task.Status,
+			)
+		}
+	}
+
+	// Show recent logs
+	if len(m.logs) > 0 {
+		s += "\nRecent activity:\n"
+		start := 0
+		if len(m.logs) > 5 {
+			start = len(m.logs) - 5
+		}
+		for _, log := range m.logs[start:] {
+			s += fmt.Sprintf("  %s\n", log)
+		}
 	}
 
 	s += "\n"
-	s += helpStyle.Render("Ctrl+C: Abort")
+	if m.executionDone {
+		s += helpStyle.Render("Execution complete! Press Enter to view results")
+	} else {
+		s += helpStyle.Render("Ctrl+C: Abort")
+	}
 
 	return s
 }

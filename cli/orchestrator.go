@@ -6,7 +6,6 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
-	"strings"
 	"sync"
 	"time"
 )
@@ -196,40 +195,144 @@ func (o *Orchestrator) runGear(repo Repository, gear int) GearResult {
 }
 
 func (o *Orchestrator) buildClaudeCodeCommand(repo Repository, gearName string) *exec.Cmd {
-	// For Claude Code, we can use the plugin skills
-	// This assumes Claude Code CLI is installed
-	skillPath := fmt.Sprintf("~/.claude/plugins/marketplaces/jschulte/stackshift/skills/%s/SKILL.md", gearName)
+	// Build command to execute StackShift skill using Claude Code
+	// The skills are accessed via the slash commands in the plugin
 
-	// Read the skill file and pass it as a prompt
-	skillContent, err := os.ReadFile(os.ExpandEnv(skillPath))
-	if err != nil {
-		// Fallback to basic command
-		return exec.Command("claude", "code", fmt.Sprintf("Run StackShift gear: %s", gearName))
+	// Map gear names to skill commands
+	skillCommands := map[string]string{
+		"analyze":          "/stackshift:analyze",
+		"reverse-engineer": "/stackshift:reverse-engineer",
+		"create-specs":     "/stackshift:create-specs",
+		"gap-analysis":     "/stackshift:gap-analysis",
+		"complete-spec":    "/stackshift:complete-specs",
+		"implement":        "/stackshift:implement",
 	}
 
-	// Create temp file with the prompt
-	tmpFile := filepath.Join(os.TempDir(), fmt.Sprintf("stackshift_%s_%s.md", repo.Name, gearName))
-	os.WriteFile(tmpFile, skillContent, 0644)
+	skillCommand, exists := skillCommands[gearName]
+	if !exists {
+		// Fallback to basic prompt
+		prompt := fmt.Sprintf("Execute StackShift %s gear for this repository", gearName)
+		return exec.Command("claude", prompt)
+	}
 
-	return exec.Command("claude", "code", "--file", tmpFile)
+	// Build the command with the skill invocation
+	prompt := fmt.Sprintf("Execute the StackShift skill: %s\n\nRepository: %s\nPath: %s\nLanguage: %s\nFramework: %s\n\nSettings:\n- Route: %s\n- Clarification: %s\n- Implementation: %s",
+		skillCommand,
+		repo.Name,
+		repo.Path,
+		repo.Language,
+		repo.Framework,
+		o.settings.Route,
+		o.settings.Clarification,
+		o.settings.Implementation,
+	)
+
+	// Use claude CLI with the prompt
+	return exec.Command("claude", prompt)
 }
 
 func (o *Orchestrator) buildOpenCodeCommand(repo Repository, gearName string) *exec.Cmd {
-	// For OpenCode with CoPilot, we use the manual prompts
-	promptPath := filepath.Join(repo.Path, "..", "..", "stackshift", "prompts", fmt.Sprintf("%02d-%s.md", getGearNumber(gearName), gearName))
+	// For OpenCode/VSCode with CoPilot, we'll create a prompt file
+	// that can be executed via code CLI or similar tool
 
-	// Read prompt
-	promptContent, err := os.ReadFile(promptPath)
-	if err != nil {
-		// Fallback
-		return exec.Command("opencode", "run", fmt.Sprintf("StackShift: %s", gearName))
+	// Generate gear-specific prompt content
+	promptContent := o.generateGearPrompt(gearName, repo)
+
+	// Create temp file with the prompt
+	tmpFile := filepath.Join(os.TempDir(), fmt.Sprintf("stackshift_%s_%s.md", repo.Name, gearName))
+	os.WriteFile(tmpFile, []byte(promptContent), 0644)
+
+	// Check if 'code' CLI is available (VSCode)
+	if _, err := exec.LookPath("code"); err == nil {
+		// Use VSCode CLI to open the prompt file and repository
+		return exec.Command("code", repo.Path, tmpFile)
 	}
 
-	// Create temp file
-	tmpFile := filepath.Join(os.TempDir(), fmt.Sprintf("stackshift_%s_%s.md", repo.Name, gearName))
-	os.WriteFile(tmpFile, promptContent, 0644)
+	// Fallback to generic command - user may need to configure
+	return exec.Command("echo", fmt.Sprintf("Please run StackShift %s gear for %s manually", gearName, repo.Name))
+}
 
-	return exec.Command("opencode", "run", "--file", tmpFile)
+func (o *Orchestrator) generateGearPrompt(gearName string, repo Repository) string {
+	// Generate gear-specific prompts for manual execution
+	prompts := map[string]string{
+		"analyze": `# StackShift Gear 1: Analyze
+
+Please analyze this repository and create an analysis-report.md file containing:
+1. Technology stack analysis
+2. Architecture overview
+3. Dependencies and integrations
+4. Key business logic components
+5. Database schema and data flow`,
+
+		"reverse-engineer": `# StackShift Gear 2: Reverse Engineer
+
+Create comprehensive documentation in docs/reverse-engineering/ including:
+- functional-specification.md
+- data-architecture.md
+- configuration-reference.md
+- api-documentation.md`,
+
+		"create-specs": `# StackShift Gear 3: Create Specs
+
+Based on the analysis, create specifications in docs/specs/ for:
+- Technical requirements
+- API contracts
+- Data models
+- Business rules`,
+
+		"gap-analysis": `# StackShift Gear 4: Gap Analysis
+
+Analyze gaps between current implementation and target stack.
+Create gap-analysis.md documenting:
+- Missing features
+- Architecture differences
+- Migration challenges`,
+
+		"complete-spec": `# StackShift Gear 5: Complete Specifications
+
+Finalize all specifications with:
+- Implementation details
+- Migration strategy
+- Testing requirements
+- Deployment plan`,
+
+		"implement": `# StackShift Gear 6: Implement
+
+Begin implementation based on specifications:
+- Create new components
+- Migrate existing functionality
+- Update tests
+- Document changes`,
+	}
+
+	basePrompt := prompts[gearName]
+	if basePrompt == "" {
+		basePrompt = fmt.Sprintf("# StackShift Gear: %s\n\nExecute the %s gear for this repository.", gearName, gearName)
+	}
+
+	// Add context
+	return fmt.Sprintf(`%s
+
+Repository: %s
+Path: %s
+Language: %s
+Framework: %s
+
+Settings:
+- Route: %s
+- Clarification Strategy: %s
+- Implementation Scope: %s
+
+Please execute this gear and update .stackshift-state.json when complete.`,
+		basePrompt,
+		repo.Name,
+		repo.Path,
+		repo.Language,
+		repo.Framework,
+		o.settings.Route,
+		o.settings.Clarification,
+		o.settings.Implementation,
+	)
 }
 
 func getGearNumber(gearName string) int {
