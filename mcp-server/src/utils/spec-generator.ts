@@ -542,27 +542,44 @@ export class SpecGenerator {
 
   private extractTechnicalStack(nodes: MarkdownNode[]): TechnicalStack | undefined {
     const techSection = this.parser.findSection(nodes, /^Technical Stack$/i);
-    if (!techSection) {
+    if (!techSection || !techSection.children) {
       return undefined;
     }
 
-    const content = this.getSectionContent(techSection);
-
-    // Simple extraction: look for common categories
-    const extractCategory = (pattern: RegExp): string[] => {
-      const match = content.match(pattern);
-      if (!match) return [];
-      const items = match[1].split(',').map((s) => s.trim());
-      return items.filter((s) => s.length > 0);
+    const stack: TechnicalStack = {
+      languages: [],
+      frameworks: [],
+      databases: [],
+      infrastructure: [],
+      buildTools: [],
     };
 
-    return {
-      languages: extractCategory(/(?:Languages?|Frontend|Backend):\s*(.+?)(?:\n|$)/i),
-      frameworks: extractCategory(/Frameworks?:\s*(.+?)(?:\n|$)/i),
-      databases: extractCategory(/Databases?:\s*(.+?)(?:\n|$)/i),
-      infrastructure: extractCategory(/(?:Infrastructure|Deployment):\s*(.+?)(?:\n|$)/i),
-      buildTools: extractCategory(/(?:Build Tools?|Tools):\s*(.+?)(?:\n|$)/i),
-    };
+    // Parse each list item for "Category: items, more items" format
+    for (const child of techSection.children) {
+      if (child.type === 'list-item') {
+        const content = child.content.trim();
+        const match = content.match(/^(.+?):\s*(.+)$/);
+        if (match) {
+          const category = match[1].toLowerCase();
+          const items = match[2].split(',').map((s) => s.trim()).filter((s) => s.length > 0);
+
+          // Categorize based on keywords
+          if (/frontend|backend|language/i.test(category)) {
+            stack.languages.push(...items);
+          } else if (/framework/i.test(category)) {
+            stack.frameworks.push(...items);
+          } else if (/database|db/i.test(category)) {
+            stack.databases.push(...items);
+          } else if (/infrastructure|deployment|hosting/i.test(category)) {
+            stack.infrastructure.push(...items);
+          } else if (/build|tool/i.test(category)) {
+            stack.buildTools.push(...items);
+          }
+        }
+      }
+    }
+
+    return stack;
   }
 
   private extractDevelopmentStandards(nodes: MarkdownNode[]): Standard[] {
@@ -728,18 +745,28 @@ export class SpecGenerator {
   private extractAcceptanceCriteria(nodes: MarkdownNode[]): AcceptanceCriterion[] {
     const criteria: AcceptanceCriterion[] = [];
 
-    // Look for "Acceptance Criteria" section
-    let foundCriteriaHeading = false;
+    // Look for "Acceptance Criteria" heading or bold text marker
+    let foundCriteriaMarker = false;
     for (const node of nodes) {
+      // Check for heading with "Acceptance Criteria"
       if (node.type === 'heading' && /Acceptance Criteria/i.test(node.content)) {
-        foundCriteriaHeading = true;
+        foundCriteriaMarker = true;
+        continue;
+      }
+      // Check for bold text marker like "**Acceptance Criteria:**"
+      if (node.type === 'paragraph' && /\*\*Acceptance Criteria:?\*\*/i.test(node.content)) {
+        foundCriteriaMarker = true;
         continue;
       }
 
-      // After finding heading, collect flat list-item nodes
-      if (foundCriteriaHeading) {
+      // After finding marker, collect flat list-item nodes
+      if (foundCriteriaMarker) {
         if (node.type === 'heading') {
           // Stop at next heading
+          break;
+        }
+        // Stop if we hit another bold marker (like **Technical Requirements:**)
+        if (node.type === 'paragraph' && /\*\*[A-Z][^*]+:?\*\*/.test(node.content)) {
           break;
         }
 
@@ -1007,10 +1034,9 @@ export class SpecGenerator {
     for (const child of section.children) {
       if (child.type === 'paragraph') {
         parts.push(child.content);
-      } else if (child.type === 'list' && child.children) {
-        for (const item of child.children) {
-          parts.push(`- ${item.content}`);
-        }
+      } else if (child.type === 'list-item') {
+        // Handle flat list-item nodes (MarkdownParser creates flat structure)
+        parts.push(`- ${child.content}`);
       } else if (child.type === 'code-block') {
         parts.push(child.content);
       }
