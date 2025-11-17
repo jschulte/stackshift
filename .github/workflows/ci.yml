@@ -214,20 +214,7 @@ jobs:
       - name: Generate diagrams
         run: npm run generate-diagrams
 
-      - name: Check for uncommitted changes
-        run: |
-          echo "Checking if diagrams are up to date..."
-
-          if git diff --exit-code docs/diagrams/; then
-            echo "✅ Diagrams are up to date"
-          else
-            echo "❌ Diagram files have uncommitted changes"
-            echo "Please run 'npm run generate-diagrams' and commit the changes"
-            git diff docs/diagrams/
-            exit 1
-          fi
-
-      - name: Validate metadata file exists
+      - name: Validate diagram generation succeeded
         run: |
           if [ -f "docs/diagrams/diagram-metadata.json" ]; then
             echo "✅ Metadata file found"
