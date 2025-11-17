@@ -7,11 +7,6 @@
 Transform any application into a fully-specified, spec-driven project with complete control - whether you're shifting to a new tech stack or taking the wheel on existing code.
 
 <p>
-  <a href="https://github.com/sponsors/jschulte"><img src="https://img.shields.io/badge/Sponsor-GitHub-ea4aaa?style=for-the-badge&logo=github" alt="GitHub Sponsors"></a>
-  <a href="https://ko-fi.com/jschulte"><img src="https://img.shields.io/badge/Support-Ko--fi-ff5e5b?style=for-the-badge&logo=ko-fi&logoColor=white" alt="Ko-fi"></a>
-</p>
-
-<p>
   <a href="https://github.com/jschulte/stackshift/actions/workflows/ci.yml"><img src="https://github.com/jschulte/stackshift/actions/workflows/ci.yml/badge.svg" alt="CI Status"></a>
   <a href="https://github.com/jschulte/stackshift/blob/main/LICENSE"><img src="https://img.shields.io/badge/License-MIT-blue.svg" alt="License"></a>
   <img src="https://img.shields.io/badge/Node.js-%3E%3D18.0.0-green" alt="Node.js">
@@ -28,7 +23,7 @@ Transform any application into a fully-specified, spec-driven project with compl
 >
 > Start in reverse (engineering), shift through 6 gears, and cruise into spec-driven development!
 >
-> *Free and open source. [Support development](https://github.com/sponsors/jschulte) to keep the gears turning!* ☕🚗
+> **Built for Cox Automotive** - Accelerating our journey to world-class software engineering through systematic transformation of our entire application portfolio.
 
 ---
 
@@ -99,6 +94,25 @@ stateDiagram-v2
 **Example:** "Add GitHub Spec Kit to existing Next.js app for spec-driven management"
 
 **Result**: A fully-documented, specification-driven application ready for enterprise development.
+
+---
+
+## 🎯 Why This Matters at Cox Automotive
+
+**The Challenge:** Cox Automotive operates hundreds of applications across our brands - Manheim, Kelley Blue Book, Autotrader, vAuto, and more. Many of these applications:
+- Lack comprehensive documentation
+- Have accumulated technical debt over years
+- Need modernization but risk is high due to tribal knowledge
+- Require significant onboarding time for new engineers
+
+**The Solution:** StackShift provides a systematic approach to:
+- **Reduce Risk** - Understand exactly what exists before making changes
+- **Accelerate Onboarding** - New team members get complete specs, not tribal knowledge
+- **Enable Modernization** - Safely migrate to modern tech stacks with confidence
+- **Scale Best Practices** - Establish spec-driven development across all teams
+- **Improve Velocity** - AI coding assistants work better with clear specifications
+
+**The Impact:** By transforming our application portfolio with StackShift, we're building the foundation for Cox Automotive to become a leader in automotive technology - with software engineering practices that match our industry ambitions.
 
 ---
 
@@ -679,11 +693,11 @@ This toolkit is designed to be:
 - **Extensible** - Add your own prompts/templates
 - **Shareable** - Use across teams and organizations
 
-Improvements welcome:
-1. Fork this toolkit
-2. Add/improve prompts or templates
-3. Share back with community
-4. Help others achieve spec-driven development
+**For Cox Automotive teams:**
+1. Create a branch for your improvements
+2. Add or enhance prompts and templates
+3. Submit a pull request for review
+4. Help scale spec-driven development across Cox
 
 ---
 
@@ -698,21 +712,22 @@ Improvements welcome:
 
 ## 📝 License
 
-This toolkit is provided as-is for use in any project. Adapt and modify as needed for your organization.
+This toolkit is provided as-is for use across Cox Automotive. Adapt and modify as needed for your team's specific needs. Originally developed as an open-source project, now maintained and enhanced for Cox's software engineering transformation.
 
 ---
 
 ## ❓ Questions & Feedback
 
-This toolkit was created to solve a real problem: **transforming partially-complete applications into fully-specified, enterprise-grade codebases**.
+This toolkit was created to solve a critical enterprise challenge: **transforming Cox Automotive's application portfolio into fully-specified, enterprise-grade codebases** that enable rapid, reliable development at scale.
 
 **Encountered an issue or have a suggestion?**
 
 - 🐛 **Found a bug?** [Open an issue](https://github.com/jschulte/stackshift/issues/new)
 - 💡 **Have an idea?** [Start a discussion](https://github.com/jschulte/stackshift/discussions)
 - 🔧 **Want to contribute?** [Submit a pull request](https://github.com/jschulte/stackshift/pulls)
+- 💬 **Need help?** Reach out to your engineering leadership or the platform team
 
-The toolkit improves with real-world usage and community feedback!
+The toolkit improves with real-world usage across our teams!
 
 ---
 
