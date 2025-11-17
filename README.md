@@ -15,11 +15,15 @@ Transform any application into a fully-specified, spec-driven project with compl
 
 </div>
 
-> **Two paths, complete control:**
+> **Three routes, complete control:**
 >
 > **🔀 Greenfield:** Extract business logic from your legacy app, then rebuild in a modern stack using tech-agnostic specs.
 >
 > **⚙️ Brownfield:** Transform your existing codebase into a spec-driven project and manage it with GitHub Spec Kit going forward.
+>
+> **🎯 Osiris:** Extract Cox Automotive Widget Services (ws-*) including widget code, ws-scripts infrastructure, and all wsm-*/ddc-* module dependencies.
+>
+> **⬆️ Upgrade Mode:** Brownfield route with automatic dependency upgrades to latest versions (modernize while spec'ing).
 >
 > Start in reverse (engineering), shift through 6 gears, and cruise into spec-driven development!
 >
@@ -48,9 +52,9 @@ Transform any application into a fully-specified, spec-driven project with compl
 5. **✨ Fifth Gear:** Complete Specification - Resolve ambiguities and clarifications
 6. **🚀 Sixth Gear:** Implement - Build features from specs!
 
-**Two Paths - Choose Your Route:**
+**Three Routes - Choose Your Path:**
 
-### 🔀 Path A: Greenfield (Shift to New Stack)
+### 🔀 Route A: Greenfield (Shift to New Stack)
 **Use when:** Rebuilding in a different tech stack or platform
 
 **Approach:** Extract business logic ONLY (tech-agnostic)
@@ -61,7 +65,7 @@ Transform any application into a fully-specified, spec-driven project with compl
 
 **Example:** "Extract business logic from Rails app to rebuild in Next.js"
 
-### ⚙️ Path B: Brownfield (Take the Wheel on Existing Code)
+### ⚙️ Route B: Brownfield (Take the Wheel on Existing Code)
 **Use when:** Managing existing codebase with GitHub Spec Kit
 
 **Approach:** Extract business logic + technical implementation (tech-prescriptive)
@@ -71,11 +75,36 @@ Transform any application into a fully-specified, spec-driven project with compl
 - Perfect for ongoing spec-driven development
 
 **Two Modes:**
-- **Standard**: Create specs for current state (as-is)
-- **Upgrade** 🆕: Create specs + upgrade all dependencies to latest versions
+- **Standard:** Create specs for current state (as-is)
+- **Upgrade:** 🆕 Create specs + upgrade all dependencies to latest versions
 
 **Example:** "Add GitHub Spec Kit to existing Next.js app for spec-driven management"
+
 **Example (Upgrade):** "Spec this legacy app AND upgrade everything to modern versions"
+
+### 🎯 Route C: Osiris (Cox Automotive Widget Services)
+**Use when:** Analyzing Cox Automotive Osiris Widget Services (ws-* repos)
+
+**Auto-detected when:** Repository name starts with `ws-`
+
+**Approach:** Comprehensive widget + module extraction (tech-agnostic)
+- Extract widget business logic
+- Extract ws-scripts infrastructure (SSR, Common data, preferences, feature flags)
+- Deep-dive all wsm-* module dependencies
+- Analyze ddc-* library integrations
+- Document complete business logic for migration
+
+**What Gets Analyzed:**
+1. **Widget Code** - React components, state management, user interactions
+2. **ws-scripts Infrastructure** - Server-side rendering, build tooling, common data
+3. **Configuration Files** - config/prefs.json, feature-flags.json, labels.json
+4. **Server-Side Logic** - src/server/store.js, endpoints.js, middleware
+5. **WSM Modules** - All wsm-* dependencies (often 60-80% of business logic)
+6. **DDC Libraries** - ddc-* utility integrations
+
+**Example:** "Extract ws-vehicle-details widget and all module dependencies for migration to Next.js"
+
+**Result:** Complete business logic captured from widget AND all shared modules, ready for migration.
 
 **Result**: A fully-documented, specification-driven application ready for enterprise development.
 
@@ -175,12 +204,14 @@ Install as a Claude Code plugin for interactive skills and workflow tracking:
 ```
 
 Restart Claude Code. Skills will now be available:
-- `analyze` - Initial Analysis
-- `reverse-engineer` - Reverse Engineer
-- `create-specs` - Create Specifications
-- `gap-analysis` - Gap Analysis
-- `complete-spec` - Complete Specification
-- `implement` - Implement from Spec
+- `analyze` - Initial Analysis (Gear 1)
+- `reverse-engineer` - Reverse Engineer (Gear 2)
+- `create-specs` - Create Specifications (Gear 3)
+- `gap-analysis` - Gap Analysis (Gear 4)
+- `complete-spec` - Complete Specification (Gear 5)
+- `implement` - Implement from Spec (Gear 6)
+- `cruise-control` - Automatic mode (all gears)
+- `modernize` - Upgrade dependencies (Brownfield only)
 
 **Usage:**
 
@@ -277,7 +308,7 @@ See [`web/README.md`](web/README.md) for complete instructions.
 
 **StackShift asks this question in Gear 1 (Initial Analysis):**
 
-> Which path best aligns with your goals?
+> Which route best aligns with your goals?
 >
 > **A) Greenfield:** Build new app based on business logic
 >    - Extract business requirements only (tech-agnostic)
@@ -288,8 +319,14 @@ See [`web/README.md`](web/README.md) for complete instructions.
 >    - Extract business logic + technical details (prescriptive)
 >    - Manage existing codebase with specs
 >    - Focus: WHAT it does + HOW it's implemented
+>
+> **C) Osiris:** Extract Cox Automotive Widget Service
+>    - Auto-detected for ws-* repository names
+>    - Extract widget + all wsm-*/ddc-* modules + ws-scripts
+>    - Tech-agnostic for migration to modern stacks
+>    - Focus: Complete widget ecosystem
 
-### When to Choose Greenfield (Path A)
+### When to Choose Greenfield (Route A)
 
 **Perfect for:**
 - 🔄 **Platform migrations** - Rails → Next.js, PHP → Python, Monolith → Microservices
@@ -304,7 +341,7 @@ See [`web/README.md`](web/README.md) for complete instructions.
 - Can be implemented in ANY technology
 - Example: "User authentication with email/password" (not "JWT via passport.js")
 
-### When to Choose Brownfield (Path B)
+### When to Choose Brownfield (Route B)
 
 **Perfect for:**
 - 📋 **Spec-driven management** - Add GitHub Spec Kit to existing codebase
@@ -319,17 +356,65 @@ See [`web/README.md`](web/README.md) for complete instructions.
 - `/speckit.analyze` validates code matches specs
 - Example: "User authentication using JWT via jose 5.1.0, bcrypt 5.1.1, stored in httpOnly cookies"
 
-### Path Comparison
+#### Brownfield Upgrade Mode 🆕
 
-| Aspect | Greenfield (A) | Brownfield (B) |
-|--------|----------------|----------------|
-| **Focus** | WHAT only | WHAT + HOW |
-| **Tech Stack** | Any (your choice) | Current (documented) |
-| **Specifications** | Agnostic | Prescriptive |
-| **Implementation** | Build new | Manage existing |
-| **Flexibility** | High | Constrained to current stack |
-| **Validation** | Manual | `/speckit.analyze` automated |
-| **Use Case** | Platform migration | Ongoing development |
+**What it does:**
+After completing all 6 gears and establishing full spec coverage, optionally modernize ALL dependencies to latest versions.
+
+**The Process:**
+1. Complete Gears 1-6 (establish specs for current state)
+2. Capture dependency baseline (document all current versions)
+3. Run tests to establish behavioral baseline
+4. Upgrade ALL dependencies to latest (npm upgrade, etc.)
+5. Run tests to detect breaking changes
+6. Use specs to guide breaking change fixes
+7. Improve test coverage to 85%+ using spec acceptance criteria
+8. Validate with `/speckit.analyze` that behavior preserved
+9. Generate upgrade report documenting changes
+
+**Benefits:**
+- ✅ Specs act as safety net during upgrade
+- ✅ Breaking changes guided by intended behavior (from specs)
+- ✅ Systematic approach reduces upgrade risk
+- ✅ Test coverage improved alongside upgrade
+- ✅ Security vulnerabilities eliminated
+- ✅ No full rewrite needed
+
+**Example:** "Spec this Next.js 12 app, then upgrade to Next.js 15 with spec-guided migration"
+
+**Slash command:** After Gear 6, run `/stackshift.modernize` to start the upgrade process
+
+### When to Choose Osiris (Route C)
+
+**Perfect for:**
+- 🎯 **Osiris widget migrations** - Move ws-* widgets to modern stacks (Next.js, React, etc.)
+- 📦 **Module consolidation** - Understand all wsm-* dependencies before migration
+- 🔄 **Widget modernization** - Extract complete business logic for rebuild
+- 📚 **Widget documentation** - Capture years of customer-driven features
+- 👥 **Widget team transitions** - Preserve knowledge when teams change
+
+**Results in:**
+- Complete business logic from widget AND all shared modules
+- ws-scripts infrastructure documented (preferences, feature flags, labels)
+- Tech-agnostic specifications ready for modern stack implementation
+- Example: "Vehicle details widget with pricing display (wsm-pricing-display), incentive calculations (wsm-incentive-display), media gallery (wsm-vehicle-media-gallery)"
+
+### Route Comparison
+
+| Aspect | Greenfield (A) | Brownfield (B) | Brownfield Upgrade | Osiris (C) |
+|--------|----------------|----------------|-------------------|------------|
+| **Focus** | WHAT only | WHAT + HOW | WHAT + HOW + Modernize | WHAT (widget + modules) |
+| **Tech Stack** | Any (your choice) | Current (documented) | Latest versions | Any (your choice) |
+| **Specifications** | Agnostic | Prescriptive | Prescriptive | Agnostic |
+| **Implementation** | Build new | Manage existing | Modernize existing | Build new |
+| **Scope** | Single app | Single app | Single app | Widget + all modules |
+| **Dependencies** | Your choice | As-is | Upgrade to latest | Your choice |
+| **Test Coverage** | Your target | As-is | Improve to 85%+ | Your target |
+| **Flexibility** | High | Constrained | Medium | High |
+| **Validation** | Manual | `/speckit.analyze` | `/speckit.analyze` | Manual |
+| **Cox Specific** | No | No | No | Yes (Osiris) |
+| **Use Case** | Platform migration | Ongoing development | Modernization | Widget migration |
+| **Auto-Detect** | No | No | No | Yes (ws-* repos) |
 
 ---
 
@@ -570,6 +655,14 @@ This toolkit works for:
 - Works even with minimal documentation
 - Infers behavior from code
 - Creates modernization roadmap
+
+### Osiris Widget Services (Cox Automotive)
+- Auto-detects ws-* repository names
+- Extracts widget + wsm-*/ddc-* modules + ws-scripts
+- Analyzes server-side rendering and configuration
+- Documents preferences, feature flags, labels
+- Captures complete business logic for migration
+- Ready for Next.js/React modernization
 
 ---
 

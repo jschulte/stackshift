@@ -4,7 +4,29 @@ Future features and enhancements planned for StackShift.
 
 ---
 
-## v1.0 (Current) ✅
+## v1.2 (Current) ✅
+
+**Released:** 2025-11-17
+
+- ✅ 6-gear reverse engineering process
+- ✅ Three routes: Greenfield / Brownfield / **Osiris** 🆕
+- ✅ **Brownfield Upgrade Mode** - Modernize dependencies with spec-guided fixes 🆕
+- ✅ **Osiris Widget Route** - ws-* auto-detection, module analysis, ws-scripts extraction 🆕
+- ✅ Claude Code plugin (8 skills including **modernize**, 2 agents)
+- ✅ MCP server (7 tools with dynamic SKILL.md loading)
+- ✅ **Auto-install /speckit.* slash commands** in Gear 3 🆕
+- ✅ Web orchestrator (browser support)
+- ✅ Cruise control (automatic mode)
+- ✅ Batch processing tools
+- ✅ GitHub Spec Kit integration
+- ✅ Comprehensive questionnaire
+- ✅ **Cox Automotive optimizations** (Osiris, wsm-*/ddc-* modules, ws-scripts) 🆕
+
+**Status:** Production-ready, Cox Automotive internal deployment
+
+---
+
+## v1.0 ✅
 
 **Released:** 2024-01-15
 
@@ -18,7 +40,7 @@ Future features and enhancements planned for StackShift.
 - ✅ GitHub Spec Kit integration
 - ✅ Comprehensive questionnaire
 
-**Status:** Production-ready, fully documented
+**Status:** Open source release
 
 ---
 
