@@ -14,6 +14,9 @@ mcp-server/node_modules/
 !.claude/commands/speckit.*.md
 !.claude/settings.json
 
+# Modernization artifacts (created during brownfield facelift)
+.modernize/
+
 specs/
 .stackshift-state.json
 .stackshift/
