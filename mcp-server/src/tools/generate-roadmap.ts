@@ -122,17 +122,40 @@ export async function generateRoadmapToolHandler(args: GenerateRoadmapArgs) {
     let features: ScoredFeature[] = [];
 
     if (includeFeatureBrainstorming) {
-      outputLines.push('## Step 3: Brainstorming Desirable Features\n');
+      outputLines.push('## Step 3: AI-Powered Feature Brainstorming\n');
 
-      // Brainstorm features
+      // Create brainstormer
       const { FeatureBrainstormer } = await import('../brainstorming/feature-brainstormer.js');
       const brainstormer = new FeatureBrainstormer({
         featuresPerCategory: 5,
-        useAI: false, // Use heuristic brainstorming for now
         verbose: true,
       });
 
-      features = await brainstormer.brainstormFeatures(projectContext);
+      try {
+        // This will throw an error with the analysis prompt
+        features = await brainstormer.brainstormFeatures(projectContext);
+      } catch (error) {
+        // The error contains the analysis prompt for Claude
+        if (error instanceof Error && error.message.includes('AI-powered brainstorming')) {
+          outputLines.push('⚡ **AI Analysis Required**\n');
+          outputLines.push('To complete feature brainstorming, Claude needs to analyze your project.\n');
+          outputLines.push('---\n');
+          outputLines.push(error.message);
+          outputLines.push('\n---\n');
+          outputLines.push('**After Claude provides the feature JSON, run the tool again to continue.**\n');
+
+          // Return early with the analysis prompt
+          return {
+            content: [
+              {
+                type: 'text',
+                text: outputLines.join('\n'),
+              },
+            ],
+          };
+        }
+        throw error; // Re-throw if it's a different error
+      }
 
       outputLines.push(`✅ Brainstormed ${features.length} desirable features\n`);
 
