@@ -29,6 +29,9 @@ describe('skill-loader', () => {
     );
     await fs.mkdir(testDir, { recursive: true });
 
+    // Set HOME to test directory for security validation
+    process.env.HOME = testDir;
+
     // Spy on console.error to suppress output during tests
     vi.spyOn(console, 'error').mockImplementation(() => {});
   });

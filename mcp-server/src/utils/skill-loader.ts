@@ -7,15 +7,37 @@
 
 import * as fs from 'fs/promises';
 import * as path from 'path';
+import { createDefaultValidator } from './security.js';
+import { readFileSafe } from './file-utils.js';
 
 /**
  * Try to load SKILL.md from multiple possible locations
  */
 export async function loadSkillFile(skillName: string): Promise<string | null> {
+  // Validate skill name: no path separators
+  if (skillName.includes('/') || skillName.includes('\\') || skillName.includes('..')) {
+    throw new Error(`Invalid skill name: cannot contain path separators`);
+  }
+
+  // Validate skill name: whitelist regex
+  if (!/^[a-zA-Z0-9_-]+$/.test(skillName)) {
+    throw new Error(`Invalid skill name: must be alphanumeric with hyphens/underscores only`);
+  }
+
+  // Validate HOME environment variable
+  const homePath = process.env.HOME;
+  if (!homePath || homePath.includes('\0')) {
+    throw new Error('Invalid HOME environment variable');
+  }
+
+  // Create validator for HOME directory
+  const validator = createDefaultValidator();
+  const validatedHome = validator.validateDirectory(homePath);
+
   const possiblePaths = [
-    // If StackShift is installed locally
+    // If StackShift is installed locally (use validated HOME)
     path.join(
-      process.env.HOME || '~',
+      validatedHome,
       '.claude/plugins/marketplaces/jschulte/stackshift/skills',
       skillName,
       'SKILL.md'
@@ -31,7 +53,7 @@ export async function loadSkillFile(skillName: string): Promise<string | null> {
 
   for (const filePath of possiblePaths) {
     try {
-      const content = await fs.readFile(filePath, 'utf-8');
+      const content = await readFileSafe(filePath);
       if (content && content.length > 100) {
         console.error(`✅ Loaded SKILL.md from: ${filePath}`);
         return content;
