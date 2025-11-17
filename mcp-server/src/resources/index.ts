@@ -6,6 +6,8 @@
 
 import * as fs from 'fs/promises';
 import * as path from 'path';
+import { createDefaultValidator } from '../utils/security.js';
+import { readJsonSafe } from '../utils/file-utils.js';
 
 const GEARS = [
   { id: 'analyze', name: 'Gear 1: Initial Analysis', emoji: '🔍' },
@@ -20,17 +22,23 @@ const GEARS = [
  * Get current state
  */
 export async function getStateResource() {
-  const directory = process.cwd();
-  const stateFile = path.join(directory, '.stackshift-state.json');
+  // Create security validator
+  const validator = createDefaultValidator();
 
   try {
-    const state = await fs.readFile(stateFile, 'utf-8');
+    // Validate directory before using it
+    const directory = validator.validateDirectory(process.cwd());
+    const stateFile = path.join(directory, '.stackshift-state.json');
+
+    // Use safe JSON read (with size limit and sanitization)
+    const state = await readJsonSafe(stateFile);
+
     return {
       contents: [
         {
           uri: 'stackshift://state',
           mimeType: 'application/json',
-          text: state,
+          text: JSON.stringify(state, null, 2),
         },
       ],
     };
@@ -58,12 +66,16 @@ export async function getStateResource() {
  * Get progress through gears
  */
 export async function getProgressResource() {
-  const directory = process.cwd();
-  const stateFile = path.join(directory, '.stackshift-state.json');
+  // Create security validator
+  const validator = createDefaultValidator();
 
   try {
-    const stateData = await fs.readFile(stateFile, 'utf-8');
-    const state = JSON.parse(stateData);
+    // Validate directory before using it
+    const directory = validator.validateDirectory(process.cwd());
+    const stateFile = path.join(directory, '.stackshift-state.json');
+
+    // Use safe JSON read (replaces readFile + JSON.parse)
+    const state = await readJsonSafe(stateFile);
 
     const progress = GEARS.map(gear => {
       const isCompleted = state.completedSteps.includes(gear.id);
@@ -120,12 +132,16 @@ ${completedCount === totalGears ? '\n🏁 **All gears complete! Cruise into prod
  * Get selected route
  */
 export async function getRouteResource() {
-  const directory = process.cwd();
-  const stateFile = path.join(directory, '.stackshift-state.json');
+  // Create security validator
+  const validator = createDefaultValidator();
 
   try {
-    const stateData = await fs.readFile(stateFile, 'utf-8');
-    const state = JSON.parse(stateData);
+    // Validate directory before using it
+    const directory = validator.validateDirectory(process.cwd());
+    const stateFile = path.join(directory, '.stackshift-state.json');
+
+    // Use safe JSON read
+    const state = await readJsonSafe(stateFile);
 
     const routeInfo =
       state.path === 'greenfield'

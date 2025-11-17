@@ -234,7 +234,7 @@ server.setRequestHandler(CallToolRequestSchema, async request => {
         return await implementToolHandler(args || {});
 
       case 'stackshift_cruise_control':
-        return await cruiseControlToolHandler((args as any) || {});
+        return await cruiseControlToolHandler(args || {} as any);
 
       default:
         throw new Error(`Unknown tool: ${name}`);
