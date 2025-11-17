@@ -5,7 +5,7 @@
 ## 1. Build (30 seconds)
 
 ```bash
-cd /Users/jonahschulte/git/stackshift/cli/stackshift-cli
+cd ~/git/stackshift/cli
 go build -o stackshift
 ```
 
