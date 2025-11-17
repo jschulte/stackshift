@@ -1,6 +1,7 @@
 {
   "name": "stackshift",
   "version": "1.0.0",
+  "type": "module",
   "description": "Reverse engineering toolkit with manual control - shift gears in your codebase. Transform any application into a fully-specified, spec-driven project with GitHub Spec Kit. Dual workflow: extract business logic for rebuilds (Greenfield) or manage existing code with specs (Brownfield).",
   "keywords": [
     "claude",
@@ -33,8 +34,11 @@
   "scripts": {
     "test": "echo \"No tests yet\" && exit 0",
     "build:mcp": "cd mcp-server && npm install && npm run build",
+    "build:diagrams": "cd scripts && npx tsc",
     "dev:mcp": "cd mcp-server && npm run dev",
     "start:mcp": "cd mcp-server && npm start",
+    "generate-diagrams": "npm run build:diagrams && node scripts/dist/generate-diagrams/index.js",
+    "generate-diagrams:verbose": "npm run build:diagrams && node scripts/dist/generate-diagrams/index.js --verbose",
     "prepare": "husky"
   },
   "files": [
@@ -46,6 +50,8 @@
     "LICENSE"
   ],
   "devDependencies": {
-    "husky": "^9.1.7"
+    "@types/node": "^24.10.1",
+    "husky": "^9.1.7",
+    "typescript": "^5.9.3"
   }
 }
