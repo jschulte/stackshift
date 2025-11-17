@@ -207,7 +207,7 @@ Add `stackshift_generate_diagrams` MCP tool that generates diagrams on demand.
 - TypeScript codebase in `mcp-server/src/`
 
 ### External Dependencies
-- **@typescript/compiler**: For AST parsing (new dependency)
+- **typescript**: For AST parsing (new dependency)
 - **fs/promises**: For file operations (built-in)
 - **path**: For path manipulation (built-in)
 
