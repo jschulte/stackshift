@@ -151,6 +151,50 @@ The MCP server exposes **6 tools** (one for each gear):
 
 **Uses:** GitHub Spec Kit's `/speckit.implement` workflow
 
+### 7. stackshift_cruise_control
+**Cruise Control:** Automatic mode - shift through all 6 gears sequentially
+
+**Parameters:**
+- `directory` (optional) - Project directory path
+- `route` (required) - Route choice: `greenfield` or `brownfield`
+- `clarifications_strategy` (optional) - How to handle clarifications: `defer`, `prompt`, or `skip` (default: `defer`)
+- `implementation_scope` (optional) - What to implement in Gear 6: `none`, `p0`, `p0_p1`, or `all` (default: `none`)
+
+**Automates:** Complete StackShift workflow from analysis to implementation
+
+### 8. stackshift_generate_roadmap (F008)
+**Strategic Roadmap Generation:** Analyze gaps and generate prioritized roadmaps
+
+**Parameters:**
+- `directory` (optional) - Project directory path (defaults to current directory)
+- `outputFormat` (optional) - Export format: `markdown`, `json`, `csv`, `html`, or `all` (default: `markdown`)
+- `includeFeatureBrainstorming` (optional) - Whether to brainstorm desirable features (default: `false`)
+- `confidenceThreshold` (optional) - Minimum confidence for gap inclusion, 0-100 (default: `50`)
+- `teamSize` (optional) - Team size for timeline estimation, 1-10 (default: `2`)
+
+**Generates:**
+- Spec gap analysis (what specs say vs what code does)
+- Feature gap analysis (advertised features vs actual capabilities)
+- Desirable feature suggestions (optional AI-powered brainstorming)
+- Prioritized roadmap with phases (P0-P3 priorities)
+- Timeline estimates for different team sizes
+- Export to ROADMAP.md, JSON, CSV, HTML, or GitHub Issues
+
+**Output:** Comprehensive roadmap in requested format(s)
+
+**Example:**
+```json
+{
+  "directory": "/path/to/project",
+  "outputFormat": "all",
+  "includeFeatureBrainstorming": true,
+  "confidenceThreshold": 70,
+  "teamSize": 2
+}
+```
+
+**See also:** [F008 Usage Examples](../production-readiness-specs/F008-roadmap-generation/examples/usage-examples.md)
+
 ---
 
 ## Available Resources
