@@ -61,52 +61,39 @@ export async function generateAllSpecsToolHandler(args: GenerateAllSpecsArgs) {
 
     console.log(`✅ Generated ${implPlansResult.plansGenerated} implementation plans`);
 
-    // Step 4: Set up Spec Kit slash commands (if not already present)
-    console.log('Step 4/4: Setting up Spec Kit slash commands...');
+    // Step 4: Verify/setup Spec Kit slash commands
+    console.log('Step 4/4: Verifying Spec Kit slash commands...');
     const directory = args.directory || process.cwd();
     const claudeCommandsDir = path.join(directory, '.claude', 'commands');
 
     try {
-      await fs.mkdir(claudeCommandsDir, { recursive: true });
+      // Check if .claude/commands already has speckit commands
+      const existingCommands = await fs.readdir(claudeCommandsDir).catch(() => []);
+      const hasSpecKitCommands = existingCommands.some((file) => file.startsWith('speckit.'));
 
-      // Copy speckit commands from plugin
-      const pluginCommandsDir = path.resolve(__dirname, '../../../plugin/claude-commands');
-      const specKitCommands = [
-        'speckit.analyze.md',
-        'speckit.clarify.md',
-        'speckit.implement.md',
-        'speckit.plan.md',
-        'speckit.specify.md',
-        'speckit.tasks.md',
-      ];
-
-      let commandsCopied = 0;
-      for (const cmd of specKitCommands) {
-        const src = path.join(pluginCommandsDir, cmd);
-        const dest = path.join(claudeCommandsDir, cmd);
-
-        try {
-          await fs.copyFile(src, dest);
-          commandsCopied++;
-        } catch (copyError) {
-          // If plugin commands don't exist, skip (already in repo .claude/commands/)
-          console.log(`Note: ${cmd} not copied (may already exist)`);
-        }
+      if (hasSpecKitCommands) {
+        console.log(`✅ Spec Kit commands already configured (${existingCommands.filter((f) => f.startsWith('speckit.')).length} found)`);
+        allProgress.push({
+          phase: 'verify-commands',
+          status: 'completed',
+          message: 'Spec Kit slash commands already configured',
+        });
+      } else {
+        console.log('ℹ️  Spec Kit commands not found. Users should copy commands from StackShift repo.');
+        allProgress.push({
+          phase: 'verify-commands',
+          status: 'warning',
+          message:
+            'Spec Kit slash commands not found. Copy from .claude/commands/ in StackShift repo or the commands will be available through the plugin.',
+        });
       }
-
-      console.log(`✅ Spec Kit commands available (${commandsCopied} installed)`);
-      allProgress.push({
-        phase: 'setup-commands',
-        status: 'completed',
-        message: `Spec Kit slash commands configured (${commandsCopied} commands)`,
-      });
     } catch (cmdError) {
-      // Non-fatal - commands may already exist
-      console.log(`Note: Spec Kit commands setup skipped (may already be configured)`);
+      // Non-fatal - not critical for spec generation
+      console.log(`Note: Could not verify slash commands (non-fatal)`);
       allProgress.push({
-        phase: 'setup-commands',
-        status: 'warning',
-        message: 'Spec Kit commands not copied (may already exist in .claude/commands/)',
+        phase: 'verify-commands',
+        status: 'info',
+        message: 'Slash command verification skipped. Commands may already be available through plugin.',
       });
     }
 
