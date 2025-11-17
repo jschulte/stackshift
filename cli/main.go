@@ -11,7 +11,8 @@ import (
 )
 
 const (
-	SelectMode = iota
+	LoadingMode = iota
+	SelectMode
 	SettingsMode
 	ConfirmMode
 	ExecutingMode
@@ -112,12 +113,9 @@ var (
 )
 
 func initialModel() model {
-	// Auto-discover repositories
-	repos := discoverRepositories()
-
 	return model{
-		mode:           SelectMode,
-		repos:          repos,
+		mode:           LoadingMode,
+		repos:          []Repository{},
 		selectedRepos:  make(map[string]bool),
 		route:          "brownfield",
 		transmission:   "cruise-control",
@@ -127,6 +125,11 @@ func initialModel() model {
 		useClaudeCode:  true,
 		logs:           []string{},
 	}
+}
+
+// Message type for repositories loaded
+type reposLoadedMsg struct {
+	repos []Repository
 }
 
 func discoverRepositories() []Repository {
@@ -212,7 +215,15 @@ func checkProgress(repoPath string) (int, string) {
 }
 
 func (m model) Init() tea.Cmd {
-	return tickCmd()
+	return tea.Batch(tickCmd(), loadRepositoriesCmd())
+}
+
+// Command to load repositories in background
+func loadRepositoriesCmd() tea.Cmd {
+	return func() tea.Msg {
+		repos := discoverRepositories()
+		return reposLoadedMsg{repos: repos}
+	}
 }
 
 // Ticker for spinner animation
@@ -236,9 +247,14 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	case tickMsg:
 		// Update spinner frame
 		m.spinnerFrame++
-		if m.mode == ExecutingMode && !m.executionDone {
+		if m.mode == ExecutingMode && !m.executionDone || m.mode == LoadingMode {
 			return m, tickCmd()
 		}
+		return m, nil
+
+	case reposLoadedMsg:
+		m.repos = msg.repos
+		m.mode = SelectMode
 		return m, nil
 
 	case executionStartedMsg:
@@ -284,6 +300,11 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 func (m model) handleKeyPress(key string) (tea.Model, tea.Cmd) {
 	switch m.mode {
+	case LoadingMode:
+		// Only allow quit during loading
+		if key == "q" || key == "ctrl+c" {
+			return m, tea.Quit
+		}
 	case SelectMode:
 		return m.handleSelectMode(key)
 	case SettingsMode:
@@ -469,6 +490,8 @@ func (m model) startExecution() tea.Cmd {
 
 func (m model) View() string {
 	switch m.mode {
+	case LoadingMode:
+		return m.viewLoadingMode()
 	case SelectMode:
 		return m.viewSelectMode()
 	case SettingsMode:
@@ -482,6 +505,19 @@ func (m model) View() string {
 	}
 
 	return ""
+}
+
+func (m model) viewLoadingMode() string {
+	spinners := []string{"⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏"}
+	spinner := spinners[m.spinnerFrame%len(spinners)]
+
+	s := titleStyle.Render("🚗 STACKSHIFT") + "\n\n"
+	s += fmt.Sprintf("%s Discovering repositories...\n\n", spinner)
+	s += helpStyle.Render("Scanning for Git repositories in your workspace\n")
+	s += helpStyle.Render("This may take a moment for large directories\n\n")
+	s += helpStyle.Render("q: Quit")
+
+	return s
 }
 
 func (m model) viewSelectMode() string {
