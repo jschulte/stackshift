@@ -677,6 +677,25 @@ This toolkit is designed to be:
 
 ---
 
+## 🔄 Upstream Sync Automation (Cox Version)
+
+The Cox version automatically syncs with upstream StackShift to get latest features:
+
+**Automated (Recommended):**
+- GitHub Action runs weekly on Mondays at 9 AM UTC
+- Auto-merges changes and creates PRs for review
+- Handles Cox-specific patterns (removes mcp-server)
+- See: `.github/workflows/sync-upstream.yml`
+
+**Manual:**
+```bash
+./scripts/cox-automation/sync-upstream.sh
+```
+
+For full documentation, see [`scripts/cox-automation/README.md`](scripts/cox-automation/README.md)
+
+---
+
 ## 📝 License
 
 This toolkit is provided as-is for use across Cox Automotive. Adapt and modify as needed for your team's specific needs. Originally developed as an open-source project, now maintained and enhanced for Cox's software engineering transformation.

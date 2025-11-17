@@ -1,0 +1,214 @@
+name: Sync Upstream StackShift
+
+on:
+  # Run weekly on Monday at 9 AM UTC (4 AM EST)
+  schedule:
+    - cron: '0 9 * * 1'
+
+  # Allow manual trigger
+  workflow_dispatch:
+    inputs:
+      upstream_ref:
+        description: 'Upstream branch/tag to sync (default: main)'
+        required: false
+        default: 'main'
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  sync-upstream:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Cox repo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Configure Git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Add upstream remote
+        run: |
+          git remote add upstream https://github.com/jschulte/stackshift.git || true
+          git fetch upstream
+
+      - name: Get upstream version
+        id: upstream-version
+        run: |
+          UPSTREAM_REF="${{ github.event.inputs.upstream_ref || 'main' }}"
+          LATEST_TAG=$(git describe --tags upstream/${UPSTREAM_REF} --abbrev=0 2>/dev/null || echo "")
+          LATEST_COMMIT=$(git rev-parse --short upstream/${UPSTREAM_REF})
+
+          if [ -n "$LATEST_TAG" ]; then
+            echo "version=${LATEST_TAG}" >> $GITHUB_OUTPUT
+            echo "ref=${LATEST_TAG}" >> $GITHUB_OUTPUT
+          else
+            echo "version=${LATEST_COMMIT}" >> $GITHUB_OUTPUT
+            echo "ref=upstream/${UPSTREAM_REF}" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Check if already synced
+        id: check-sync
+        run: |
+          UPSTREAM_COMMIT=$(git rev-parse upstream/${{ github.event.inputs.upstream_ref || 'main' }})
+          if git merge-base --is-ancestor $UPSTREAM_COMMIT HEAD; then
+            echo "already_synced=true" >> $GITHUB_OUTPUT
+            echo "✅ Already up to date with upstream"
+          else
+            echo "already_synced=false" >> $GITHUB_OUTPUT
+            COMMITS_BEHIND=$(git rev-list --count HEAD..upstream/${{ github.event.inputs.upstream_ref || 'main' }})
+            echo "commits_behind=${COMMITS_BEHIND}" >> $GITHUB_OUTPUT
+            echo "📊 Behind upstream by ${COMMITS_BEHIND} commits"
+          fi
+
+      - name: Create sync branch
+        if: steps.check-sync.outputs.already_synced == 'false'
+        run: |
+          BRANCH_NAME="upstream-sync-${{ steps.upstream-version.outputs.version }}-$(date +%Y%m%d)"
+          git checkout -b ${BRANCH_NAME}
+          echo "SYNC_BRANCH=${BRANCH_NAME}" >> $GITHUB_ENV
+
+      - name: Merge upstream changes
+        if: steps.check-sync.outputs.already_synced == 'false'
+        id: merge
+        run: |
+          set +e
+          git merge --no-commit --no-ff upstream/${{ github.event.inputs.upstream_ref || 'main' }}
+          MERGE_EXIT=$?
+          set -e
+
+          if [ $MERGE_EXIT -eq 0 ]; then
+            echo "status=clean" >> $GITHUB_OUTPUT
+            echo "✅ Clean merge - no conflicts"
+          else
+            echo "status=conflicts" >> $GITHUB_OUTPUT
+            echo "⚠️ Merge has conflicts"
+          fi
+
+      - name: Handle Cox-specific patterns
+        if: steps.check-sync.outputs.already_synced == 'false' && steps.merge.outputs.status == 'conflicts'
+        id: auto-resolve
+        run: |
+          set +e
+
+          # Always remove mcp-server (Cox pattern)
+          if [ -d mcp-server ]; then
+            echo "🔧 Removing mcp-server directory (Cox pattern)"
+            git rm -rf mcp-server/ 2>/dev/null || true
+          fi
+
+          # Check if conflicts remain
+          if git diff --name-only --diff-filter=U | grep -q .; then
+            echo "resolved=false" >> $GITHUB_OUTPUT
+            echo "⚠️ Conflicts remain after auto-resolution"
+            CONFLICTS=$(git diff --name-only --diff-filter=U)
+            echo "conflicts<<EOF" >> $GITHUB_OUTPUT
+            echo "$CONFLICTS" >> $GITHUB_OUTPUT
+            echo "EOF" >> $GITHUB_OUTPUT
+          else
+            echo "resolved=true" >> $GITHUB_OUTPUT
+            echo "✅ All conflicts auto-resolved"
+          fi
+
+          set -e
+
+      - name: Commit merge
+        if: steps.check-sync.outputs.already_synced == 'false' && (steps.merge.outputs.status == 'clean' || steps.auto-resolve.outputs.resolved == 'true')
+        run: |
+          COMMIT_MSG=$(cat <<EOF
+          Merge upstream StackShift ${{ steps.upstream-version.outputs.version }}
+
+          Automated sync from https://github.com/jschulte/stackshift
+
+          Upstream changes: ${{ steps.check-sync.outputs.commits_behind }} commits
+
+          Cox customizations preserved:
+          - ✅ MCP server removed (should live in mcp-tools)
+          - ✅ Osiris documentation intact
+          - ✅ Cox-specific README sections maintained
+
+          Auto-resolved patterns:
+          - Removed mcp-server/ directory
+
+          Generated by: .github/workflows/sync-upstream.yml
+          EOF
+          )
+
+          git commit -m "$COMMIT_MSG"
+
+      - name: Push sync branch
+        if: steps.check-sync.outputs.already_synced == 'false' && (steps.merge.outputs.status == 'clean' || steps.auto-resolve.outputs.resolved == 'true')
+        run: |
+          git push origin ${SYNC_BRANCH}
+
+      - name: Create Pull Request
+        if: steps.check-sync.outputs.already_synced == 'false' && (steps.merge.outputs.status == 'clean' || steps.auto-resolve.outputs.resolved == 'true')
+        uses: peter-evans/create-pull-request@v5
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          branch: ${{ env.SYNC_BRANCH }}
+          title: "🔄 Sync upstream StackShift ${{ steps.upstream-version.outputs.version }}"
+          body: |
+            ## Upstream Sync: ${{ steps.upstream-version.outputs.version }}
+
+            This PR automatically syncs changes from the upstream StackShift repository.
+
+            ### 📊 Changes
+            - **Commits behind:** ${{ steps.check-sync.outputs.commits_behind }}
+            - **Upstream source:** https://github.com/jschulte/stackshift
+            - **Upstream ref:** ${{ steps.upstream-version.outputs.ref }}
+
+            ### ✅ Cox Customizations Preserved
+            - MCP server removed (should live in mcp-tools)
+            - Osiris documentation intact
+            - Cox-specific README sections maintained
+
+            ### 🔧 Auto-Resolved Conflicts
+            - Removed mcp-server/ directory (Cox pattern)
+
+            ### 📝 Review Checklist
+            - [ ] Review upstream changes
+            - [ ] Verify Cox customizations are intact
+            - [ ] Check KNOWN_ISSUES.md still accurate
+            - [ ] Test plugin functionality
+            - [ ] Verify Osiris docs unchanged
+
+            ### 🚀 Merge Instructions
+            1. Review the changes
+            2. Run tests if needed
+            3. Merge when ready
+
+            ---
+
+            **Generated by:** `.github/workflows/sync-upstream.yml`
+            **Triggered:** ${{ github.event_name == 'schedule' && 'Scheduled (weekly)' || 'Manual' }}
+          labels: |
+            upstream-sync
+            automation
+          draft: false
+
+      - name: Report conflicts
+        if: steps.check-sync.outputs.already_synced == 'false' && steps.auto-resolve.outputs.resolved == 'false'
+        run: |
+          echo "::error::❌ Merge conflicts require manual resolution"
+          echo "::error::Conflicts in: ${{ steps.auto-resolve.outputs.conflicts }}"
+          echo ""
+          echo "To resolve manually:"
+          echo "1. git fetch origin"
+          echo "2. git checkout ${SYNC_BRANCH}"
+          echo "3. Resolve conflicts in: ${{ steps.auto-resolve.outputs.conflicts }}"
+          echo "4. git add <resolved-files>"
+          echo "5. git commit"
+          echo "6. git push origin ${SYNC_BRANCH}"
+          exit 1
+
+      - name: Already up to date
+        if: steps.check-sync.outputs.already_synced == 'true'
+        run: |
+          echo "✅ Repository is already up to date with upstream"
+          echo "No action needed."
