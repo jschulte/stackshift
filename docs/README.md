@@ -69,26 +69,57 @@ Internal documentation about how StackShift was built:
 
 ---
 
+## 📋 Project Planning & Reviews
+
+### Planning Documents (`/docs/planning/`)
+Project roadmaps and improvement plans:
+- **[Implementation Roadmap](planning/IMPLEMENTATION_ROADMAP.md)** - Development roadmap
+- **[Feature Gap Analysis](planning/FEATURE_GAP_ANALYSIS.md)** - Missing features
+- **[Prompt Improvements](planning/PROMPT_IMPROVEMENTS.md)** - Prompt enhancements
+
+### Review Documents (`/docs/reviews/`)
+Historical analysis and assessments:
+- **[Documentation Reviews](reviews/)** - Documentation quality assessments
+- **[Test Coverage Analysis](reviews/test-coverage-analysis.md)** - Testing metrics
+- **[Analysis Report](reviews/analysis-report.md)** - Feature analysis
+
+### Specifications
+- **[Production Readiness Specs](../production-readiness-specs/README.md)** - Detailed feature specifications
+
+---
+
 ## 📁 Documentation Structure
 
 ```
 stackshift/
 ├── README.md                    # Main overview
 ├── QUICKSTART.md                # 5-minute quick start
+├── ROADMAP.md                   # Project roadmap
 ├── LICENSE                      # MIT license
 ├── docs/
 │   ├── README.md               # This file
-│   ├── guides/
-│   │   ├── INSTALLATION.md     # Installation guide
-│   │   └── PLUGIN_GUIDE.md     # Plugin usage guide
-│   └── development/            # Internal/development docs
-│       ├── TRANSFORMATION_SUMMARY.md
-│       └── GREENFIELD_BROWNFIELD_SUMMARY.md
+│   ├── guides/                 # User guides
+│   │   ├── INSTALLATION.md
+│   │   └── PLUGIN_GUIDE.md
+│   ├── development/            # Development docs
+│   │   ├── TRANSFORMATION_SUMMARY.md
+│   │   └── GREENFIELD_BROWNFIELD_SUMMARY.md
+│   ├── planning/               # Project planning
+│   │   ├── IMPLEMENTATION_ROADMAP.md
+│   │   ├── FEATURE_GAP_ANALYSIS.md
+│   │   └── PROMPT_IMPROVEMENTS.md
+│   ├── reviews/                # Historical reviews
+│   │   ├── analysis-report.md
+│   │   ├── test-coverage-analysis.md
+│   │   └── DOCUMENTATION_*.md
+│   └── reverse-engineering/    # Sample outputs
+├── production-readiness-specs/ # Feature specifications
+│   └── README.md
+├── cli/                        # CLI tool
+│   ├── README.md
+│   └── QUICKSTART.md
 ├── web/
-│   ├── README.md               # Web usage guide
-│   ├── stackshift-web-orchestrator.md
-│   ├── GREENFIELD_STRUCTURE.md
-│   └── SPECKIT_FALLBACK.md
+│   └── README.md               # Web usage guide
 ├── mcp-server/
 │   └── README.md               # MCP server guide
 └── scripts/

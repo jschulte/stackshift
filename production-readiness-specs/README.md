@@ -114,6 +114,23 @@ Major gaps:
 
 ---
 
+### F007: Enterprise CLI Orchestrator
+**Priority:** P1 - HIGH
+**Status:** ✅ IMPLEMENTED
+**Effort:** 16-20 hours
+**Impact:** Enables bulk repository migration
+
+Enterprise CLI tool for bulk migration:
+- Repository auto-discovery and selection
+- Parallel orchestration with configurable limits
+- Dual AI backend support (Claude Code & VSCode/Copilot)
+- Real-time progress tracking with animations
+- Comprehensive state management and logging
+
+[Full Specification](./F007-cli-orchestrator/spec.md)
+
+---
+
 ## Implementation Roadmap
 
 ### Sprint 1: Critical Security & Deployment (Week 1)
