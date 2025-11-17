@@ -61,15 +61,15 @@ Transform any application into a fully-specified, spec-driven project with compl
 
 ```mermaid
 stateDiagram-v2
-    [*] --> analyze
-    analyze --> reverse-engineer
-    reverse-engineer --> create-specs
-    create-specs --> gap-analysis
-    gap-analysis --> complete-spec
-    complete-spec --> implement
-    analyze --> cruise-control: auto
-    implement --> [*]
-    cruise-control --> [*]
+    [*] --> Analyze
+    Analyze --> ReverseEngineer: Gear 2
+    ReverseEngineer --> CreateSpecs: Gear 3
+    CreateSpecs --> GapAnalysis: Gear 4
+    GapAnalysis --> CompleteSpec: Gear 5
+    CompleteSpec --> Implement: Gear 6
+    Analyze --> CruiseControl: auto mode
+    Implement --> [*]
+    CruiseControl --> [*]
 ```
 
 *Last generated: 2025-11-17T17:24:53.600Z*
