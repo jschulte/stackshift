@@ -35,7 +35,10 @@
     "build:mcp": "cd mcp-server && npm install && npm run build",
     "dev:mcp": "cd mcp-server && npm run dev",
     "start:mcp": "cd mcp-server && npm start",
-    "prepare": "husky"
+    "prepare": "husky",
+    "setup:spec-sync": "chmod +x .specify/hooks/validate-specs.sh && chmod +x .specify/hooks/modules/*.sh && echo '✅ Spec sync hooks configured'",
+    "validate:specs": ".specify/hooks/validate-specs.sh",
+    "docs:spec-sync": "cat .specify/docs/SPEC_SYNC_GUIDE.md"
   },
   "files": [
     "plugin/",

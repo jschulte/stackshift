@@ -8,6 +8,7 @@ set -e
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "$SCRIPT_DIR/modules/config.sh"
 source "$SCRIPT_DIR/modules/validator.sh"
+source "$SCRIPT_DIR/modules/auto-fix.sh"
 
 # Colors for output
 RED='\033[0;31m'
@@ -50,6 +51,20 @@ main() {
   # Check if validation is disabled
   if [ "$mode" = "off" ]; then
     echo -e "${YELLOW}ℹ️  Spec sync validation is disabled (mode: off)${NC}"
+    exit 0
+  fi
+
+  # Check if current branch is exempted
+  if config_is_branch_exempted; then
+    local current_branch=$(git rev-parse --abbrev-ref HEAD 2>/dev/null || echo "unknown")
+    echo -e "${YELLOW}ℹ️  Spec sync validation skipped (branch '$current_branch' is exempted)${NC}"
+    exit 0
+  fi
+
+  # Check if current user is exempted
+  if config_is_user_exempted; then
+    local current_user=$(git config user.email 2>/dev/null || echo "unknown")
+    echo -e "${YELLOW}ℹ️  Spec sync validation skipped (user '$current_user' is exempted)${NC}"
     exit 0
   fi
 
@@ -109,6 +124,60 @@ main() {
     echo "  2. Commit the spec changes"
     echo "  3. Push again"
     echo ""
+
+    # Check if auto-fix is enabled
+    local auto_fix_enabled=$(echo "$config" | jq -r '.autoFix // false')
+    local require_approval=$(echo "$config" | jq -r '.requireApproval // true')
+
+    if [ "$auto_fix_enabled" = "true" ]; then
+      echo -e "${BLUE}🤖 Auto-fix is enabled${NC}"
+      echo ""
+
+      # Determine if interactive mode
+      local interactive="true"
+      if [ "$require_approval" != "true" ] || [ -n "$CI" ]; then
+        interactive="false"
+        echo "   Running in headless mode (auto-applying updates)"
+      else
+        echo "   Running in interactive mode (approval required)"
+      fi
+      echo ""
+
+      # Run auto-fix
+      if autofix_run "$results" "$config" "$interactive"; then
+        echo ""
+        echo -e "${GREEN}✅ Auto-fix applied updates successfully${NC}"
+        echo ""
+        echo -e "${YELLOW}📝 Next steps:${NC}"
+        echo "  1. Review the auto-generated spec changes"
+        echo "  2. Commit the spec updates:"
+        echo "     git commit -m \"docs: update specs for code changes\""
+        echo "  3. Push again"
+        echo ""
+
+        # Re-run validation to confirm
+        echo -e "${BLUE}🔍 Re-validating after auto-fix...${NC}"
+        echo ""
+        local new_results=$(validator_run "$config")
+        local new_failures=$(echo "$new_results" | jq '[.[] | select(.status == "fail")] | length')
+
+        if [ "$new_failures" -eq 0 ]; then
+          echo -e "${GREEN}✅ Validation passed after auto-fix!${NC}"
+          echo ""
+          echo "All specs are now up-to-date. Commit the changes and push."
+          exit 0
+        else
+          echo -e "${YELLOW}⚠️  Some validations still failing after auto-fix${NC}"
+          echo "Please review and manually update remaining specs."
+          echo ""
+        fi
+      else
+        echo ""
+        echo -e "${YELLOW}⚠️  Auto-fix did not apply any updates${NC}"
+        echo ""
+      fi
+    fi
+
     echo -e "${YELLOW}🚨 Or bypass this check (not recommended):${NC}"
     echo "  SKIP_SPEC_SYNC=1 git push"
     echo ""

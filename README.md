@@ -40,6 +40,7 @@ Transform any application into a fully-specified, spec-driven project with compl
 - **[MCP Guide](mcp-server/README.md)** - MCP server for VSCode/Copilot
 - **[Web Guide](web/README.md)** - Using in Claude Code Web (browser)
 - **[Batch Processing](scripts/BATCH_PROCESSING_GUIDE.md)** - Process multiple projects efficiently
+- **[Spec Sync Guide](.specify/docs/SPEC_SYNC_GUIDE.md)** - Automated spec synchronization for spec-driven development
 
 ---
 

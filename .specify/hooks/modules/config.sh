@@ -101,3 +101,78 @@ config_matches_pattern() {
 
   [[ "$file" =~ $pattern ]]
 }
+
+# Evaluate a rule against a file and its changes
+# Returns JSON: {"matches": true/false, "requiresSpecUpdate": true/false, "severity": "error/warning"}
+config_evaluate_rule() {
+  local rule="$1"
+  local file="$2"
+  local diff="$3"
+
+  # Extract rule properties
+  local file_pattern=$(echo "$rule" | jq -r '.filePattern // ""')
+  local change_pattern=$(echo "$rule" | jq -r '.changePattern // ""')
+  local requires_spec=$(echo "$rule" | jq -r '.requiresSpecUpdate // false')
+  local severity=$(echo "$rule" | jq -r '.severity // "warning"')
+
+  # Check if file matches the file pattern
+  if [ -n "$file_pattern" ] && ! config_matches_pattern "$file" "$file_pattern"; then
+    echo '{"matches": false, "requiresSpecUpdate": false, "severity": "none"}'
+    return 0
+  fi
+
+  # Check if changes match the change pattern (if specified)
+  if [ -n "$change_pattern" ] && [ "$change_pattern" != "null" ]; then
+    if ! echo "$diff" | grep -qE "$change_pattern"; then
+      echo '{"matches": false, "requiresSpecUpdate": false, "severity": "none"}'
+      return 0
+    fi
+  fi
+
+  # Rule matches - return its requirements
+  echo "{\"matches\": true, \"requiresSpecUpdate\": $requires_spec, \"severity\": \"$severity\"}"
+}
+
+# Check if current branch is exempted from validation
+config_is_branch_exempted() {
+  local branch=$(git rev-parse --abbrev-ref HEAD 2>/dev/null || echo "")
+  local config=$(config_load)
+
+  # Get exempted branches (support both exemptions.branches and exemptBranches)
+  local exempted=$(echo "$config" | jq -r '.exemptions.branches[]?, .exemptBranches[]?' 2>/dev/null)
+
+  if [ -z "$exempted" ]; then
+    return 1  # No exemptions
+  fi
+
+  while IFS= read -r pattern; do
+    [ -z "$pattern" ] && continue
+    if [[ "$branch" == $pattern ]]; then
+      return 0  # Branch is exempted
+    fi
+  done <<< "$exempted"
+
+  return 1  # Not exempted
+}
+
+# Check if current user is exempted from validation
+config_is_user_exempted() {
+  local user=$(git config user.email 2>/dev/null || echo "")
+  local config=$(config_load)
+
+  # Get exempted users (support both exemptions.users and exemptUsers)
+  local exempted=$(echo "$config" | jq -r '.exemptions.users[]?, .exemptUsers[]?' 2>/dev/null)
+
+  if [ -z "$exempted" ]; then
+    return 1  # No exemptions
+  fi
+
+  while IFS= read -r pattern; do
+    [ -z "$pattern" ] && continue
+    if [[ "$user" == $pattern ]]; then
+      return 0  # User is exempted
+    fi
+  done <<< "$exempted"
+
+  return 1  # Not exempted
+}

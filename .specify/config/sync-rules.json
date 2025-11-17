@@ -46,6 +46,56 @@
       "severity": "info",
       "enabled": true,
       "priority": 50
+    },
+    {
+      "name": "CLI command changes require spec updates",
+      "id": "cli_commands",
+      "filePattern": "src/cli/**/*.{ts,js}",
+      "changePattern": "^[+-]\\s*(program\\.command|yargs\\.|commander\\.)",
+      "requiresSpecUpdate": true,
+      "specSections": ["CLI Reference", "User Guide"],
+      "severity": "error",
+      "enabled": true,
+      "priority": 95
+    },
+    {
+      "name": "Database schema changes require spec updates",
+      "id": "database_schema",
+      "filePattern": "**/migrations/**/*.{ts,js,sql}",
+      "requiresSpecUpdate": true,
+      "specSections": ["Data Model", "Architecture"],
+      "severity": "error",
+      "enabled": true,
+      "priority": 95
+    },
+    {
+      "name": "Configuration changes require spec updates",
+      "id": "config_changes",
+      "filePattern": "**/{config,settings}/**/*.{ts,js,json}",
+      "changePattern": "^[+-]\\s*(export|const|let|var)\\s+\\w+Config",
+      "requiresSpecUpdate": true,
+      "specSections": ["Configuration", "Deployment"],
+      "severity": "warning",
+      "enabled": true,
+      "priority": 70
+    },
+    {
+      "name": "Documentation updates don't require spec changes",
+      "id": "docs_only",
+      "filePattern": "**/*.md",
+      "requiresSpecUpdate": false,
+      "severity": "info",
+      "enabled": true,
+      "priority": 10
+    },
+    {
+      "name": "Build and tooling changes (lenient)",
+      "id": "build_tooling",
+      "filePattern": "**/{{package.json,tsconfig.json,*.config.{ts,js}}}",
+      "requiresSpecUpdate": false,
+      "severity": "info",
+      "enabled": true,
+      "priority": 20
     }
   ],
   "exemptions": {
