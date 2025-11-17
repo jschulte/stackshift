@@ -23,6 +23,7 @@ import { gapAnalysisToolHandler } from './tools/gap-analysis.js';
 import { completeSpecToolHandler } from './tools/complete-spec.js';
 import { implementToolHandler } from './tools/implement.js';
 import { cruiseControlToolHandler } from './tools/cruise-control.js';
+import { generateRoadmapToolHandler } from './tools/generate-roadmap.js';
 import { getStateResource, getProgressResource, getRouteResource } from './resources/index.js';
 
 const server = new Server(
@@ -175,6 +176,41 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
           required: ['route'],
         },
       },
+      {
+        name: 'stackshift_generate_roadmap',
+        description:
+          'F008: Generate strategic roadmap from gap analysis - Analyzes gaps between specs and implementation, identifies missing features, and generates prioritized roadmap with phases and timelines',
+        inputSchema: {
+          type: 'object',
+          properties: {
+            directory: {
+              type: 'string',
+              description: 'Path to project directory (defaults to current directory)',
+            },
+            outputFormat: {
+              type: 'string',
+              enum: ['markdown', 'json', 'csv', 'html', 'all'],
+              description: 'Export format (defaults to markdown)',
+            },
+            includeFeatureBrainstorming: {
+              type: 'boolean',
+              description: 'Whether to brainstorm desirable features (default: false)',
+            },
+            confidenceThreshold: {
+              type: 'number',
+              minimum: 0,
+              maximum: 100,
+              description: 'Minimum confidence for gap inclusion (0-100, default: 50)',
+            },
+            teamSize: {
+              type: 'number',
+              minimum: 1,
+              maximum: 10,
+              description: 'Team size for timeline estimation (default: 2)',
+            },
+          },
+        },
+      },
     ],
   };
 });
@@ -235,6 +271,9 @@ server.setRequestHandler(CallToolRequestSchema, async request => {
 
       case 'stackshift_cruise_control':
         return await cruiseControlToolHandler(args || {} as any);
+
+      case 'stackshift_generate_roadmap':
+        return await generateRoadmapToolHandler(args || {});
 
       default:
         throw new Error(`Unknown tool: ${name}`);
