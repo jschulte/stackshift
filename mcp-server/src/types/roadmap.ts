@@ -129,6 +129,7 @@ export type FeatureCategory =
   | 'core-functionality'
   | 'user-experience'
   | 'integration'
+  | 'integrations'
   | 'performance'
   | 'security'
   | 'developer-experience'
@@ -159,6 +160,7 @@ export interface DesirableFeature {
   id: string;
   category: FeatureCategory;
   name: string;
+  title: string;
   description: string;
   rationale: string;
   value: string;
@@ -168,9 +170,11 @@ export interface DesirableFeature {
   alternatives: string[];
   risks: Risk[];
   source: BrainstormSource;
+  strategicAlignment: number;
 }
 
 export interface ScoredFeature extends DesirableFeature {
+  impact: number;
   impactScore: number; // 1-10
   effortScore: number; // 1-10
   roi: number; // impact / effort
@@ -192,17 +196,14 @@ export interface ScoredFeature extends DesirableFeature {
 export type RoadmapItemType =
   | 'spec-gap'
   | 'feature-gap'
+  | 'gap-fix'
+  | 'feature'
   | 'enhancement'
   | 'technical-debt'
   | 'documentation'
   | 'testing';
 
-export type ItemStatus =
-  | 'not-started'
-  | 'in-progress'
-  | 'blocked'
-  | 'completed'
-  | 'wont-do';
+export type ItemStatus = 'not-started' | 'in-progress' | 'blocked' | 'completed' | 'wont-do';
 
 export interface RoadmapItem {
   id: string;
@@ -214,6 +215,8 @@ export interface RoadmapItem {
   phase: number;
   status: ItemStatus;
   owner?: string;
+  assignee?: string;
+  source?: string;
   dependencies: string[];
   blocks: string[];
   successCriteria: string[];
@@ -237,11 +240,7 @@ export interface Phase {
   dependencies: number[];
 }
 
-export type DependencyType =
-  | 'sequential'
-  | 'prerequisite'
-  | 'related'
-  | 'optional';
+export type DependencyType = 'sequential' | 'prerequisite' | 'related' | 'optional';
 
 export interface Dependency {
   dependent: string;
@@ -301,6 +300,11 @@ export interface RoadmapSummary {
   completion: CompletenessAssessment;
   highlights: string[];
   nextSteps: string[];
+  byPriority?: {
+    p0Count: number;
+    p1Count: number;
+    p2Count: number;
+  };
 }
 
 export interface Roadmap {
@@ -410,8 +414,10 @@ export interface ExportOptions {
 }
 
 export interface ExportResult {
+  success: boolean;
   format: ExportFormat;
   content: string;
+  outputPath?: string;
   metadata: {
     generatedAt: Date;
     itemCount: number;
@@ -566,12 +572,15 @@ export const GAP_STATUS_PRIORITY: Record<GapStatus, number> = {
   complete: 4,
 } as const;
 
-export const PRIORITY_DEFINITIONS: Record<Priority, {
-  level: Priority;
-  label: string;
-  description: string;
-  criteria: string[];
-}> = {
+export const PRIORITY_DEFINITIONS: Record<
+  Priority,
+  {
+    level: Priority;
+    label: string;
+    description: string;
+    criteria: string[];
+  }
+> = {
   P0: {
     level: 'P0',
     label: 'Critical',
@@ -597,21 +606,13 @@ export const PRIORITY_DEFINITIONS: Record<Priority, {
     level: 'P2',
     label: 'Medium',
     description: 'Enhancements, additional languages',
-    criteria: [
-      'Nice-to-have feature',
-      'Additional language support',
-      'Performance improvement',
-    ],
+    criteria: ['Nice-to-have feature', 'Additional language support', 'Performance improvement'],
   },
   P3: {
     level: 'P3',
     label: 'Nice to Have',
     description: 'Polish, integrations, advanced features',
-    criteria: [
-      'Optional integration',
-      'UI polish',
-      'Advanced feature',
-    ],
+    criteria: ['Optional integration', 'UI polish', 'Advanced feature'],
   },
 };
 
