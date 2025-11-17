@@ -114,32 +114,43 @@ export async function generateRoadmapToolHandler(args: GenerateRoadmapArgs) {
       outputLines.push('');
     }
 
+    // Load project context (needed for both brainstorming and roadmap generation)
+    const { loadProjectContext } = await import('../brainstorming/utils/project-context.js');
+    const projectContext = await loadProjectContext(directory);
+
     // Step 3: Feature brainstorming (if enabled)
-    const features: ScoredFeature[] = [];
+    let features: ScoredFeature[] = [];
 
     if (includeFeatureBrainstorming) {
       outputLines.push('## Step 3: Brainstorming Desirable Features\n');
-      outputLines.push('⚠️  Feature brainstorming not yet implemented (Phase 5)\n');
+
+      // Brainstorm features
+      const { FeatureBrainstormer } = await import('../brainstorming/feature-brainstormer.js');
+      const brainstormer = new FeatureBrainstormer({
+        featuresPerCategory: 5,
+        useAI: false, // Use heuristic brainstorming for now
+        verbose: true,
+      });
+
+      features = await brainstormer.brainstormFeatures(projectContext);
+
+      outputLines.push(`✅ Brainstormed ${features.length} desirable features\n`);
+
+      // Show top features
+      const topFeatures = features.slice(0, 5);
+      if (topFeatures.length > 0) {
+        outputLines.push('**Top Features:**');
+        for (const feature of topFeatures) {
+          outputLines.push(
+            `- [${feature.priority}] ${feature.title} (Impact: ${feature.impact}/10, Effort: ${feature.effort.hours}h, ROI: ${feature.roi.toFixed(2)})`
+          );
+        }
+        outputLines.push('');
+      }
     }
 
     // Step 4: Generate roadmap
     outputLines.push('## Step 4: Generating Roadmap\n');
-
-    // Build project context
-    const projectName = path.basename(directory);
-    const projectContext: ProjectContext = {
-      path: directory,
-      name: projectName,
-      language: 'typescript',
-      techStack: ['Node.js', 'TypeScript'],
-      frameworks: [],
-      currentFeatures: [],
-      route: 'brownfield',
-      linesOfCode: 0,
-      fileCount: 0,
-      specs: [],
-      docs: [],
-    };
 
     const roadmapGenerator = new RoadmapGenerator({
       maxPhases: 4,
