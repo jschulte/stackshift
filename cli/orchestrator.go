@@ -444,8 +444,32 @@ func (o *Orchestrator) KillAll() {
 }
 
 func (o *Orchestrator) GetProgress(repoName string) (int, string) {
-	// Read state file from repo
-	// Return current gear and status
-	// This would parse .stackshift-state.json
-	return 0, "in_progress"
+	// Find the repository by name
+	var repoPath string
+	for _, repo := range o.repos {
+		if repo.Name == repoName {
+			repoPath = repo.Path
+			break
+		}
+	}
+	if repoPath == "" {
+		return 0, "repo_not_found"
+	}
+
+	stateFile := filepath.Join(repoPath, ".stackshift-state.json")
+	data, err := os.ReadFile(stateFile)
+	if err != nil {
+		return 0, "state_file_missing"
+	}
+
+	type State struct {
+		CurrentGear int    `json:"current_gear"`
+		Status     string `json:"status"`
+	}
+	var state State
+	if err := json.Unmarshal(data, &state); err != nil {
+		return 0, "state_file_invalid"
+	}
+
+	return state.CurrentGear, state.Status
 }
