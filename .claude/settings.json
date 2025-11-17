@@ -7,5 +7,19 @@
       "Read(./.DS_Store)",
       "Read(./.git/**)"
     ]
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "if echo \"$CLAUDE_TOOL_INPUT\" | jq -r '.command' 2>/dev/null | grep -q '^git push'; then ./.specify/hooks/validate-specs.sh \"$CLAUDE_TOOL_INPUT\"; fi",
+            "timeout": 30000
+          }
+        ]
+      }
+    ]
   }
 }
