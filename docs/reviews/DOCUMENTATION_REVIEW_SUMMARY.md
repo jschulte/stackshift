@@ -400,7 +400,7 @@ Documentation review is complete when:
 
 ### Location
 ```
-/Users/jonahschulte/git/stackshift/
+~/git/stackshift/
 ├── DOCUMENTATION_REVIEW.md          ← Read this first
 ├── DOCUMENTATION_ACTION_PLAN.md      ← Use this to create docs
 ├── DOCUMENTATION_IMPROVEMENTS.md     ← Use this to improve existing

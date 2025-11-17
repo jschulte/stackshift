@@ -44,7 +44,7 @@ StackShift has **excellent user-facing documentation** covering installation, qu
 
 ### 1.1 README.md - EXCELLENT (95%)
 
-**Location:** `/Users/jonahschulte/git/stackshift/README.md`
+**Location:** `~/git/stackshift/README.md`
 **Status:** Comprehensive and well-organized
 **Length:** ~3,400 lines
 
@@ -74,7 +74,7 @@ StackShift has **excellent user-facing documentation** covering installation, qu
 
 ### 1.2 QUICKSTART.md - EXCELLENT (90%)
 
-**Location:** `/Users/jonahschulte/git/stackshift/QUICKSTART.md`
+**Location:** `~/git/stackshift/QUICKSTART.md`
 **Status:** Very effective
 **Length:** ~250 lines
 
@@ -99,7 +99,7 @@ StackShift has **excellent user-facing documentation** covering installation, qu
 
 ### 1.3 Installation Guide - GOOD (80%)
 
-**Location:** `/Users/jonahschulte/git/stackshift/docs/guides/INSTALLATION.md`
+**Location:** `~/git/stackshift/docs/guides/INSTALLATION.md`
 **Status:** Comprehensive but needs updates
 **Length:** ~330 lines
 
@@ -127,7 +127,7 @@ StackShift has **excellent user-facing documentation** covering installation, qu
 
 ### 1.4 Plugin Guide - GOOD (75%)
 
-**Location:** `/Users/jonahschulte/git/stackshift/docs/guides/PLUGIN_GUIDE.md`
+**Location:** `~/git/stackshift/docs/guides/PLUGIN_GUIDE.md`
 **Status:** Partial - needs expansion
 **Length:** ~100 lines
 
@@ -156,7 +156,7 @@ StackShift has **excellent user-facing documentation** covering installation, qu
 
 ### 1.5 Web Guide - GOOD (80%)
 
-**Location:** `/Users/jonahschulte/git/stackshift/web/README.md`
+**Location:** `~/git/stackshift/web/README.md`
 **Status:** Clear but incomplete
 **Length:** ~100 lines
 
@@ -181,7 +181,7 @@ StackShift has **excellent user-facing documentation** covering installation, qu
 
 ### 1.6 MCP Server Guide - PARTIALLY COMPLETE (70%)
 
-**Location:** `/Users/jonahschulte/git/stackshift/mcp-server/README.md`
+**Location:** `~/git/stackshift/mcp-server/README.md`
 **Status:** Starts strong, incomplete
 **Length:** ~100 lines (limited preview read)
 

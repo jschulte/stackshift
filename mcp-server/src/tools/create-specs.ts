@@ -124,7 +124,8 @@ Then run: \`/speckit.analyze\` to validate specs
 
 ---
 
-**Manual prompt:** \`prompts/${route}/03-create-${route === 'greenfield' ? 'agnostic' : 'prescriptive'}-specs.md\`
+**Manual prompt:** \`web/WEB_BOOTSTRAP.md\` (Gear 3)
+**Legacy:** \`legacy/original-prompts/${route}/03-create-${route === 'greenfield' ? 'agnostic' : 'prescriptive'}-specs.md\`
 `;
 
     // SECURITY: Update state using atomic operations

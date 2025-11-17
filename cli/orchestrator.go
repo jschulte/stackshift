@@ -444,6 +444,7 @@ func (o *Orchestrator) KillAll() {
 }
 
 func (o *Orchestrator) GetProgress(repoName string) (int, string) {
+<<<<<<< HEAD
 	// Find the repository by name
 	var repoPath string
 	for _, repo := range o.repos {
@@ -472,4 +473,10 @@ func (o *Orchestrator) GetProgress(repoName string) (int, string) {
 	}
 
 	return state.CurrentGear, state.Status
+=======
+	// Read state file from repo
+	// Return current gear and status
+	// This would parse .stackshift-state.json
+	return 0, "in_progress"
+>>>>>>> feature/stackshift-cli
 }

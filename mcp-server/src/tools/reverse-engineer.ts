@@ -97,9 +97,10 @@ Use tool: \`stackshift_create_specs\`
 ---
 
 **Note:** This MCP tool provides guidance. For full extraction, use the Claude Code plugin
-or manual prompts in \`prompts/${route}/\` directory.
+or the web bootstrap prompt.
 
-**Manual prompt:** \`prompts/${route}/02-reverse-engineer-${route === 'greenfield' ? 'business-logic' : 'full-stack'}.md\`
+**Manual prompt:** \`web/WEB_BOOTSTRAP.md\` (Gear 2)
+**Legacy:** \`legacy/original-prompts/${route}/02-reverse-engineer-${route === 'greenfield' ? 'business-logic' : 'full-stack'}.md\`
 `;
 
     // SECURITY: Update state using atomic operations
