@@ -20,6 +20,43 @@ describe('Create Specs Tool Tests', () => {
   let testDir: string;
   let stateManager: StateManager;
 
+  // Helper to set up test directory with all required files
+  async function setupTestDirectory(dir: string) {
+    // Create reverse engineering docs directory and copy sample functional spec
+    const docsDir = path.join(dir, 'docs', 'reverse-engineering');
+    await fs.mkdir(docsDir, { recursive: true });
+
+    // Copy sample functional spec from fixtures
+    const fixtureDir = path.join(process.cwd(), 'src', 'utils', '__tests__', 'fixtures');
+    const sampleSpec = await fs.readFile(
+      path.join(fixtureDir, 'sample-functional-spec.md'),
+      'utf-8'
+    );
+    await fs.writeFile(path.join(docsDir, 'functional-specification.md'), sampleSpec);
+
+    // Copy templates from root project to test directory
+    const sourceTemplatesDir = path.join(process.cwd(), '..', 'plugin', 'templates');
+    const destTemplatesDir = path.join(dir, 'plugin', 'templates');
+    await fs.mkdir(destTemplatesDir, { recursive: true });
+
+    const templates = [
+      'constitution-agnostic-template.md',
+      'constitution-prescriptive-template.md',
+      'feature-spec-template.md',
+      'implementation-status-template.md',
+    ];
+
+    for (const template of templates) {
+      try {
+        const content = await fs.readFile(path.join(sourceTemplatesDir, template), 'utf-8');
+        await fs.writeFile(path.join(destTemplatesDir, template), content);
+      } catch (error) {
+        // Template may not exist, skip
+        console.warn(`Warning: Could not copy template ${template}:`, error);
+      }
+    }
+  }
+
   beforeEach(async () => {
     // Create temporary test directory
     testDir = path.join(tmpdir(), `stackshift-test-${randomBytes(8).toString('hex')}`);
@@ -27,6 +64,9 @@ describe('Create Specs Tool Tests', () => {
 
     // Initialize state manager
     stateManager = new StateManager(testDir);
+
+    // Set up test directory with all required files
+    await setupTestDirectory(testDir);
   });
 
   afterEach(async () => {
@@ -93,9 +133,9 @@ describe('Create Specs Tool Tests', () => {
       const result = await createSpecsToolHandler({ directory: testDir });
 
       expect(result.content[0].text).toContain('Greenfield');
-      expect(result.content[0].text).toContain('Tech-Agnostic Template');
-      expect(result.content[0].text).toContain('Business requirements only');
-      expect(result.content[0].text).not.toContain('Current implementation details');
+      expect(result.content[0].text).toContain('Automated Spec Generation Complete');
+      expect(result.content[0].text).toContain('Feature Specifications');
+      expect(result.content[0].text).toContain('Constitution');
     });
 
     it('should handle brownfield route correctly', async () => {
@@ -104,9 +144,9 @@ describe('Create Specs Tool Tests', () => {
       const result = await createSpecsToolHandler({ directory: testDir });
 
       expect(result.content[0].text).toContain('Brownfield');
-      expect(result.content[0].text).toContain('Tech-Prescriptive Template');
-      expect(result.content[0].text).toContain('Current implementation details');
-      expect(result.content[0].text).toContain('Exact technical architecture');
+      expect(result.content[0].text).toContain('Automated Spec Generation Complete');
+      expect(result.content[0].text).toContain('Feature Specifications');
+      expect(result.content[0].text).toContain('Constitution');
     });
 
     it('should throw error if route not set', async () => {
@@ -180,15 +220,15 @@ describe('Create Specs Tool Tests', () => {
       expect(result.content[0].text).toContain('stackshift_gap_analysis');
     });
 
-    it('should include GitHub Spec Kit integration instructions', async () => {
+    it('should include constitution and feature spec counts', async () => {
       await stateManager.initialize(testDir, 'brownfield');
 
       const result = await createSpecsToolHandler({ directory: testDir });
 
-      expect(result.content[0].text).toContain('GitHub Spec Kit Integration');
-      expect(result.content[0].text).toContain('specify init');
-      expect(result.content[0].text).toContain('--ai claude');
-      expect(result.content[0].text).toContain('.specify/memory/constitution.md');
+      expect(result.content[0].text).toContain('Constitution');
+      expect(result.content[0].text).toContain('Feature Specifications');
+      expect(result.content[0].text).toContain('Total Features');
+      expect(result.content[0].text).toContain('Implementation Plans');
     });
 
     it('should include output structure for both routes', async () => {
@@ -199,32 +239,40 @@ describe('Create Specs Tool Tests', () => {
 
         const result = await createSpecsToolHandler({ directory: testDir });
 
+        expect(result.content[0].text).toContain('specs/');
         expect(result.content[0].text).toContain('.specify/');
         expect(result.content[0].text).toContain('memory/');
         expect(result.content[0].text).toContain('constitution.md');
-        expect(result.content[0].text).toContain('specifications/');
-        expect(result.content[0].text).toContain('plans/');
 
         // Clean state for next iteration
         await fs.rm(testDir, { recursive: true, force: true });
         await fs.mkdir(testDir, { recursive: true });
         stateManager = new StateManager(testDir);
+
+        // Recreate test directory structure
+        await setupTestDirectory(testDir);
       }
     });
 
-    it('should reference correct manual prompt for each route', async () => {
+    it('should include validation and next steps', async () => {
       // Greenfield
       await stateManager.initialize(testDir, 'greenfield');
       let result = await createSpecsToolHandler({ directory: testDir });
-      expect(result.content[0].text).toContain('03-create-agnostic-specs.md');
+      expect(result.content[0].text).toContain('/speckit.analyze');
+      expect(result.content[0].text).toContain('stackshift_gap_analysis');
 
       // Brownfield
       await fs.rm(testDir, { recursive: true, force: true });
       await fs.mkdir(testDir, { recursive: true });
       stateManager = new StateManager(testDir);
+
+      // Recreate test directory structure
+      await setupTestDirectory(testDir);
+
       await stateManager.initialize(testDir, 'brownfield');
       result = await createSpecsToolHandler({ directory: testDir });
-      expect(result.content[0].text).toContain('03-create-prescriptive-specs.md');
+      expect(result.content[0].text).toContain('/speckit.analyze');
+      expect(result.content[0].text).toContain('stackshift_gap_analysis');
     });
   });
 
@@ -236,15 +284,18 @@ describe('Create Specs Tool Tests', () => {
       );
     });
 
-    it('should wrap errors with descriptive message', async () => {
+    it('should return helpful error message when docs are missing', async () => {
       await stateManager.initialize(testDir, 'greenfield');
 
-      // Try with a directory that doesn't exist for validation
-      const nonExistentPath = path.join(testDir, 'nonexistent', 'path');
+      // Remove the docs directory to simulate missing prerequisite
+      await fs.rm(path.join(testDir, 'docs'), { recursive: true, force: true });
 
-      await expect(createSpecsToolHandler({ directory: nonExistentPath })).rejects.toThrow(
-        /Spec creation failed/
-      );
+      const result = await createSpecsToolHandler({ directory: testDir });
+
+      // Should return error response, not throw
+      expect(result.content[0].text).toContain('Error During Spec Generation');
+      expect(result.content[0].text).toContain('Functional specification not found');
+      expect(result.content[0].text).toContain('stackshift_reverse_engineer');
     });
   });
 
@@ -265,7 +316,7 @@ describe('Create Specs Tool Tests', () => {
       const result = await createSpecsToolHandler({ directory: testDir });
 
       expect(result.content[0].text).toContain('/speckit.analyze');
-      expect(result.content[0].text).toContain('validate specs');
+      expect(result.content[0].text).toContain('Validate Specifications');
     });
   });
 });

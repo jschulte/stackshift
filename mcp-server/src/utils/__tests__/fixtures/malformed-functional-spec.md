@@ -50,7 +50,6 @@ This feature has no criteria at all.
 ```typescript
 const x = 1;
 const y = 2;
-```
 
 No closing markers
 

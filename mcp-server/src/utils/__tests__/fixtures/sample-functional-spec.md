@@ -134,6 +134,25 @@ As a user, I want to set my display name, so that others can identify me.
 - CDN for static assets
 - Caching layer with Redis
 
+### Code Quality
+- Follow TypeScript strict mode
+- ESLint with Airbnb style guide
+- Prettier for code formatting
+- SonarQube code quality scans
+- Code review required for all PRs
+
+### Testing
+- Unit test coverage: ≥ 80%
+- Integration tests for all API endpoints
+- E2E tests for critical user flows
+- Run tests in CI/CD pipeline
+
+### Documentation
+- JSDoc comments for all public APIs
+- README with setup instructions
+- API documentation with Swagger/OpenAPI
+- Architecture decision records (ADRs)
+
 ## Technical Stack
 
 - **Frontend:** React 18.2, TypeScript, Tailwind CSS
