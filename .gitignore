@@ -5,6 +5,15 @@ dist/
 mcp-server/dist/
 mcp-server/node_modules/
 
+# Spec Kit artifacts (created by specify init or StackShift)
+.claude/commands/
+.specify/
+specs/
+.stackshift-state.json
+.stackshift/
+analysis-report.md
+docs/reverse-engineering/
+
 # Downloaded toolkits (session-specific)
 .stackshift/
 .speckit/
