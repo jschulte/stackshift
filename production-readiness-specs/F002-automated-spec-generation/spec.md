@@ -18,7 +18,7 @@ Automates GitHub Spec Kit specification creation from reverse-engineering docume
 
 StackShift creates comprehensive reverse engineering documentation in Gears 1-2. Gear 3 should transform this into complete GitHub Spec Kit specifications automatically. Manual spec creation is:
 
-1. **Current State**: User completes Gears 1-2, has `docs/reverse-engineering/` with 8+ comprehensive documents
+1. **Current State**: User completes Gears 1-2, has `docs/reverse-engineering/` with 9 comprehensive documents
 2. **Gear 3 Today**: Returns markdown instructions saying "manually create .specify/ directory and spec files"
 3. **User Experience**: Must manually transform functional-specification.md into individual feature specs
 4. **Pain Point**: Time-consuming, error-prone, doesn't leverage existing reverse-engineering artifacts
@@ -73,10 +73,11 @@ StackShift creates comprehensive reverse engineering documentation in Gears 1-2.
    - Follow GitHub Spec Kit conventions
 
 6. **File Reading and Parsing**
-   - Read all reverse-engineering docs (8 files)
+   - Read all reverse-engineering docs (9 files)
    - Parse markdown structure (headers, lists, code blocks)
-   - Extract structured data (features, requirements, dependencies)
+   - Extract structured data (features, requirements, dependencies, integrations)
    - Identify implementation status from technical-debt-analysis.md
+   - Extract external services from integration-points.md
 
 ### Non-Functional Requirements
 

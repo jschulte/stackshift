@@ -6,7 +6,14 @@ mcp-server/dist/
 mcp-server/node_modules/
 
 # Spec Kit artifacts (created by specify init or StackShift)
-.claude/commands/
+# Track StackShift and Spec Kit commands, ignore user-added commands
+!.claude/
+!.claude/commands/
+.claude/commands/*
+!.claude/commands/stackshift.*.md
+!.claude/commands/speckit.*.md
+!.claude/settings.json
+
 specs/
 .stackshift-state.json
 .stackshift/
