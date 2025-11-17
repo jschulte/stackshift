@@ -28,5 +28,5 @@ graph TB
     mcp_utils --> mcp_resources
 ```
 
-*Last generated: 2025-11-17T09:10:43.227Z*
+*Last generated: 2025-11-17T17:24:53.601Z*
 <!-- DIAGRAM: architecture-end -->
