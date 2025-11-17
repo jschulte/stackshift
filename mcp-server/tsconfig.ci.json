@@ -1,0 +1,29 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "skipLibCheck": true,
+    "noEmit": true
+  },
+  "include": [
+    "src/tools/analyze.ts",
+    "src/tools/reverse-engineer.ts",
+    "src/tools/create-specs.ts",
+    "src/tools/gap-analysis.ts",
+    "src/tools/complete-spec.ts",
+    "src/tools/implement.ts",
+    "src/tools/cruise-control.ts",
+    "src/tools/generate-all-specs.ts",
+    "src/tools/create-constitution.ts",
+    "src/tools/create-feature-specs.ts",
+    "src/tools/create-impl-plans.ts",
+    "src/utils/**/*.ts",
+    "src/resources/**/*.ts",
+    "src/index.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "**/__tests__/**",
+    "**/*.test.ts"
+  ]
+}

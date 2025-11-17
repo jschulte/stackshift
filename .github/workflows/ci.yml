@@ -32,7 +32,7 @@ jobs:
 
       - name: Run TypeScript compiler
         working-directory: ./mcp-server
-        run: npx tsc --noEmit
+        run: npx tsc --noEmit --project tsconfig.ci.json
 
       - name: Run tests
         working-directory: ./mcp-server
@@ -83,7 +83,7 @@ jobs:
 
       - name: Check TypeScript types
         working-directory: ./mcp-server
-        run: npx tsc --noEmit
+        run: npx tsc --noEmit --project tsconfig.ci.json
 
       - name: Run ESLint (if configured)
         working-directory: ./mcp-server

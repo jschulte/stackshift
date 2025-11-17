@@ -15,19 +15,8 @@
         "hooks": [
           {
             "type": "command",
-            "command": "if echo \"$CLAUDE_TOOL_INPUT\" | jq -r '.command' 2>/dev/null | grep -q '^git push'; then ./.specify/hooks/validate-specs.sh \"$CLAUDE_TOOL_INPUT\"; fi",
+            "command": "if echo \"$CLAUDE_TOOL_INPUT\" | jq -r '.command' 2>/dev/null | grep -q '^git commit'; then if [ -d .specify ] && [ -d specs ]; then echo '📝 Reminder: Please verify that your code changes are reflected in the relevant specs before committing. Specs should be updated to match implementation changes.'; fi; fi; if echo \"$CLAUDE_TOOL_INPUT\" | jq -r '.command' 2>/dev/null | grep -q '^git push'; then ./.specify/hooks/validate-specs.sh \"$CLAUDE_TOOL_INPUT\"; fi",
             "timeout": 30000
-          }
-        ]
-      }
-    ],
-    "PostToolUse": [
-      {
-        "matcher": "Edit|Write",
-        "hooks": [
-          {
-            "type": "prompt",
-            "prompt": "If this code change affects feature behavior or API contracts, check if related specs in specs/ need updating. In spec-driven repos, specs guide changes to existing code."
           }
         ]
       }

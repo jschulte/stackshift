@@ -231,7 +231,7 @@ export class RoadmapGenerator {
       const levels = this.calculateDependencyLevels(items);
       const maxLevel = Math.max(...Array.from(levels.values()));
 
-      for (let level = 0; level <= maxLevel && phases.length < phaseConfig.maxPhases; level++) {
+      for (let level = 0; level <= maxLevel && phases.length < (phaseConfig.maxPhases || 4); level++) {
         const levelItems = items.filter(i => levels.get(i.id) === level);
         if (levelItems.length > 0) {
           phases.push(
@@ -246,9 +246,10 @@ export class RoadmapGenerator {
       }
     } else {
       // Timeline-based: Distribute evenly across phases
-      const itemsPerPhase = Math.ceil(items.length / phaseConfig.maxPhases);
+      const maxPhases = phaseConfig.maxPhases || 4;
+      const itemsPerPhase = Math.ceil(items.length / maxPhases);
 
-      for (let i = 0; i < phaseConfig.maxPhases && i * itemsPerPhase < items.length; i++) {
+      for (let i = 0; i < maxPhases && i * itemsPerPhase < items.length; i++) {
         const start = i * itemsPerPhase;
         const end = Math.min(start + itemsPerPhase, items.length);
         const phaseItems = items.slice(start, end);
@@ -302,24 +303,35 @@ export class RoadmapGenerator {
     // Calculate milestones
     const milestones = this.calculateMilestones(roadmap.phases);
 
+    const startDate = new Date();
+
     return {
       totalWeeks: weeks,
       totalHours: Math.round(adjustedHours),
-      byPhase: phases,
-      milestones,
       byTeamSize: {
         oneDev: {
           weeks: Math.ceil((totalHours * EFFORT_MULTIPLIERS.ONE_DEV) / HOURS_PER_WEEK),
-          hours: Math.round(totalHours * EFFORT_MULTIPLIERS.ONE_DEV),
+          completionDate: new Date(startDate.getTime() + Math.ceil((totalHours * EFFORT_MULTIPLIERS.ONE_DEV) / HOURS_PER_WEEK) * 7 * 24 * 60 * 60 * 1000),
+          assumptions: ['Full-time developer', '35 hours per week'],
         },
         twoDevs: {
           weeks: Math.ceil((totalHours * EFFORT_MULTIPLIERS.TWO_DEVS) / HOURS_PER_WEEK),
-          hours: Math.round(totalHours * EFFORT_MULTIPLIERS.TWO_DEVS),
+          completionDate: new Date(startDate.getTime() + Math.ceil((totalHours * EFFORT_MULTIPLIERS.TWO_DEVS) / HOURS_PER_WEEK) * 7 * 24 * 60 * 60 * 1000),
+          assumptions: ['Two full-time developers', '35 hours per week each'],
         },
         threeDevs: {
           weeks: Math.ceil((totalHours * EFFORT_MULTIPLIERS.THREE_DEVS) / HOURS_PER_WEEK),
-          hours: Math.round(totalHours * EFFORT_MULTIPLIERS.THREE_DEVS),
+          completionDate: new Date(startDate.getTime() + Math.ceil((totalHours * EFFORT_MULTIPLIERS.THREE_DEVS) / HOURS_PER_WEEK) * 7 * 24 * 60 * 60 * 1000),
+          assumptions: ['Three full-time developers', '35 hours per week each'],
         },
+      },
+      criticalPath: {
+        items: roadmap.allItems.slice(0, 5),
+        durationWeeks: weeks,
+      },
+      parallelizableWork: {
+        items: [],
+        durationWeeks: 0,
       },
     };
   }
@@ -351,12 +363,11 @@ export class RoadmapGenerator {
           status: 'not-started',
           tags: ['gap', 'spec', gap.spec],
           dependencies: gap.dependencies,
+          blocks: [],
+          successCriteria: [],
+          acceptanceCriteria: [],
           assignee: undefined,
-          source: {
-            type: 'spec-gap',
-            spec: gap.spec,
-            requirement: gap.requirement,
-          },
+          source: gap.spec,
         });
       } else {
         // FeatureGap
@@ -371,11 +382,11 @@ export class RoadmapGenerator {
           status: 'not-started',
           tags: ['gap', 'feature', 'documentation'],
           dependencies: [],
+          blocks: [],
+          successCriteria: [],
+          acceptanceCriteria: [],
           assignee: undefined,
-          source: {
-            type: 'feature-gap',
-            claim: gap.claim,
-          },
+          source: gap.claim,
         });
       }
     }
@@ -393,11 +404,11 @@ export class RoadmapGenerator {
         status: 'not-started',
         tags: ['feature', 'enhancement', feature.category],
         dependencies: feature.dependencies || [],
+        blocks: [],
+        successCriteria: [],
+        acceptanceCriteria: [],
         assignee: undefined,
-        source: {
-          type: 'brainstormed',
-          category: feature.category,
-        },
+        source: feature.category,
       });
     }
 
@@ -437,6 +448,10 @@ export class RoadmapGenerator {
       .slice(0, 5)
       .map(i => `${i.title} complete`);
 
+    // Calculate start and end weeks
+    const startWeek = number === 1 ? 0 : (number - 1) * weeks;
+    const endWeek = startWeek + weeks;
+
     return {
       number,
       name,
@@ -444,8 +459,12 @@ export class RoadmapGenerator {
       items,
       totalEffort,
       duration,
+      startWeek,
+      endWeek,
       outcome,
       successCriteria,
+      deliverables: items.slice(0, 3).map(i => i.title),
+      dependencies: number > 1 ? [number - 1] : [],
     };
   }
 
@@ -504,8 +523,9 @@ export class RoadmapGenerator {
     itemsCount: number
   ): RoadmapMetadata {
     return {
-      generated: new Date().toISOString(),
+      generated: new Date(),
       projectName: context.name,
+      projectPath: context.path,
       toolVersion: '1.0.0',
       analysisBasis: {
         specsAnalyzed: context.specs.length,
@@ -548,20 +568,20 @@ export class RoadmapGenerator {
 
     return {
       overview,
-      totalItems: items.length,
-      byPriority: {
-        p0: items.filter(i => i.priority === 'P0').length,
-        p1: items.filter(i => i.priority === 'P1').length,
-        p2: items.filter(i => i.priority === 'P2').length,
-        p3: items.filter(i => i.priority === 'P3').length,
-      },
-      byType: {
-        gapFixes: items.filter(i => i.type === 'gap-fix').length,
-        features: items.filter(i => i.type === 'feature').length,
-        enhancements: items.filter(i => i.type === 'enhancement').length,
-      },
-      completion,
+      currentState: `${specGaps} spec gaps, ${featureGaps} feature gaps identified`,
+      targetState: `All ${items.length} items completed across ${this.config.maxPhases} phases`,
+      completion: completion as any,
+      highlights: [
+        `${items.filter(i => i.priority === 'P0').length} critical (P0) items`,
+        `${items.filter(i => i.priority === 'P1').length} high-priority (P1) items`,
+        `${features.length} new features brainstormed`,
+      ],
       nextSteps,
+      byPriority: {
+        p0Count: items.filter(i => i.priority === 'P0').length,
+        p1Count: items.filter(i => i.priority === 'P1').length,
+        p2Count: items.filter(i => i.priority === 'P2').length,
+      },
     };
   }
 
@@ -655,11 +675,14 @@ export class RoadmapGenerator {
     const highEffortItems = items.filter(i => i.effort.hours > 40);
     if (highEffortItems.length > 0) {
       risks.push({
+        id: uuidv4(),
         title: 'High-effort items may take longer than estimated',
+        description: `${highEffortItems.length} items require more than 40 hours of effort`,
         likelihood: 'medium',
         impact: 'high',
         severity: 'medium',
-        mitigations: 'Break down large items into smaller tasks; Add buffer time',
+        mitigations: ['Break down large items into smaller tasks', 'Add buffer time'],
+        affectedItems: highEffortItems.map(i => i.id),
       });
     }
 
@@ -667,11 +690,14 @@ export class RoadmapGenerator {
     const complexDeps = items.filter(i => i.dependencies && i.dependencies.length > 2);
     if (complexDeps.length > 0) {
       risks.push({
+        id: uuidv4(),
         title: 'Complex dependencies may cause delays',
+        description: `${complexDeps.length} items have complex dependency chains`,
         likelihood: 'medium',
         impact: 'medium',
         severity: 'medium',
-        mitigations: 'Identify critical path; Start independent items in parallel',
+        mitigations: ['Identify critical path', 'Start independent items in parallel'],
+        affectedItems: complexDeps.map(i => i.id),
       });
     }
 
@@ -693,7 +719,7 @@ export class RoadmapGenerator {
             dependencies.push({
               dependent: item.title,
               dependsOn: depItem.title,
-              type: 'blocks',
+              type: 'prerequisite',
               reason: `${item.title} requires ${depItem.title} to be complete`,
               isHard: true,
             });

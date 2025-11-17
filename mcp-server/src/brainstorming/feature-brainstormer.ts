@@ -61,6 +61,7 @@ const CATEGORY_DESCRIPTIONS: Record<FeatureCategory, string> = {
   'security': 'Security hardening, vulnerability fixes, and compliance',
   'testing': 'Testing infrastructure, coverage, and quality assurance',
   'documentation': 'User guides, API docs, and developer documentation',
+  'integration': 'Third-party integration and ecosystem connection',
   'integrations': 'Third-party integrations and ecosystem connections',
 };
 
@@ -221,6 +222,7 @@ Analyze ${context.name} critically and suggest ${this.config.categories.length *
           id: `brainstorm-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
           category: item.category,
           name: item.title,
+          title: item.title,
           description: item.description,
           rationale: item.description, // Use description as rationale
           value: item.strategicAlignment ? item.strategicAlignment.join('; ') : 'Strategic value',
@@ -230,6 +232,7 @@ Analyze ${context.name} critically and suggest ${this.config.categories.length *
           alternatives: [],
           risks: [],
           source: 'ai-generated',
+          strategicAlignment: item.strategicAlignment?.length || 5,
         });
       }
     } catch (error) {

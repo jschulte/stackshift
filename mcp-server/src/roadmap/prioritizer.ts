@@ -172,8 +172,8 @@ export class Prioritizer {
       score -= effortPenalty;
 
       // Boost for items that unblock others
-      const dependentCount = items =>
-        items.filter(i => i.dependencies?.includes(item.id)).length;
+      const dependentCount = (items: RoadmapItem[]) =>
+        items.filter((i: RoadmapItem) => i.dependencies?.includes(item.id)).length;
       // Note: This would require context, so we'll estimate
       if (item.dependencies && item.dependencies.length === 0) {
         score += 50; // No dependencies = can start immediately

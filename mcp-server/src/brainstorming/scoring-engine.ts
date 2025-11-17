@@ -84,6 +84,8 @@ export class ScoringEngine {
       scored.push({
         ...feature,
         impact,
+        impactScore: impact,
+        effortScore: effort,
         effort: createEffortEstimate(effortHours, 'medium', 'ai'),
         roi,
         strategicValue,
@@ -139,8 +141,8 @@ export class ScoringEngine {
     score += categoryImpact[feature.category] || 0;
 
     // Strategic alignment
-    if (feature.strategicAlignment && feature.strategicAlignment.length > 0) {
-      score += Math.min(feature.strategicAlignment.length, 2);
+    if (typeof feature.strategicAlignment === 'number') {
+      score += Math.min(feature.strategicAlignment * 0.5, 2);
     }
 
     return Math.max(1, Math.min(10, score));
@@ -198,8 +200,8 @@ export class ScoringEngine {
     let score = 5;
 
     // Strategic alignment
-    if (feature.strategicAlignment) {
-      score += Math.min(feature.strategicAlignment.length * 0.5, 3);
+    if (typeof feature.strategicAlignment === 'number') {
+      score += Math.min(feature.strategicAlignment * 0.3, 3);
     }
 
     // Market trends
@@ -327,7 +329,9 @@ export class ScoringEngine {
     const factors: string[] = [];
     const lower = (feature.title + ' ' + feature.description).toLowerCase();
 
-    if (feature.strategicAlignment) factors.push(...feature.strategicAlignment);
+    if (typeof feature.strategicAlignment === 'number' && feature.strategicAlignment > 5) {
+      factors.push('High strategic alignment');
+    }
     if (lower.includes('ai')) factors.push('AI trend alignment');
     if (lower.includes('competitive')) factors.push('Competitive advantage');
 

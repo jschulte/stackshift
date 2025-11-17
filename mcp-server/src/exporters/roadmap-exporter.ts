@@ -67,35 +67,42 @@ export class RoadmapExporter {
       let outputPath: string | undefined;
 
       switch (format) {
-        case 'markdown':
+        case 'markdown': {
           content = await this.exportMarkdown(roadmap, options?.outputPath);
           outputPath = options?.outputPath || 'ROADMAP.md';
           break;
+        }
 
-        case 'json':
+        case 'json': {
           content = await this.exportJSON(roadmap);
           outputPath = options?.outputPath || 'roadmap.json';
           break;
+        }
 
-        case 'csv':
+        case 'csv': {
           content = await this.exportCSV(roadmap);
           outputPath = options?.outputPath || 'roadmap.csv';
           break;
+        }
 
-        case 'github-issues':
+        case 'github-issues': {
           // GitHub Issues export returns JSON representation
           const issues = await this.exportGitHubIssues(roadmap);
           content = JSON.stringify(issues, null, 2);
           outputPath = options?.outputPath || 'github-issues.json';
           break;
+        }
 
-        case 'html':
+        case 'html': {
           content = await this.exportHTML(roadmap);
           outputPath = options?.outputPath || 'roadmap.html';
           break;
+        }
 
-        default:
-          throw new ExportError(format, `Unsupported export format: ${format}`);
+        default: {
+          const unknownFormat: string = format;
+          throw new ExportError(format, `Unsupported export format: ${unknownFormat}`);
+        }
       }
 
       // Write to file if output path is specified
@@ -108,6 +115,11 @@ export class RoadmapExporter {
         format,
         content,
         outputPath,
+        metadata: {
+          generatedAt: new Date(),
+          itemCount: 0,
+          byteSize: content.length,
+        },
       };
     } catch (error) {
       const message = error instanceof Error ? error.message : String(error);
@@ -327,12 +339,16 @@ ${this.markdownToHtmlSimple(markdown)}
     // Source
     if (item.source) {
       parts.push('## Source\n');
-      parts.push(`**Type:** ${item.source.type}`);
-      if ('spec' in item.source && item.source.spec) {
-        parts.push(`**Spec:** ${item.source.spec}`);
-      }
-      if ('requirement' in item.source && item.source.requirement) {
-        parts.push(`**Requirement:** ${item.source.requirement}`);
+      if (typeof item.source === 'string') {
+        parts.push(`**Source:** ${item.source}`);
+      } else {
+        parts.push(`**Type:** ${(item.source as any).type || 'unknown'}`);
+        if ('spec' in item.source && (item.source as any).spec) {
+          parts.push(`**Spec:** ${(item.source as any).spec}`);
+        }
+        if ('requirement' in item.source && (item.source as any).requirement) {
+          parts.push(`**Requirement:** ${(item.source as any).requirement}`);
+        }
       }
       parts.push('');
     }

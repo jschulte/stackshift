@@ -194,10 +194,9 @@ export async function generateRoadmapToolHandler(args: GenerateRoadmapArgs) {
 
     // Show summary
     outputLines.push('**Summary:**');
-    outputLines.push(`- P0 (Critical): ${roadmap.summary.byPriority.p0} items`);
-    outputLines.push(`- P1 (High): ${roadmap.summary.byPriority.p1} items`);
-    outputLines.push(`- P2 (Medium): ${roadmap.summary.byPriority.p2} items`);
-    outputLines.push(`- P3 (Nice to Have): ${roadmap.summary.byPriority.p3} items`);
+    outputLines.push(`- P0 (Critical): ${roadmap.summary.byPriority?.p0Count || 0} items`);
+    outputLines.push(`- P1 (High): ${roadmap.summary.byPriority?.p1Count || 0} items`);
+    outputLines.push(`- P2 (Medium): ${roadmap.summary.byPriority?.p2Count || 0} items`);
     outputLines.push('');
     outputLines.push(`**Timeline Estimates:**`);
     outputLines.push(`- 1 developer: ${roadmap.timeline.byTeamSize.oneDev.weeks} weeks`);

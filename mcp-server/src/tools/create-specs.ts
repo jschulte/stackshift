@@ -75,7 +75,7 @@ Gear 2 (Reverse Engineer) must be completed first.
     await stateManager.completeStep('create-specs');
 
     // Format success response
-    if (result.success) {
+    if (result.success && result.summary) {
       const summary = result.summary;
       const response = `# StackShift - Gear 3: Create Specifications ✅
 
@@ -86,17 +86,17 @@ Gear 2 (Reverse Engineer) must be completed first.
 Generated specifications for the ENTIRE application using F002 automated tools.
 
 ### 📋 Constitution
-- **Created**: ${summary.constitution.path}
-- **Values**: ${summary.constitution.valuesCount} core principles
+- **Created**: ${summary?.constitution?.path || 'N/A'}
+- **Values**: ${summary?.constitution?.valuesCount || 0} core principles
 
 ### 📝 Feature Specifications
-- **Total Features**: ${summary.featureSpecs.total}
-- **✅ Complete**: ${summary.featureSpecs.complete} features (fully implemented)
-- **⚠️ Partial**: ${summary.featureSpecs.partial} features (partially implemented)
-- **❌ Missing**: ${summary.featureSpecs.missing} features (not implemented)
+- **Total Features**: ${summary?.featureSpecs?.total || 0}
+- **✅ Complete**: ${summary?.featureSpecs?.complete || 0} features (fully implemented)
+- **⚠️ Partial**: ${summary?.featureSpecs?.partial || 0} features (partially implemented)
+- **❌ Missing**: ${summary?.featureSpecs?.missing || 0} features (not implemented)
 
 ### 📐 Implementation Plans
-- **Created**: ${summary.implPlans.total} plans
+- **Created**: ${summary?.implPlans?.total || 0} plans
 - **For**: PARTIAL and MISSING features only
 
 ### ⏱️ Performance
@@ -107,13 +107,13 @@ Generated specifications for the ENTIRE application using F002 automated tools.
 \`\`\`
 specs/
 ${
-  summary.featureSpecs.total > 0
+  (summary?.featureSpecs?.total || 0) > 0
     ? `├── 001-{feature-name}/
 │   ├── spec.md              # Full specification
 │   └── plan.md              # Implementation plan (if needed)
 ├── 002-{feature-name}/
 │   └── spec.md
-└── ...${summary.featureSpecs.total} total features`
+└── ...${summary?.featureSpecs?.total || 0} total features`
     : '(No features extracted - check functional-specification.md)'
 }
 
@@ -146,11 +146,11 @@ All features from \`docs/reverse-engineering/functional-specification.md\` now h
 stackshift_gap_analysis
 \`\`\`
 
-This will analyze all ${summary.featureSpecs.total} specs and create a prioritized roadmap for implementing the ${summary.featureSpecs.partial + summary.featureSpecs.missing} incomplete features.
+This will analyze all ${summary?.featureSpecs?.total || 0} specs and create a prioritized roadmap for implementing the ${(summary?.featureSpecs?.partial || 0) + (summary?.featureSpecs?.missing || 0)} incomplete features.
 
 ---
 
-**🎉 Success**: All ${summary.featureSpecs.total} features are now under spec control!
+**🎉 Success**: All ${summary?.featureSpecs?.total || 0} features are now under spec control!
 `;
 
       return {
