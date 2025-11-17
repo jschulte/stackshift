@@ -93,8 +93,8 @@ The CLI MUST provide intuitive repository selection:
 ║   🚗 STACKSHIFT                                ║
 ║   Discovered 134 repositories                 ║
 ║                                               ║
-║   → ☑ wsm-pricing-display | TypeScript | ✅   ║
-║     ☑ wsm-date-picker | TypeScript | 🚗 Gear 3║
+║   → ☑ user-dashboard | TypeScript | ✅   ║
+║     ☑ analytics-service | TypeScript | 🚗 Gear 3║
 ║     ☐ legacy-api-gateway | Go | ⏸️            ║
 ║                                               ║
 ║   Selected: 2 | brownfield → cruise-control  ║

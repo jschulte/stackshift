@@ -2,7 +2,7 @@
 
 **Bulk Reverse Engineering & Migration Orchestrator**
 
-Transform 100+ legacy codebases into specification-driven, modern applications at scale.
+Transform legacy codebases into specification-driven, modern applications at scale - from a single repo to dozens or hundreds.
 
 ## 🎯 The Mission
 
@@ -44,8 +44,8 @@ go build -o stackshift
 ║   🚗 STACKSHIFT                                ║
 ║   Discovered 134 repositories                 ║
 ║                                               ║
-║   → ☑ wsm-pricing-display | TypeScript | ✅   ║
-║     ☑ wsm-date-picker | TypeScript | 🚗 Gear 3║
+║   → ☑ user-dashboard | TypeScript | ✅   ║
+║     ☑ analytics-service | TypeScript | 🚗 Gear 3║
 ║     ☐ legacy-api-gateway | Go | ⏸️            ║
 ║     ☐ auth-service | Python | ⏸️              ║
 ║                                               ║
@@ -174,10 +174,10 @@ Queue: Repo 4, Repo 5, Repo 6... (7 waiting)
 
 Completed: 95/100
 
-✅ Gear 1: wsm-pricing-display
-✅ Gear 2: wsm-pricing-display
-✅ Gear 3: wsm-pricing-display
-❌ Gear 4: wsm-pricing-display
+✅ Gear 1: user-dashboard
+✅ Gear 2: user-dashboard
+✅ Gear 3: user-dashboard
+❌ Gear 4: user-dashboard
    Error: Clarification needed - manual review required
 
 Logs saved to: ~/.stackshift-results/2024-11-17_14-30-00/
@@ -188,9 +188,9 @@ Logs saved to: ~/.stackshift-results/2024-11-17_14-30-00/
 ```
 ~/.stackshift-results/
 └── 2024-11-17_14-30-00/
-    ├── wsm-pricing-display_gear1.log
-    ├── wsm-pricing-display_gear2.log
-    ├── wsm-date-picker_gear1.log
+    ├── user-dashboard_gear1.log
+    ├── user-dashboard_gear2.log
+    ├── analytics-service_gear1.log
     └── summary.md
 ```
 

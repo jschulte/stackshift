@@ -108,7 +108,7 @@ OR switch to `cruise-control` mode to run all 6 gears automatically!
 - Increase parallel limit to 3-5
 
 ### Enterprise Scale
-- Select all 100+ repos
+- Select all repos (or as many as you need)
 - `cruise-control` mode
 - Parallel limit: 5-10
 - Let it run overnight
