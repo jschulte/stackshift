@@ -56,6 +56,26 @@ Transform any application into a fully-specified, spec-driven project with compl
 
 **Two Paths - Choose Your Route:**
 
+<!-- DIAGRAM: workflow-start -->
+### Workflow State Machine
+
+```mermaid
+stateDiagram-v2
+    [*] --> analyze
+    analyze --> reverse-engineer
+    reverse-engineer --> create-specs
+    create-specs --> gap-analysis
+    gap-analysis --> complete-spec
+    complete-spec --> implement
+    analyze --> cruise-control: auto
+    implement --> [*]
+    cruise-control --> [*]
+```
+
+*Last generated: 2025-11-17T08:49:54.775Z*
+<!-- DIAGRAM: workflow-end -->
+
+
 ### 🔀 Path A: Greenfield (Shift to New Stack)
 **Use when:** Rebuilding in a different tech stack or platform
 
