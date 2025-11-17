@@ -41,11 +41,23 @@
     "prepublishOnly": "npm run build"
   },
   "dependencies": {
-    "@modelcontextprotocol/sdk": "^1.0.0"
+    "@babel/parser": "^7.28.5",
+    "@babel/types": "^7.28.5",
+    "@modelcontextprotocol/sdk": "^1.0.0",
+    "asciichart": "^1.5.25",
+    "handlebars": "^4.7.8",
+    "markdown-it": "^14.1.0",
+    "ora": "^8.2.0",
+    "p-limit": "^5.0.0",
+    "uuid": "^13.0.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.1",
+    "@types/babel__parser": "^7.0.0",
+    "@types/handlebars": "^4.0.40",
+    "@types/markdown-it": "^14.1.2",
     "@types/node": "^20.0.0",
+    "@types/uuid": "^10.0.0",
     "@typescript-eslint/eslint-plugin": "^8.46.4",
     "@typescript-eslint/parser": "^8.46.4",
     "@vitest/coverage-v8": "^1.0.0",
