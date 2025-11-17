@@ -32,7 +32,6 @@ Transform any application into a fully-specified, spec-driven project with compl
 - **[Quick Start](QUICKSTART.md)** - Get started in 5 minutes!
 - **[Installation Guide](docs/guides/INSTALLATION.md)** - Detailed installation for all platforms
 - **[Plugin Guide](docs/guides/PLUGIN_GUIDE.md)** - Claude Code plugin usage
-- **[MCP Guide](mcp-server/README.md)** - MCP server for VSCode/Copilot
 - **[Web Guide](web/README.md)** - Using in Claude Code Web (browser)
 - **[Batch Processing](scripts/BATCH_PROCESSING_GUIDE.md)** - Process multiple projects efficiently
 
@@ -50,26 +49,6 @@ Transform any application into a fully-specified, spec-driven project with compl
 6. **🚀 Sixth Gear:** Implement - Build features from specs!
 
 **Two Paths - Choose Your Route:**
-
-<!-- DIAGRAM: workflow-start -->
-### Workflow State Machine
-
-```mermaid
-stateDiagram-v2
-    [*] --> analyze
-    analyze --> reverse-engineer
-    reverse-engineer --> create-specs
-    create-specs --> gap-analysis
-    gap-analysis --> complete-spec
-    complete-spec --> implement
-    analyze --> cruise-control: auto
-    implement --> [*]
-    cruise-control --> [*]
-```
-
-*Last generated: 2025-11-17T17:24:53.600Z*
-<!-- DIAGRAM: workflow-end -->
-
 
 ### 🔀 Path A: Greenfield (Shift to New Stack)
 **Use when:** Rebuilding in a different tech stack or platform
@@ -176,7 +155,7 @@ stateDiagram-v2
 
 ## 🚀 Quick Start
 
-### Three Ways to Use StackShift
+### Two Ways to Use StackShift
 
 #### Option 1: Claude Code Plugin (Local - Best Experience)
 
@@ -286,24 +265,6 @@ See [`web/README.md`](web/README.md) for complete instructions.
 - 🚀 No installation required
 - 🔄 Full cruise control support
 - 💾 Download specs when complete
-
-#### Option 3: MCP Server (VSCode, Copilot)
-
-**Recommended for:** VSCode users, GitHub Copilot users
-
-```bash
-# Configure in VSCode settings.json
-{
-  "mcp.servers": {
-    "stackshift": {
-      "command": "npx",
-      "args": ["-y", "stackshift-mcp"]
-    }
-  }
-}
-```
-
-See [`mcp-server/README.md`](mcp-server/README.md) for complete instructions.
 
 ---
 
