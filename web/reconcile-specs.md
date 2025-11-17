@@ -179,7 +179,7 @@ As a {user type}, I need {capability} so that {benefit}.
 
 ---
 
-{3-5 user stories per feature}
+{3-6 user stories per feature}
 
 ---
 
