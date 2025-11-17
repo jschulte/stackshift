@@ -9,6 +9,7 @@ import { DiagramValidator } from './diagram-validator.js';
 import { DocumentationEmbedder } from './embedders/doc-embedder.js';
 import { WorkflowDiagramGenerator } from './generators/workflow-diagram.js';
 import { ArchitectureDiagramGenerator } from './generators/architecture-diagram.js';
+import { ClassDiagramGenerator } from './generators/class-diagram.js';
 import type {
   GenerationOptions,
   GenerationResult,
@@ -94,7 +95,29 @@ export class DiagramGenerator {
     if (this.options.verbose) {
       console.log('📝 Generating class diagrams...');
     }
-    // Will be implemented in Phase 6
+    const classGen = new ClassDiagramGenerator();
+    const classModules = [
+      { file: 'mcp-server/src/utils/security.ts', name: 'security' },
+      { file: 'mcp-server/src/utils/state-manager.ts', name: 'state-manager' },
+      { file: 'mcp-server/src/utils/file-utils.ts', name: 'file-utils' }
+    ];
+
+    for (const module of classModules) {
+      try {
+        const modulePath = join(this.options.rootDir, module.file);
+        const diagram = await classGen.parse(modulePath, module.name);
+        const mermaid = classGen.toMermaid(diagram);
+        mermaid.outputPath = join(this.options.rootDir, mermaid.outputPath);
+        await this.validateAndWrite(mermaid);
+        result.classDiagrams.push(mermaid);
+      } catch (error: any) {
+        result.errors.push({
+          type: 'generate',
+          message: `Failed to generate class diagram for ${module.name}: ${error.message}`,
+          sourceFile: module.file
+        });
+      }
+    }
 
     // Sequence diagrams
     if (this.options.verbose) {

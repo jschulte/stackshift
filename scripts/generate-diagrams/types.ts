@@ -147,3 +147,96 @@ export interface GenerationResult {
   /** Errors encountered (non-fatal) */
   errors: GenerationError[];
 }
+
+/**
+ * Method node in a class or interface
+ */
+export interface MethodNode {
+  /** Method name */
+  name: string;
+
+  /** Visibility (+: public, -: private, #: protected) */
+  visibility: '+' | '-' | '#';
+
+  /** Method parameters */
+  parameters: string[];
+
+  /** Return type */
+  returnType: string;
+}
+
+/**
+ * Property node in a class or interface
+ */
+export interface PropertyNode {
+  /** Property name */
+  name: string;
+
+  /** Visibility (+: public, -: private, #: protected) */
+  visibility: '+' | '-' | '#';
+
+  /** Property type */
+  type: string;
+}
+
+/**
+ * Class node extracted from TypeScript AST
+ */
+export interface ClassNode {
+  /** Class name */
+  name: string;
+
+  /** Class methods */
+  methods: MethodNode[];
+
+  /** Class properties */
+  properties: PropertyNode[];
+
+  /** Parent class (extends) */
+  extends?: string;
+
+  /** Implemented interfaces */
+  implements?: string[];
+}
+
+/**
+ * Interface node extracted from TypeScript AST
+ */
+export interface InterfaceNode {
+  /** Interface name */
+  name: string;
+
+  /** Interface properties */
+  properties: PropertyNode[];
+
+  /** Interface methods */
+  methods: MethodNode[];
+
+  /** Parent interfaces (extends) */
+  extends?: string[];
+}
+
+/**
+ * Class diagram structure
+ */
+export interface ClassDiagram {
+  /** Diagram type */
+  type: 'class';
+
+  /** Module name */
+  moduleName: string;
+
+  /** Classes in the diagram */
+  classes: ClassNode[];
+
+  /** Interfaces in the diagram */
+  interfaces: InterfaceNode[];
+
+  /** Relationships between classes/interfaces */
+  relationships: Array<{
+    from: string;
+    to: string;
+    type: string;
+    label?: string;
+  }>;
+}
