@@ -1,12 +1,24 @@
 # F002: Automated Spec Generation
 
+## Implementation Status
+
+**Status**: ✅ **INTEGRATED into Gear 3** (as of 2024-11-17)
+
+Gear 3 (`mcp-server/src/tools/create-specs.ts`) now calls F002 automated spec generation tools:
+- `generateAllSpecsToolHandler` - Orchestrates full spec generation
+- `createConstitutionToolHandler` - Generates constitution from reverse engineering docs
+- `createFeatureSpecsToolHandler` - Creates specs for ALL features (complete, partial, missing)
+- `createImplPlansToolHandler` - Generates implementation plans for incomplete features
+
+**Result**: Brownfield repos now get 100% spec coverage for entire application!
+
 ## Overview
 
-Currently, StackShift Gear 3 (Create Specs) provides guidance for manually creating GitHub Spec Kit specifications, but doesn't automatically generate the spec files. This feature will enhance Gear 3 to programmatically create all Spec Kit artifacts from reverse-engineering documentation.
+Previously, StackShift Gear 3 (Create Specs) provided guidance for manually creating GitHub Spec Kit specifications, but didn't automatically generate the spec files. This feature enhanced Gear 3 to programmatically create all Spec Kit artifacts from reverse-engineering documentation.
 
-## Problem Statement
+## Problem Statement (RESOLVED)
 
-The current implementation of `create-specs` tool (`mcp-server/src/tools/create-specs.ts`) only returns instructional text telling users HOW to create specs manually. This creates a workflow gap:
+The previous implementation of `create-specs` tool only returned instructional text telling users HOW to create specs manually. This created a workflow gap:
 
 1. **Current State**: User completes Gears 1-2, has `docs/reverse-engineering/` with 8+ comprehensive documents
 2. **Gear 3 Today**: Returns markdown instructions saying "manually create .specify/ directory and spec files"

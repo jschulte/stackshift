@@ -20,6 +20,17 @@
           }
         ]
       }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "prompt",
+            "prompt": "If this code change affects feature behavior or API contracts, check if related specs in specs/ need updating. In spec-driven repos, specs guide changes to existing code."
+          }
+        ]
+      }
     ]
   }
 }
