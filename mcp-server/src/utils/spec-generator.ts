@@ -515,8 +515,7 @@ export class SpecGenerator {
   }
 
   private extractValues(nodes: MarkdownNode[]): string[] {
-    // Simplified: Find first list after any "Values" heading
-    // This is a pragmatic approach - we can make it more sophisticated later
+    // MarkdownParser creates flat list-item nodes, not nested list structures
     const listItems: string[] = [];
     let foundValuesHeading = false;
 
@@ -527,22 +526,14 @@ export class SpecGenerator {
         continue;
       }
 
-      // If we found the Values heading and hit a list, collect its items
-      if (foundValuesHeading && node.type === 'list') {
-        if (node.children) {
-          for (const child of node.children) {
-            if (child.content) {
-              listItems.push(child.content.trim());
-            }
-          }
+      // After finding Values heading, collect list-item nodes
+      if (foundValuesHeading) {
+        if (node.type === 'list-item') {
+          listItems.push(node.content.trim());
+        } else if (node.type === 'heading') {
+          // Stop at next heading
+          break;
         }
-        // Got the list, we're done
-        break;
-      }
-
-      // Stop if we hit another heading after finding Values
-      if (foundValuesHeading && node.type === 'heading') {
-        break;
       }
     }
 
