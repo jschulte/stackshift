@@ -124,7 +124,7 @@ stateDiagram-v2
 │  Gear 2: Reverse Engineer (Reverse Gear! 🔄)                │
 │  ├─ Extract business logic ONLY ◄── Greenfield              │
 │  ├─ OR business logic + tech details ◄── Brownfield         │
-│  └─ Generate 8 comprehensive docs                           │
+│  └─ Generate 9 comprehensive docs                           │
 │         │                                                    │
 │         ▼                                                    │
 │  Gear 3: Create Specifications                              │
@@ -429,12 +429,13 @@ stackshift/
 - Extracts all data models, API endpoints, components
 - Documents configuration, infrastructure, operations
 - Analyzes technical debt and test coverage
-- Generates 8 comprehensive documents
+- Generates 9 comprehensive documents
 
 **Output:**
 ```
 docs/reverse-engineering/
 ├── functional-specification.md     (Business logic, requirements)
+├── integration-points.md           (External services, APIs, dependencies)
 ├── configuration-reference.md      (All config options)
 ├── data-architecture.md            (Data models, API contracts)
 ├── operations-guide.md             (Deployment, infrastructure)

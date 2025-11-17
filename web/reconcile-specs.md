@@ -37,15 +37,16 @@ First, understand what you have:
 # Verify reverse engineering docs exist
 ls docs/reverse-engineering/
 
-# Should contain 8-10 comprehensive files:
+# Should contain 9 comprehensive files from StackShift:
 # - functional-specification.md (THE COMPLETE APP)
+# - integration-points.md (External services, APIs, dependencies - CRITICAL!)
+# - configuration-reference.md
 # - data-architecture.md
-# - api-documentation.md
-# - business-logic.md
-# - integration-points.md
+# - operations-guide.md
 # - technical-debt-analysis.md
-# - security-analysis.md
-# - deployment-architecture.md
+# - observability-requirements.md
+# - visual-design-system.md
+# - test-documentation.md
 ```
 
 ### Check Existing Specs
@@ -82,12 +83,14 @@ cat docs/reverse-engineering/functional-specification.md
 **This file describes the ENTIRE application** - both what exists AND what's missing.
 
 ### Also Read Supporting Docs
+- `integration-points.md` - ALL external services, APIs, dependencies (CRITICAL!)
 - `data-architecture.md` - All data models
-- `api-documentation.md` - All API endpoints
-- `business-logic.md` - All business rules
-- `integration-points.md` - All external integrations
+- `configuration-reference.md` - All config and environment variables
+- `operations-guide.md` - Deployment and operational details
 - `technical-debt-analysis.md` - Implementation status
-- `deployment-architecture.md` - Infrastructure
+- `observability-requirements.md` - Monitoring and logging
+- `visual-design-system.md` - UI/UX patterns
+- `test-documentation.md` - Testing approach
 
 **Goal**: Understand EVERY capability the application has or needs.
 
