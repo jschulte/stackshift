@@ -56,11 +56,11 @@
 
 ### Tasks
 
-- [ ] T001 Create `.specify/hooks/modules` directory structure
-- [ ] T002 Create `.specify/config` directory for configuration files
-- [ ] T003 [P] Install Husky via npm: `npm install --save-dev husky`
-- [ ] T004 [P] Initialize Husky git hooks: `npx husky install`
-- [ ] T005 Create `.gitignore` entry for `.specify/config/sync-rules.local.json`
+- [X] T001 Create `.specify/hooks/modules` directory structure
+- [X] T002 Create `.specify/config` directory for configuration files
+- [X] T003 [P] Install Husky via npm: `npm install --save-dev husky`
+- [X] T004 [P] Initialize Husky git hooks: `npx husky install`
+- [X] T005 Create `.gitignore` entry for `.specify/config/sync-rules.local.json`
 
 **Acceptance Criteria:**
 - [ ] Directory structure matches specification
@@ -85,17 +85,17 @@
 
 ### Tasks
 
-- [ ] T006 [P] Create default configuration schema in `.specify/config/sync-rules.json`
-- [ ] T007 [P] Implement `config_load()` function in `.specify/hooks/modules/config.sh`
-- [ ] T008 [P] Implement `config_get_mode()` function in `.specify/hooks/modules/config.sh`
-- [ ] T009 [P] Implement `config_should_ignore()` function in `.specify/hooks/modules/config.sh`
-- [ ] T010 [P] Implement `git_get_context()` function in `.specify/hooks/modules/git-analyzer.sh`
-- [ ] T011 [P] Implement `git_get_changed_files()` function in `.specify/hooks/modules/git-analyzer.sh`
-- [ ] T012 [P] Implement `git_get_file_diff()` and `git_get_last_commit_time()` in `.specify/hooks/modules/git-analyzer.sh`
-- [ ] T013 [P] Implement `mapper_find_specs()` function in `.specify/hooks/modules/mapper.sh`
-- [ ] T014 [P] Implement `mapper_check_explicit()` function in `.specify/hooks/modules/mapper.sh`
-- [ ] T015 [P] Implement `mapper_heuristic_match()` function in `.specify/hooks/modules/mapper.sh`
-- [ ] T016 [P] Implement `categorizer_analyze()` function in `.specify/hooks/modules/categorizer.sh`
+- [X] T006 [P] Create default configuration schema in `.specify/config/sync-rules.json`
+- [X] T007 [P] Implement `config_load()` function in `.specify/hooks/modules/config.sh`
+- [X] T008 [P] Implement `config_get_mode()` function in `.specify/hooks/modules/config.sh`
+- [X] T009 [P] Implement `config_should_ignore()` function in `.specify/hooks/modules/config.sh`
+- [X] T010 [P] Implement `git_get_context()` function in `.specify/hooks/modules/git-analyzer.sh`
+- [X] T011 [P] Implement `git_get_changed_files()` function in `.specify/hooks/modules/git-analyzer.sh`
+- [X] T012 [P] Implement `git_get_file_diff()` and `git_get_last_commit_time()` in `.specify/hooks/modules/git-analyzer.sh`
+- [X] T013 [P] Implement `mapper_find_specs()` function in `.specify/hooks/modules/mapper.sh`
+- [X] T014 [P] Implement `mapper_check_explicit()` function in `.specify/hooks/modules/mapper.sh`
+- [X] T015 [P] Implement `mapper_heuristic_match()` function in `.specify/hooks/modules/mapper.sh`
+- [X] T016 [P] Implement `categorizer_analyze()` function in `.specify/hooks/modules/categorizer.sh`
 - [ ] T017 Add unit tests for config module in `test/modules/config.bats`
 - [ ] T018 Add unit tests for git-analyzer module in `test/modules/git-analyzer.bats`
 - [ ] T019 Add unit tests for mapper module in `test/modules/mapper.bats`
@@ -142,15 +142,15 @@
 
 ### Tasks
 
-- [ ] T021 [US1] Implement `validator_check_file()` function in `.specify/hooks/modules/validator.sh`
-- [ ] T022 [US1] Implement `validator_run()` function in `.specify/hooks/modules/validator.sh`
-- [ ] T023 [US1] Create main hook entry point in `.specify/hooks/validate-specs.sh`
-- [ ] T024 [US1] Add JSON input parsing from `$CLAUDE_TOOL_INPUT` in `.specify/hooks/validate-specs.sh`
-- [ ] T025 [US1] Add git push detection logic in `.specify/hooks/validate-specs.sh`
-- [ ] T026 [US1] Add validation execution and result formatting in `.specify/hooks/validate-specs.sh`
-- [ ] T027 [US1] Add emergency bypass check for `SKIP_SPEC_SYNC` in `.specify/hooks/validate-specs.sh`
-- [ ] T028 [US1] Configure Claude Code PreToolUse hook in `.claude/settings.json`
-- [ ] T029 [US1] Make `.specify/hooks/validate-specs.sh` executable: `chmod +x`
+- [X] T021 [US1] Implement `validator_check_file()` function in `.specify/hooks/modules/validator.sh`
+- [X] T022 [US1] Implement `validator_run()` function in `.specify/hooks/modules/validator.sh`
+- [X] T023 [US1] Create main hook entry point in `.specify/hooks/validate-specs.sh`
+- [X] T024 [US1] Add JSON input parsing from `$CLAUDE_TOOL_INPUT` in `.specify/hooks/validate-specs.sh`
+- [X] T025 [US1] Add git push detection logic in `.specify/hooks/validate-specs.sh`
+- [X] T026 [US1] Add validation execution and result formatting in `.specify/hooks/validate-specs.sh`
+- [X] T027 [US1] Add emergency bypass check for `SKIP_SPEC_SYNC` in `.specify/hooks/validate-specs.sh`
+- [X] T028 [US1] Configure Claude Code PreToolUse hook in `.claude/settings.json`
+- [X] T029 [US1] Make `.specify/hooks/validate-specs.sh` executable: `chmod +x`
 - [ ] T030 [US1] Add unit tests for validator module in `test/modules/validator.bats`
 - [ ] T031 [US1] Add integration test: outdated spec blocks push in `test/integration/validation.bats`
 - [ ] T032 [US1] Add integration test: up-to-date spec allows push in `test/integration/validation.bats`
