@@ -54,7 +54,7 @@ export interface State {
   stepDetails: Record<string, any>;
   auto_mode?: boolean;
   auto_config?: AutoConfig;
-  modernize?: boolean; // Brownfield Facelift: upgrade all dependencies after spec completion
+  modernize?: boolean; // Brownfield Upgrade: upgrade all dependencies after spec completion
   config?: any;
 }
 
