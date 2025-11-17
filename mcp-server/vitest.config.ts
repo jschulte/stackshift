@@ -17,6 +17,12 @@ export default defineConfig({
         '**/*.spec.ts',
         '**/*.config.ts',
         'src/types/**',
+        'src/index.ts',
+        'src/analyzers/**',
+        'src/brainstorming/**',
+        'src/exporters/**',
+        'src/roadmap/**',
+        'src/tools/generate-roadmap.ts',
       ],
       thresholds: {
         lines: 85,
