@@ -44,5 +44,8 @@
     "templates/",
     "README.md",
     "LICENSE"
-  ]
+  ],
+  "devDependencies": {
+    "husky": "^9.1.7"
+  }
 }
