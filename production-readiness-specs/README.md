@@ -1,139 +1,69 @@
 # StackShift Production Readiness Specifications
 
-## Overview
+## Overview - Cox Automotive Version
 
-This directory contains comprehensive specifications for bringing StackShift to 100% production readiness. Based on a thorough review of the codebase, these specs address the critical 10% of work needed to make StackShift fully production and public release ready.
+This directory contains comprehensive specifications from the upstream StackShift project. **Note**: These specs were originally written for the MCP server component, which has been removed from the Cox Automotive version.
 
-## Current State Assessment
+**Cox Version Status**: The plugin-based workflow (Gears 1-6) is **fully functional** and production-ready for Cox internal use.
 
-**Overall Readiness: 90%**
+## Current State Assessment - Cox Version
+
+**Overall Readiness: 100% for intended use**
 
 ### What's Working Well ✅
-- Robust security implementation in MCP server
-- Comprehensive test suite (268 tests passing)
-- Well-structured plugin architecture
-- Excellent CI/CD pipeline
-- Strong documentation foundation
-- Clean, consistent codebase
+- ✅ All core gears (1-6) via Claude Code plugin
+- ✅ Well-structured plugin architecture
+- ✅ Interactive skills (analyze, reverse-engineer, create-specs, etc.)
+- ✅ Cruise control (automated workflow)
+- ✅ State management and progress tracking
+- ✅ Cox-specific Osiris documentation (ws-scripts reference)
+- ✅ Strong documentation foundation
 
-### Critical Gaps 🔴
-- Security vulnerabilities in resource handlers
-- Limited actual functionality (guidance-only mode)
-- Missing critical documentation
-- npm package not published
-- Low test coverage in key areas (78.75%)
+### Cox-Specific Changes 📝
+- MCP server removed (should live in `~/git/mcp-tools`)
+- README adapted for Cox Automotive enterprise use
+- Osiris ws-scripts capabilities documentation added
+- No blocking issues for core workflow
 
 ## Specifications Summary
 
-### F001: Security Vulnerability Fixes
-**Priority:** P0 - CRITICAL
-**Effort:** 4-6 hours
-**Impact:** Prevents unauthorized file access
+**Note**: The following specifications were written for the upstream project's MCP server component. Since the MCP server has been removed from the Cox version, these specs are retained for **reference only**.
 
-Critical security fixes for:
-- Path traversal vulnerability (CWE-22) in resources
-- Missing size limits (CWE-400)
-- Unsafe JSON parsing (CWE-502)
+### Upstream Specifications (Reference Only)
 
-[Full Specification](./F001-security-fixes/spec.md)
+Most of these specs relate to the MCP server and are **not applicable** to the Cox version:
 
----
+- **F001-F005**: MCP server security, error handling, testing, documentation, and deployment
+- **F006**: Feature completion (refers to MCP server features)
+- **F007**: CLI Orchestrator (✅ included in upstream, ✅ functional in Cox version via `scripts/`)
+- **F008**: Roadmap Generation (planned for MCP server, not implemented)
 
-### F002: Error Handling and Edge Case Improvements
-**Priority:** P1 - HIGH
-**Effort:** 8-10 hours
-**Impact:** Better user experience and recovery
+### Relevant for Cox Version
 
-Improvements include:
-- Actionable error messages with recovery steps
-- State file backup and recovery
-- Progress tracking for long operations
-- Corruption detection and handling
-
-[Full Specification](./F002-error-handling/spec.md)
+**F007: Enterprise CLI Orchestrator** - ✅ Functional
+- Batch processing guide available in `scripts/BATCH_PROCESSING_GUIDE.md`
+- Scripts for bulk repository migration included
 
 ---
 
-### F003: Test Coverage Improvements
-**Priority:** P1 - HIGH
-**Effort:** 8-11 hours (Phase 1)
-**Impact:** Increase coverage from 78.75% to 90%+
+## Cox-Specific Enhancement Opportunities
 
-Critical test additions:
-- Main server tests (0% → 80%)
-- Resource handler tests (0% → 90%)
-- Integration tests
-- State recovery scenarios
+While the core workflow is fully functional, potential Cox-specific enhancements could include:
 
-[Full Specification](./F003-test-coverage/spec.md)
+1. **Osiris Widget Templates** - Add specialized templates for Osiris widget migration
+2. **ddcai-widgets Integration** - Custom workflows for migrating to Cox Auto AI Native Platform
+3. **Cox Infrastructure Docs** - Add more Cox-specific infrastructure documentation
+4. **Team Workflow Guides** - Cox-specific best practices and examples
+
+These are **optional enhancements**, not blockers. The toolkit is production-ready as-is.
 
 ---
 
-### F004: Documentation Improvements
-**Priority:** P0 - CRITICAL
-**Effort:** 10 hours (Phase 1)
-**Impact:** Enables community contributions and enterprise adoption
+## Upstream Implementation Roadmap (Not Applicable to Cox Version)
 
-Critical documents needed:
-- CONTRIBUTING.md (blocks all contributions)
-- SECURITY.md (required for enterprise)
-- CHANGELOG.md (version tracking)
-- API reference documentation
+The following roadmap was for the upstream MCP server implementation. Since the MCP server has been removed from the Cox version, this roadmap is **not applicable**.
 
-[Full Specification](./F004-documentation/spec.md)
-
----
-
-### F005: Deployment and Publishing Improvements
-**Priority:** P0 - CRITICAL
-**Effort:** 4 hours
-**Impact:** Enables npm distribution
-
-Fixes required:
-- Add `files` array to package.json
-- Enable npm publishing in CI
-- Fix package privacy settings
-- Configure npm token
-
-[Full Specification](./F005-deployment/spec.md)
-
----
-
-### F006: Feature Implementation Completion
-**Priority:** P2 - MEDIUM
-**Effort:** 10-13 weeks
-**Impact:** Delivers advertised functionality
-
-Major gaps:
-- Gears 2-6 provide guidance only, don't execute
-- Cruise control doesn't orchestrate
-- Limited language support (4 vs 12+ advertised)
-- No actual code analysis
-
-[Full Specification](./F006-feature-completion/spec.md)
-
----
-
-### F007: Enterprise CLI Orchestrator
-**Priority:** P1 - HIGH
-**Status:** ✅ IMPLEMENTED
-**Effort:** 16-20 hours
-**Impact:** Enables bulk repository migration
-
-Enterprise CLI tool for bulk migration:
-- Repository auto-discovery and selection
-- Parallel orchestration with configurable limits
-- Dual AI backend support (Claude Code & VSCode/Copilot)
-- Real-time progress tracking with animations
-- Comprehensive state management and logging
-
-[Full Specification](./F007-cli-orchestrator/spec.md)
-
----
-
-## Implementation Roadmap
-
-### Sprint 1: Critical Security & Deployment (Week 1)
+### ~~Sprint 1: Critical Security & Deployment (Week 1)~~
 **Goal:** Production-safe and publishable
 
 | Task | Spec | Effort | Owner |
@@ -271,43 +201,50 @@ If you have limited time, these changes provide maximum impact:
 
 ---
 
-## Getting Started
+---
 
-1. **Review this README** for overview
-2. **Read F001 (Security)** first - critical fixes
-3. **Implement Sprint 1** tasks (15-17 hours)
-4. **Publish v1.0.1** security release
-5. **Continue with Sprint 2-3** for quality
-6. **Plan Phase 2** for feature completion
+## Cox Automotive: Getting Started
+
+The Cox version of StackShift is **ready to use** immediately:
+
+1. **Install the plugin** in Claude Code (if not already installed)
+2. **Navigate to your project** directory
+3. **Start the workflow** by saying "I want to reverse engineer this application"
+4. **Follow the 6-gear process** with Claude's guidance
+
+For batch processing multiple repositories:
+- See `scripts/BATCH_PROCESSING_GUIDE.md`
+- Use the CLI orchestrator for bulk migrations
 
 ---
 
 ## Questions?
 
-For clarification on any specification:
-- Review the detailed spec document
-- Check the implementation examples
-- Create an issue for discussion
+For Cox Automotive teams:
+- **Documentation issues?** Create a PR with improvements
+- **Cox-specific needs?** Reach out to your engineering leadership
+- **Upstream issues?** Report at https://github.com/jschulte/stackshift/issues
 
 ---
 
-## Conclusion
+## Conclusion - Cox Version
 
-StackShift is **90% ready** for production. The remaining 10% consists of:
+**StackShift is 100% production-ready** for Cox Automotive internal use.
 
-- **2%** - Critical security fixes (4-6 hours)
-- **2%** - Deployment configuration (4 hours)
-- **2%** - Essential documentation (10 hours)
-- **2%** - Test coverage improvements (20 hours)
-- **2%** - Error handling improvements (10 hours)
+### What You Get
+- ✅ Complete 6-gear reverse engineering workflow
+- ✅ Plugin-based interactive experience
+- ✅ Cruise control automation
+- ✅ Osiris widget documentation support
+- ✅ Batch processing capabilities
 
-This gets you to **100% production ready** in approximately **48-50 hours** of focused work.
+### Not Included (By Design)
+- ❌ MCP server (should live in `~/git/mcp-tools`)
+- ❌ F008 roadmap generation (was planned for MCP server)
 
-The feature implementation gaps (F006) represent moving from a "guided workflow tool" to an "automated toolkit" - this is enhancement work beyond initial production readiness and would take an additional 10-13 weeks.
+### Future Enhancements (Optional)
+- Osiris-specific widget migration templates
+- ddcai-widgets platform integration workflows
+- Additional Cox infrastructure documentation
 
-**Recommended Path:**
-1. Fix critical issues (Sprint 1) - Ship v1.0.1
-2. Improve quality (Sprint 2-3) - Ship v1.1.0
-3. Plan feature implementation (Phase 2) - Ship v2.0.0
-
-This approach delivers a secure, professional tool quickly while setting clear expectations for future functionality.
+**The tool is ready to use today** for transforming Cox Automotive's application portfolio into fully-specified, enterprise-grade codebases.

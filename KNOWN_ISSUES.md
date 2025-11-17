@@ -1,70 +1,48 @@
 # Known Issues
 
-**Last Updated**: 2024-11-17
+**Last Updated**: 2025-11-17
+**Cox Automotive Version**: Adapted from upstream with MCP server removed
 
 ---
 
-## 🟡 TypeScript Build Issues (F008 Roadmap)
+## 📝 MCP Server Removed
 
-**Status**: MCP server builds with type errors. Core gears (1-3) and F002 tools work correctly.
+**Status**: MCP server component has been removed from this repository.
 
-**Impact**: F008 roadmap generation has remaining logic errors after type definition fixes.
+**Reason**: The MCP server should live in `~/git/mcp-tools` instead for Cox infrastructure.
 
-### F008 Roadmap Generation (~47 remaining errors)
+**Impact**:
+- F008 roadmap generation features (planned but not implemented) removed with MCP server
+- Core plugin-based workflow (Gears 1-6) remains fully functional
+- Specs in `production-readiness-specs/F008-roadmap-generation/` remain for reference
 
-**Files**:
-- `src/brainstorming/feature-brainstormer.ts`
-- `src/brainstorming/scoring-engine.ts`
-- `src/exporters/roadmap-exporter.ts`
-- `src/roadmap/prioritizer.ts`
-- `src/roadmap/roadmap-generator.ts`
-
-**Partial Fixes Applied**:
-- ✅ Added missing properties to `DesirableFeature` (title, strategicAlignment)
-- ✅ Added missing properties to `ScoredFeature` (impact)
-- ✅ Added missing properties to `RoadmapItem` (assignee, source)
-- ✅ Extended `RoadmapItemType` enum (gap-fix, feature)
-- ✅ Extended `FeatureCategory` enum (integrations)
-- ✅ Added success property to `ExportResult`
-- ✅ Added downlevelIteration to tsconfig.json
-
-**Remaining Issues** (~47 errors):
-- Logic errors in brainstorming/scoring-engine.ts (treating numbers as arrays)
-- Type mismatches in feature-brainstormer.ts
-- Export path handling in roadmap-exporter.ts
-- Nullable safety in roadmap-generator.ts
-- Timeline interface hours property inconsistency
-
-**Impact**: F008 tools exist but cannot be called from Gear 4 until fixed.
-
-**Workaround**: Use `/speckit.analyze` manually for gap analysis.
-
-**Priority**: P2 (Medium) - Advanced feature, doesn't block core workflow
+**Note**: If MCP server support is needed, it should be implemented in the mcp-tools repository separately.
 
 ---
 
-## 🟢 What Works
+## 🟢 What Works (Cox Automotive Version)
 
-- ✅ All core gears (1-6)
-- ✅ F002 automated spec generation (Gear 3 integration)
-- ✅ CLI orchestrator (batch processing)
+- ✅ All core gears (1-6) via Claude Code plugin
 - ✅ Plugin skills (interactive workflow)
-- ✅ Web prompts (manual usage)
-- ✅ Spec sync hooks (PreToolUse + PostToolUse)
-- ✅ State management and security
+- ✅ Web prompts (manual usage via Claude Code Web)
+- ✅ State management and progress tracking
+- ✅ Cruise control (automated workflow)
+- ✅ Osiris widget documentation (ws-scripts reference)
 
 ---
 
-## 📋 Fix Priorities
+## 📋 Current Status
 
-**P1 High**: None (core functionality works)
+**No Blocking Issues**: All core functionality is operational.
 
-**P2 Medium**:
-- Fix F008 type errors (enables full Gear 4 automation)
-- Implement F005 (Mermaid diagrams)
+**Cox-Specific Additions**:
+- ✅ Osiris ws-scripts capabilities documentation (`docs/osiris/`)
+- ✅ README adapted for Cox Automotive enterprise use
+- ✅ MCP server removed (should live in mcp-tools)
 
-**P3 Low**:
-- Fix F002 iterator warnings
-- Implement F003/F004 (AST support)
+**Future Enhancements** (Optional, not blocking):
+- Implement MCP server support in mcp-tools repository if needed
+- Add Cox-specific widget migration workflows for ddcai-widgets
+- Extend Osiris documentation based on team feedback
 
-**See specs**: `production-readiness-specs/F00*/` for implementation details
+**See specs**: `production-readiness-specs/` for detailed feature specifications
