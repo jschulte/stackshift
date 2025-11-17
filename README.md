@@ -96,7 +96,12 @@ stateDiagram-v2
 - Enables `/speckit.analyze` validation
 - Perfect for ongoing spec-driven development
 
+**Two Modes:**
+- **Standard**: Create specs for current state (as-is)
+- **Facelift** 🆕: Create specs + upgrade all dependencies to latest versions
+
 **Example:** "Add GitHub Spec Kit to existing Next.js app for spec-driven management"
+**Example (Facelift):** "Spec this legacy app AND upgrade everything to modern versions"
 
 **Result**: A fully-documented, specification-driven application ready for enterprise development.
 
