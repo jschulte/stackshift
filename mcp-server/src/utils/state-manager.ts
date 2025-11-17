@@ -28,6 +28,15 @@ export type StepId =
 export type Route = 'greenfield' | 'brownfield' | null;
 
 /**
+ * Auto config structure for cruise control
+ */
+export interface AutoConfig {
+  clarifications_strategy: 'defer' | 'prompt' | 'skip';
+  implementation_scope: 'none' | 'p0' | 'p0_p1' | 'all';
+  pause_between_gears: boolean;
+}
+
+/**
  * State file structure
  */
 export interface State {
@@ -44,6 +53,7 @@ export interface State {
   };
   stepDetails: Record<string, any>;
   auto_mode?: boolean;
+  auto_config?: AutoConfig;
   config?: any;
 }
 
