@@ -23,6 +23,10 @@ import { gapAnalysisToolHandler } from './tools/gap-analysis.js';
 import { completeSpecToolHandler } from './tools/complete-spec.js';
 import { implementToolHandler } from './tools/implement.js';
 import { cruiseControlToolHandler } from './tools/cruise-control.js';
+import { generateAllSpecsToolHandler } from './tools/generate-all-specs.js';
+import { createConstitutionToolHandler } from './tools/create-constitution.js';
+import { createFeatureSpecsToolHandler } from './tools/create-feature-specs.js';
+import { createImplPlansToolHandler } from './tools/create-impl-plans.js';
 import { getStateResource, getProgressResource, getRouteResource } from './resources/index.js';
 
 const server = new Server(
@@ -175,6 +179,86 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
           required: ['route'],
         },
       },
+      {
+        name: 'stackshift_generate_all_specs',
+        description:
+          'F002: Automated Spec Generation - Generate constitution, feature specs, and implementation plans automatically',
+        inputSchema: {
+          type: 'object',
+          properties: {
+            directory: {
+              type: 'string',
+              description: 'Path to project directory',
+            },
+            route: {
+              type: 'string',
+              enum: ['greenfield', 'brownfield'],
+              description: 'Route choice (optional if already set via analyze)',
+            },
+          },
+        },
+      },
+      {
+        name: 'stackshift_create_constitution',
+        description:
+          'F002: Generate constitution.md from functional specification',
+        inputSchema: {
+          type: 'object',
+          properties: {
+            directory: {
+              type: 'string',
+              description: 'Path to project directory',
+            },
+            route: {
+              type: 'string',
+              enum: ['greenfield', 'brownfield'],
+              description: 'Route choice',
+            },
+            outputPath: {
+              type: 'string',
+              description: 'Custom output path (default: .specify/memory/constitution.md)',
+            },
+          },
+        },
+      },
+      {
+        name: 'stackshift_create_feature_specs',
+        description:
+          'F002: Extract features and generate individual spec files',
+        inputSchema: {
+          type: 'object',
+          properties: {
+            directory: {
+              type: 'string',
+              description: 'Path to project directory',
+            },
+            route: {
+              type: 'string',
+              enum: ['greenfield', 'brownfield'],
+              description: 'Route choice',
+            },
+          },
+        },
+      },
+      {
+        name: 'stackshift_create_impl_plans',
+        description:
+          'F002: Generate implementation plans for PARTIAL and MISSING features',
+        inputSchema: {
+          type: 'object',
+          properties: {
+            directory: {
+              type: 'string',
+              description: 'Path to project directory',
+            },
+            route: {
+              type: 'string',
+              enum: ['greenfield', 'brownfield'],
+              description: 'Route choice',
+            },
+          },
+        },
+      },
     ],
   };
 });
@@ -235,6 +319,18 @@ server.setRequestHandler(CallToolRequestSchema, async request => {
 
       case 'stackshift_cruise_control':
         return await cruiseControlToolHandler(args || {} as any);
+
+      case 'stackshift_generate_all_specs':
+        return await generateAllSpecsToolHandler(args || {});
+
+      case 'stackshift_create_constitution':
+        return await createConstitutionToolHandler(args || {});
+
+      case 'stackshift_create_feature_specs':
+        return await createFeatureSpecsToolHandler(args || {});
+
+      case 'stackshift_create_impl_plans':
+        return await createImplPlansToolHandler(args || {});
 
       default:
         throw new Error(`Unknown tool: ${name}`);
