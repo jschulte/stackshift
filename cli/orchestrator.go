@@ -184,7 +184,16 @@ func (o *Orchestrator) runGear(repo Repository, gear int) GearResult {
 	}
 
 	// Validate completion
-	success, message := o.validateGear(repo, gear)
+	var success bool
+	var message string
+
+	if gear == 1 {
+		// Gear 1 (analyze) creates the state file, so check for analysis-report.md instead
+		success, message = o.validateGear1(repo)
+	} else {
+		// Other gears should have state file
+		success, message = o.validateGear(repo, gear)
+	}
 
 	return GearResult{
 		Repo:    repo.Name,
@@ -348,12 +357,17 @@ func getGearNumber(gearName string) int {
 }
 
 func (o *Orchestrator) validateGear(repo Repository, gear int) (bool, string) {
+	// Gear 1 should not use this function - it has its own validation
+	if gear == 1 {
+		return o.validateGear1(repo)
+	}
+
 	stateFile := filepath.Join(repo.Path, ".stackshift-state.json")
 
 	// Check if state file exists
 	data, err := os.ReadFile(stateFile)
 	if err != nil {
-		return false, "State file not found"
+		return false, "State file not found (Gear 1 may not have completed)"
 	}
 
 	var state StateFile
@@ -444,7 +458,6 @@ func (o *Orchestrator) KillAll() {
 }
 
 func (o *Orchestrator) GetProgress(repoName string) (int, string) {
-<<<<<<< HEAD
 	// Find the repository by name
 	var repoPath string
 	for _, repo := range o.repos {
@@ -460,7 +473,8 @@ func (o *Orchestrator) GetProgress(repoName string) (int, string) {
 	stateFile := filepath.Join(repoPath, ".stackshift-state.json")
 	data, err := os.ReadFile(stateFile)
 	if err != nil {
-		return 0, "state_file_missing"
+		// State file doesn't exist yet (Gear 1 not complete)
+		return 0, "not_started"
 	}
 
 	type State struct {
@@ -473,10 +487,4 @@ func (o *Orchestrator) GetProgress(repoName string) (int, string) {
 	}
 
 	return state.CurrentGear, state.Status
-=======
-	// Read state file from repo
-	// Return current gear and status
-	// This would parse .stackshift-state.json
-	return 0, "in_progress"
->>>>>>> feature/stackshift-cli
 }
