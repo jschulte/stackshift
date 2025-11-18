@@ -1,5 +1,5 @@
 ---
-name: stackshift
+name: stackshift.start
 description: Start StackShift reverse engineering process - analyzes codebase, auto-detects widget type, and guides through 6-gear transformation to spec-driven development. Supports Greenfield, Brownfield, Osiris, Osiris-module, CMS-v9, and CMS-viewmodel routes.
 ---
 
