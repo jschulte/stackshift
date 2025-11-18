@@ -118,10 +118,9 @@ export class DiagramGenerator {
       console.log('📝 Generating class diagrams...');
     }
     const classGen = new ClassDiagramGenerator();
-    const classModules = [
-      { file: 'mcp-server/src/utils/security.ts', name: 'security' },
-      { file: 'mcp-server/src/utils/state-manager.ts', name: 'state-manager' },
-      { file: 'mcp-server/src/utils/file-utils.ts', name: 'file-utils' }
+    const classModules: { file: string; name: string }[] = [
+      // Class diagrams for utility modules
+      // Add entries here when new utility modules are created
     ];
 
     for (const module of classModules) {
