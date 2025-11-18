@@ -67,27 +67,50 @@ This skill performs deep codebase analysis and generates **9 comprehensive docum
 
 ---
 
-## Path Detection
+## Configuration Check (FIRST STEP!)
 
-**FIRST:** Check which path was selected in Step 1:
+**Load state file to check:**
 
-```javascript
-// State file will contain:
+```bash
+# Check route
+ROUTE=$(cat .stackshift-state.json | jq -r '.path')
+echo "Route: $ROUTE"
+
+# Check spec output location (Greenfield only)
+SPEC_OUTPUT=$(cat .stackshift-state.json | jq -r '.config.spec_output_location // "."')
+echo "Writing specs to: $SPEC_OUTPUT"
+
+# Create output directories if needed
+if [ "$SPEC_OUTPUT" != "." ]; then
+  mkdir -p "$SPEC_OUTPUT/docs/reverse-engineering"
+  mkdir -p "$SPEC_OUTPUT/.specify/memory/specifications"
+fi
+```
+
+**State file structure:**
+```json
 {
-  "path": "greenfield" | "brownfield",
-  "metadata": {
-    "pathDescription": "..."
+  "path": "greenfield",
+  "config": {
+    "spec_output_location": "~/git/my-new-app",  // Where to write specs
+    "build_location": "~/git/my-new-app",         // Where to build code (Gear 6)
+    "target_stack": "Next.js 15..."
   }
 }
 ```
 
-**Based on path:**
+**File write locations:**
+
+| Route | Spec Output | Where Files Go |
+|-------|-------------|----------------|
+| **Greenfield** | Custom location | `{spec_output_location}/docs/`, `{spec_output_location}/.specify/` |
+| **Greenfield** | Not set (default) | `./docs/reverse-engineering/`, `./.specify/` (current repo) |
+| **Brownfield** | Always current repo | `./docs/reverse-engineering/`, `./.specify/` |
+
+**Based on route:**
 - **Greenfield** → Use `prompts/greenfield/02-reverse-engineer-business-logic.md`
 - **Brownfield** → Use `prompts/brownfield/02-reverse-engineer-full-stack.md`
-
-Or for manual users:
-- Check `.stackshift-state.json` for `path` field
-- Follow corresponding prompt file
+- **Osiris** → Use custom Osiris extraction workflow
 
 ---
 

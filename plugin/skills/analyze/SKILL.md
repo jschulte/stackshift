@@ -175,7 +175,32 @@ D) All - Every feature (may take hours/days)
    → Longest runtime
 ```
 
-**Question 5: Target Stack** _(If Greenfield + Implementation selected)_
+**Question 5: Spec Output Location** _(If Greenfield selected)_
+```
+Where should specifications and documentation be written?
+
+A) Current repository (default)
+   → Specs in: ./docs/reverse-engineering/, ./.specify/
+   → Simple, everything in one place
+   → Good for: small teams, single repo
+
+B) New application repository
+   → Specs in: ~/git/my-new-app/.specify/
+   → Specs live with NEW codebase
+   → Good for: clean separation, NEW repo already exists
+
+C) Separate documentation repository
+   → Specs in: ~/git/my-app-docs/.specify/
+   → Central docs repo for multiple apps
+   → Good for: enterprise, multiple related apps
+
+D) Custom location
+   → Your choice: [specify path]
+
+Default: Current repository (A)
+```
+
+**Question 6: Target Stack** _(If Greenfield + Implementation selected)_
 ```
 What tech stack for the new implementation?
 
@@ -186,7 +211,7 @@ Examples:
 - Your choice: [specify your preferred stack]
 ```
 
-**Question 6: Build Location** _(If Greenfield + Implementation selected)_
+**Question 7: Build Location** _(If Greenfield + Implementation selected)_
 ```
 Where should the new application be built?
 
@@ -231,6 +256,32 @@ Claude Code Web users: This won't work in Web - use subfolder instead.
 ```
 
 All answers are stored in `.stackshift-state.json` and guide the entire workflow.
+
+**State file example:**
+```json
+{
+  "path": "greenfield",
+  "config": {
+    "spec_output_location": "~/git/my-new-app",  // Where to write specs/docs
+    "build_location": "~/git/my-new-app",         // Where to build new code (Gear 6)
+    "target_stack": "Next.js 15 + React 19 + Prisma",
+    "clarifications_strategy": "defer",
+    "implementation_scope": "p0_p1"
+  }
+}
+```
+
+**How it works:**
+
+**Spec Output Location:**
+- Gear 2 writes to: `{spec_output_location}/docs/reverse-engineering/`
+- Gear 3 writes to: `{spec_output_location}/.specify/memory/`
+- If not set: defaults to current directory
+
+**Build Location:**
+- Gear 6 writes code to: `{build_location}/src/`, `{build_location}/package.json`, etc.
+- Can be same as spec location OR different
+- If not set: defaults to `greenfield/` subfolder
 
 ### Implementing the Questionnaire
 
