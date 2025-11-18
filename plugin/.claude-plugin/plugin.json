@@ -1,11 +1,11 @@
 {
   "name": "stackshift",
-  "version": "1.0.0",
-  "description": "Reverse engineering toolkit with manual control over your codebase transformation. Shift through 6 gears to transform applications into spec-driven projects with GitHub Spec Kit. Dual workflow: Greenfield (extract business logic for rebuilds) or Brownfield (manage existing with specs). Interactive skills with auto-activation.",
+  "version": "1.2.0",
+  "description": "Reverse engineering toolkit for Cox Automotive applications. Transform any application into fully-specified, spec-driven codebase through 6-gear process. Three routes: Greenfield (tech-agnostic migration), Brownfield (existing codebase management), Osiris (Osiris widget + module extraction). Includes Brownfield Upgrade mode for spec-driven dependency modernization.",
   "author": {
-    "name": "Jonah Schulte"
+    "name": "Jonah Schulte / DDC Web Platform"
   },
-  "repository": "https://github.com/jschulte/stackshift",
+  "repository": "https://ghe.coxautoinc.com/DDC-WebPlatform/stackshift",
   "license": "MIT",
   "keywords": [
     "stackshift",
@@ -17,7 +17,11 @@
     "refactoring",
     "greenfield",
     "brownfield",
-    "openapi",
-    "json-schema"
+    "osiris",
+    "widgets",
+    "modernization",
+    "cox-automotive",
+    "wsm-modules",
+    "ws-scripts"
   ]
 }

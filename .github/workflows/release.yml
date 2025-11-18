@@ -7,7 +7,7 @@ on:
 
 jobs:
   release:
-    name: Create Cox StackShift Release
+    name: Create Release
     runs-on: CAI-Enterprise
 
     permissions:
@@ -17,71 +17,112 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Install dependencies
+        working-directory: ./mcp-server
+        run: npm ci
+
+      - name: Run tests
+        working-directory: ./mcp-server
+        run: npm test
+
+      - name: Build
+        working-directory: ./mcp-server
+        run: npm run build
+
       - name: Extract version from tag
         id: get_version
         run: echo "VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
 
-      - name: Create release notes
-        id: release_notes
-        run: |
-          cat > release-notes.md <<EOF
-          ## Cox StackShift v${{ steps.get_version.outputs.VERSION }}
-
-          ### 🎯 What is Cox StackShift?
-
-          Internal Cox Automotive version of StackShift - a reverse engineering toolkit
-          for transforming applications into fully-specified, enterprise-grade codebases.
-
-          ### ✨ Features
-
-          - **6-Gear Workflow**: Systematic reverse engineering process
-          - **Plugin-based**: Interactive skills for Claude Code
-          - **Osiris Support**: Documentation for ws-scripts infrastructure
-          - **Upstream Sync**: Automated syncing with upstream StackShift
-          - **Cox Customizations**: Tailored for Cox Automotive needs
-
-          ### 📦 Installation
-
-          \`\`\`bash
-          # Install the plugin in Claude Code
-          /plugin install DDC-WebPlatform/stackshift
-          \`\`\`
-
-          ### 📚 Documentation
-
-          - [README](https://ghe.coxautoinc.com/DDC-WebPlatform/stackshift)
-          - [Osiris Documentation](https://ghe.coxautoinc.com/DDC-WebPlatform/stackshift/tree/main/docs/osiris)
-          - [Automation Guide](https://ghe.coxautoinc.com/DDC-WebPlatform/stackshift/tree/main/scripts/cox-automation)
-
-          ### 🔄 Upstream Version
-
-          Based on [jschulte/stackshift](https://github.com/jschulte/stackshift)
-
-          ### 💬 Questions?
-
-          Reach out to your engineering leadership or the platform team.
-          EOF
-
-          echo "notes_file=release-notes.md" >> $GITHUB_OUTPUT
-
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v1
         with:
-          name: Cox StackShift v${{ steps.get_version.outputs.VERSION }}
-          body_path: release-notes.md
+          name: Release v${{ steps.get_version.outputs.VERSION }}
+          body: |
+            ## StackShift v${{ steps.get_version.outputs.VERSION }}
+
+            ### Changes
+            See [CHANGELOG.md](https://ghe.coxautoinc.com/${{ github.repository }}/blob/main/CHANGELOG.md) for details.
+
+            ### Installation
+
+            **MCP Server:**
+            ```bash
+            npm install -g stackshift-mcp@${{ steps.get_version.outputs.VERSION }}
+            ```
+
+            **Claude Code Plugin:**
+            ```bash
+            # Copy plugin directory to your Claude Code workspace
+            cp -r plugin/ ~/.claude/plugins/stackshift/
+            ```
+
+            ### Verification
+            ```bash
+            # Verify installation
+            stackshift --version
+
+            # Or check via Claude Code
+            /stackshift.analyze
+            ```
           draft: false
           prerelease: false
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Summary
+      - name: Publish to npm (deferred)
         run: |
-          echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-          echo "✅ Release Created Successfully"
-          echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-          echo ""
-          echo "Version: v${{ steps.get_version.outputs.VERSION }}"
-          echo ""
-          echo "View release:"
-          echo "https://ghe.coxautoinc.com/DDC-WebPlatform/stackshift/releases/tag/v${{ steps.get_version.outputs.VERSION }}"
-          echo ""
+          echo "npm publication deferred per project clarifications"
+          echo "To publish manually later: npm publish --access public"
+        # Uncomment to enable npm publishing:
+        # working-directory: ./mcp-server
+        # run: npm publish --access public
+        # env:
+        #   NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+  build-assets:
+    name: Build Distribution Assets
+    runs-on: CAI-Enterprise
+    needs: release
+
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+
+      - name: Build MCP Server
+        working-directory: ./mcp-server
+        run: |
+          npm ci
+          npm run build
+
+      - name: Package Plugin
+        run: |
+          tar -czf stackshift-plugin-${{ github.ref_name }}.tar.gz plugin/
+
+      - name: Package MCP Server
+        working-directory: ./mcp-server
+        run: |
+          npm pack
+          mv stackshift-mcp-*.tgz ../stackshift-mcp-${{ github.ref_name }}.tgz
+
+      - name: Upload Release Assets
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            stackshift-plugin-${{ github.ref_name }}.tar.gz
+            stackshift-mcp-${{ github.ref_name }}.tgz
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

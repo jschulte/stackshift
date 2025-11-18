@@ -7,122 +7,219 @@ on:
     branches: [ main, develop ]
 
 jobs:
-  validate:
-    name: Validate Cox StackShift
+  test:
+    name: Test & Build
+    runs-on: CAI-Enterprise
+
+    strategy:
+      matrix:
+        node-version: [18.x, 20.x]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+          cache-dependency-path: mcp-server/package-lock.json
+
+      - name: Install dependencies
+        working-directory: ./mcp-server
+        run: npm ci
+
+      - name: Run TypeScript compiler
+        working-directory: ./mcp-server
+        run: npx tsc --noEmit --project tsconfig.ci.json
+
+      - name: Run tests
+        working-directory: ./mcp-server
+        run: npm test
+
+      - name: Run tests with coverage
+        working-directory: ./mcp-server
+        run: npm run test:coverage
+        if: matrix.node-version == '20.x'
+
+      - name: Upload coverage reports
+        uses: codecov/codecov-action@v4
+        if: matrix.node-version == '20.x'
+        with:
+          directory: ./mcp-server/coverage
+          flags: mcp-server
+          fail_ci_if_error: false
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+
+      - name: Build
+        working-directory: ./mcp-server
+        run: npm run build
+
+      - name: Security audit
+        working-directory: ./mcp-server
+        run: npm audit --audit-level=high
+        continue-on-error: true
+
+  lint:
+    name: Lint & Format Check
     runs-on: CAI-Enterprise
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Verify plugin structure
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+          cache: 'npm'
+          cache-dependency-path: mcp-server/package-lock.json
+
+      - name: Install dependencies
+        working-directory: ./mcp-server
+        run: npm ci
+
+      - name: Check TypeScript types
+        working-directory: ./mcp-server
+        run: npx tsc --noEmit --project tsconfig.ci.json
+
+      - name: Run ESLint (if configured)
+        working-directory: ./mcp-server
         run: |
-          echo "✅ Validating Cox StackShift plugin structure..."
-
-          # Check required plugin files exist
-          if [ ! -f "plugin/.claude-plugin/plugin.json" ]; then
-            echo "❌ Missing plugin.json"
-            exit 1
-          fi
-
-          # Check skills exist
-          if [ ! -d "plugin/skills" ]; then
-            echo "❌ Missing skills directory"
-            exit 1
-          fi
-
-          # Check core skills
-          for skill in analyze reverse-engineer create-specs gap-analysis complete-spec implement modernize cruise-control; do
-            if [ ! -f "plugin/skills/${skill}/SKILL.md" ]; then
-              echo "❌ Missing skill: ${skill}"
-              exit 1
-            fi
-            echo "✅ Found skill: ${skill}"
-          done
-
-          echo "✅ Plugin structure validated"
-
-      - name: Verify Cox customizations
-        run: |
-          echo "✅ Checking Cox-specific customizations..."
-
-          # Verify mcp-server is removed
-          if [ -d "mcp-server" ]; then
-            echo "❌ mcp-server should be removed in Cox version"
-            exit 1
-          fi
-          echo "✅ mcp-server correctly removed"
-
-          # Verify Osiris docs exist
-          if [ ! -f "docs/osiris/ws-scripts-capabilities.md" ]; then
-            echo "❌ Missing Osiris documentation"
-            exit 1
-          fi
-          echo "✅ Osiris documentation present"
-
-          # Verify Cox README sections exist
-          if ! grep -q "Why This Matters at Cox Automotive" README.md; then
-            echo "❌ Missing Cox Automotive section in README"
-            exit 1
-          fi
-          echo "✅ Cox README customizations present"
-
-          echo "✅ Cox customizations validated"
-
-      - name: Verify automation
-        run: |
-          echo "✅ Checking automation tools..."
-
-          # Check GitHub Action exists
-          if [ ! -f ".github/workflows/sync-upstream.yml" ]; then
-            echo "❌ Missing sync-upstream workflow"
-            exit 1
-          fi
-          echo "✅ Upstream sync workflow present"
-
-          # Check manual script exists and is executable
-          if [ ! -x "scripts/cox-automation/sync-upstream.sh" ]; then
-            echo "❌ Missing or non-executable sync script"
-            exit 1
-          fi
-          echo "✅ Manual sync script present and executable"
-
-          echo "✅ Automation validated"
-
-      - name: Validate plugin.json
-        run: |
-          echo "✅ Validating plugin.json structure..."
-
-          # Check if jq is available (it should be on most runners)
-          if command -v jq &> /dev/null; then
-            cat plugin/.claude-plugin/plugin.json | jq empty && echo "✅ Valid JSON"
+          if [ -f ".eslintrc.js" ] || [ -f ".eslintrc.json" ] || grep -q "eslintConfig" package.json; then
+            npm run lint || echo "ESLint not configured yet"
           else
-            echo "⚠️ jq not available, skipping JSON validation"
+            echo "ESLint not configured - skipping"
           fi
+        continue-on-error: true
 
-      - name: Check slash commands
+      - name: Check Prettier formatting (if configured)
+        working-directory: ./mcp-server
         run: |
-          echo "✅ Checking slash commands..."
-
-          # Count slash commands
-          COMMAND_COUNT=$(find .claude/commands -name "*.md" -type f 2>/dev/null | wc -l || echo "0")
-          echo "Found ${COMMAND_COUNT} slash commands"
-
-          if [ "$COMMAND_COUNT" -gt "0" ]; then
-            echo "✅ Slash commands present"
+          if [ -f ".prettierrc" ] || [ -f ".prettierrc.json" ] || grep -q "prettier" package.json; then
+            npm run format:check || echo "Prettier not configured yet"
           else
-            echo "⚠️ No slash commands found (optional)"
+            echo "Prettier not configured - skipping"
+          fi
+        continue-on-error: true
+
+  validate-state:
+    name: Validate StackShift State
+    runs-on: CAI-Enterprise
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Validate state file
+        run: |
+          if [ -f ".stackshift-state.json" ]; then
+            echo "Validating .stackshift-state.json..."
+            cat .stackshift-state.json | jq empty && echo "✅ Valid JSON"
+          else
+            echo "No state file found - skipping validation"
           fi
 
-      - name: Summary
+  security:
+    name: Security Scan
+    runs-on: CAI-Enterprise
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+
+      - name: Install dependencies
+        working-directory: ./mcp-server
+        run: npm ci
+
+      - name: Run npm audit
+        working-directory: ./mcp-server
+        run: npm audit --audit-level=moderate
+        continue-on-error: true
+
+      - name: Check for known vulnerabilities
+        working-directory: ./mcp-server
         run: |
-          echo ""
-          echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-          echo "✅ Cox StackShift Validation Complete"
-          echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-          echo ""
-          echo "All checks passed!"
-          echo "- Plugin structure valid"
-          echo "- Cox customizations intact"
-          echo "- Automation tools configured"
-          echo ""
+          echo "Checking for security vulnerabilities..."
+          npm audit --json > audit-results.json || true
+
+          HIGH_COUNT=$(cat audit-results.json | jq '.metadata.vulnerabilities.high // 0')
+          CRITICAL_COUNT=$(cat audit-results.json | jq '.metadata.vulnerabilities.critical // 0')
+
+          echo "Critical: $CRITICAL_COUNT, High: $HIGH_COUNT"
+
+          if [ "$CRITICAL_COUNT" -gt "0" ]; then
+            echo "❌ Critical vulnerabilities found!"
+            exit 1
+          elif [ "$HIGH_COUNT" -gt "0" ]; then
+            echo "⚠️  High severity vulnerabilities found"
+            exit 1
+          else
+            echo "✅ No critical or high severity vulnerabilities"
+          fi
+        continue-on-error: true
+
+  build-plugin:
+    name: Validate Claude Code Plugin
+    runs-on: CAI-Enterprise
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Validate plugin structure
+        run: |
+          echo "Validating Claude Code plugin structure..."
+
+          # Check for required plugin files
+          [ -f "plugin/.claude-plugin/plugin.json" ] && echo "✅ plugin.json found" || echo "❌ plugin.json missing"
+
+          # Validate plugin.json
+          if [ -f "plugin/.claude-plugin/plugin.json" ]; then
+            cat plugin/.claude-plugin/plugin.json | jq empty && echo "✅ Valid plugin.json"
+          fi
+
+          # Check for skills
+          echo "Checking skills..."
+          find plugin/skills -name "SKILL.md" -type f | wc -l | xargs -I {} echo "Found {} skills"
+
+          # Check for agents
+          echo "Checking agents..."
+          find plugin/agents -type d -mindepth 1 -maxdepth 1 | wc -l | xargs -I {} echo "Found {} agents"
+
+  diagrams:
+    name: Validate Diagram Generation
+    runs-on: CAI-Enterprise
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Generate diagrams
+        run: npm run generate-diagrams
+
+      - name: Validate diagram generation succeeded
+        run: |
+          if [ -f "docs/diagrams/diagram-metadata.json" ]; then
+            echo "✅ Metadata file found"
+            cat docs/diagrams/diagram-metadata.json | jq empty && echo "✅ Valid metadata JSON"
+          else
+            echo "❌ Metadata file missing"
+            exit 1
+          fi

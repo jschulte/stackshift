@@ -7,8 +7,8 @@
 Transform any application into a fully-specified, spec-driven project with complete control - whether you're shifting to a new tech stack or taking the wheel on existing code.
 
 <p>
-  <a href="https://github.com/jschulte/stackshift/actions/workflows/ci.yml"><img src="https://github.com/jschulte/stackshift/actions/workflows/ci.yml/badge.svg" alt="CI Status"></a>
-  <a href="https://github.com/jschulte/stackshift/blob/main/LICENSE"><img src="https://img.shields.io/badge/License-MIT-blue.svg" alt="License"></a>
+  <a href="https://ghe.coxautoinc.com/DDC-WebPlatform/stackshift/actions/workflows/ci.yml"><img src="https://ghe.coxautoinc.com/DDC-WebPlatform/stackshift/actions/workflows/ci.yml/badge.svg" alt="CI Status"></a>
+  <a href="https://ghe.coxautoinc.com/DDC-WebPlatform/stackshift/blob/main/LICENSE"><img src="https://img.shields.io/badge/License-MIT-blue.svg" alt="License"></a>
   <img src="https://img.shields.io/badge/Node.js-%3E%3D18.0.0-green" alt="Node.js">
   <img src="https://img.shields.io/badge/TypeScript-5.3.0-blue" alt="TypeScript">
 </p>
@@ -272,7 +272,7 @@ If not using the plugin, use the web bootstrap for manual execution:
 
 ```bash
 # 1. Clone StackShift
-git clone https://github.com/jschulte/stackshift.git
+git clone https://ghe.coxautoinc.com/DDC-WebPlatform/stackshift.git
 
 # 2. Use web bootstrap prompt
 cat web/WEB_BOOTSTRAP.md
@@ -803,9 +803,9 @@ This toolkit was created to solve a critical enterprise challenge: **transformin
 
 **Encountered an issue or have a suggestion?**
 
-- 🐛 **Found a bug?** [Open an issue](https://github.com/jschulte/stackshift/issues/new)
-- 💡 **Have an idea?** [Start a discussion](https://github.com/jschulte/stackshift/discussions)
-- 🔧 **Want to contribute?** [Submit a pull request](https://github.com/jschulte/stackshift/pulls)
+- 🐛 **Found a bug?** [Open an issue](https://ghe.coxautoinc.com/DDC-WebPlatform/stackshift/issues/new)
+- 💡 **Have an idea?** [Start a discussion](https://ghe.coxautoinc.com/DDC-WebPlatform/stackshift/discussions)
+- 🔧 **Want to contribute?** [Submit a pull request](https://ghe.coxautoinc.com/DDC-WebPlatform/stackshift/pulls)
 - 💬 **Need help?** Reach out to your engineering leadership or the platform team
 
 The toolkit improves with real-world usage across our teams!

@@ -1,18 +1,18 @@
 {
-  "name": "jschulte",
+  "name": "ddc-webplatform",
   "owner": {
-    "name": "Jonah Schulte"
+    "name": "DDC Web Platform - Cox Automotive"
   },
   "metadata": {
-    "description": "Developer tools and Claude Code plugins by Jonah Schulte",
-    "homepage": "https://github.com/jschulte"
+    "description": "StackShift - Reverse engineering toolkit for Cox Automotive application transformation",
+    "homepage": "https://ghe.coxautoinc.com/DDC-WebPlatform/stackshift"
   },
   "plugins": [
     {
       "name": "stackshift",
-      "version": "1.0.0",
+      "version": "1.2.0",
       "source": "./plugin",
-      "description": "Reverse engineering toolkit - shift gears between tech stacks or manage existing code with GitHub Spec Kit. Start in reverse (engineering), shift through 6 gears, cruise into spec-driven development. Dual workflow: Greenfield (extract business logic) or Brownfield (manage existing). Interactive skills with auto-activation."
+      "description": "Reverse engineering toolkit for Cox Automotive applications. Transform any application into fully-specified, spec-driven codebase through 6-gear process. Three routes: Greenfield (tech-agnostic migration), Brownfield (existing codebase management), Osiris (widget + module extraction). Includes Brownfield Upgrade mode for dependency modernization."
     }
   ]
 }
