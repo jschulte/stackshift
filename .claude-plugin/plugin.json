@@ -5,7 +5,7 @@
   "author": {
     "name": "Jonah Schulte / DDC Web Platform"
   },
-  "repository": "https://ghe.coxautoinc.com/DDC-WebPlatform/stackshift",
+  "repository": "git@ghe.coxautoinc.com:DDC-WebPlatform/stackshift.git",
   "license": "MIT",
   "keywords": [
     "stackshift",

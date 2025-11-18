@@ -4,80 +4,54 @@
 
 ---
 
-## Choose Your Installation Method
+## Installation
 
-### 🖥️ Local (Claude Code CLI)
-
-**Best for:** Regular use, local development
+### Via Marketplace (Recommended)
 
 ```bash
-# Quick install
-git clone https://github.com/jschulte/stackshift.git
+# Install from marketplace
+/plugin install stackshift@ddc-webplatform
+
+# Restart Claude Code
+```
+
+### Manual Installation
+
+```bash
+# Clone and install locally
+git clone git@ghe.coxautoinc.com:DDC-WebPlatform/stackshift.git
 cd stackshift
 ./install-local.sh
 
 # Restart Claude Code
-# Done! ✅
-```
-
-**Usage:**
-```
-"Analyze this codebase"
-→ Answer questions (route, mode, scope)
-→ Shift through the gears!
 ```
 
 ---
 
-### 🌐 Web (Claude Code in Browser)
+## First Run - Start the Analysis
 
-**Best for:** Quick analysis, any device, no installation
+**Use the slash command to begin:**
 
+```bash
+/stackshift.start
 ```
-1. Go to: https://claude.ai/code
-2. Connect to GitHub
-3. Select your repo from dropdown
-4. Copy-paste web/WEB_BOOTSTRAP.md (entire file)
-5. Hit enter
-6. Answer questions (route, mode, scope)
-7. StackShift runs automatically! 🚗
-```
+
+This will:
+1. Show you the overview of all 3 routes
+2. Auto-detect your repository type
+3. Start Gear 1 (Analysis) automatically
+4. Guide you through the configuration questions
 
 ---
 
-### 🔧 VSCode/Copilot (MCP Server)
-
-**Best for:** VSCode users, GitHub Copilot integration
-
-**Add to VSCode settings.json:**
-```json
-{
-  "mcp.servers": {
-    "stackshift": {
-      "command": "npx",
-      "args": ["-y", "stackshift-mcp"]
-    }
-  }
-}
-```
-
-**Usage:**
-```
-@claude use stackshift_analyze with brownfield route
-@claude use stackshift_cruise_control
-```
-
----
-
-## First Run
-
-### Configuration Questions
+## Configuration Questions
 
 StackShift asks 2-6 questions upfront:
 
 **1. Route** (always):
 - **Greenfield:** Extract business logic → rebuild in new stack
 - **Brownfield:** Document existing → manage with GitHub Spec Kit
+- **Osiris:** Extract Cox Osiris widgets + modules
 
 **2. Transmission** (always):
 - **Manual:** Review each gear before proceeding
@@ -86,7 +60,7 @@ StackShift asks 2-6 questions upfront:
 **3-6. If Cruise Control** (conditional):
 - Clarifications strategy (defer/prompt/skip)
 - Implementation scope (none/p0/p0_p1/all)
-- Target tech stack (if greenfield)
+- Target tech stack (if greenfield/osiris)
 - Build location (greenfield/ subfolder recommended)
 
 **All answers saved** → Guides entire workflow!
@@ -109,35 +83,44 @@ StackShift asks 2-6 questions upfront:
 
 ---
 
+## Available Slash Commands
+
+### StackShift Commands
+
+```bash
+/stackshift.start           # Start analysis (recommended entry point)
+/stackshift.batch          # Batch process multiple repos
+/stackshift.modernize      # Brownfield: Upgrade all dependencies
+/stackshift.version        # Show installed version
+/stackshift.setup          # Install commands to current project
+```
+
+### Spec Kit Commands (Available after Gear 3)
+
+```bash
+/speckit.specify           # Create feature specification
+/speckit.plan              # Create implementation plan
+/speckit.tasks             # Generate task list
+/speckit.implement         # Execute implementation
+/speckit.clarify           # Resolve ambiguities
+/speckit.analyze           # Validate specs match code
+```
+
+---
+
 ## Example Sessions
 
 ### Brownfield (Manage Existing App)
 
-```
-User: "Analyze this Next.js app"
+```bash
+# Start the process
+/stackshift.start
 
-StackShift:
-Choose route:
-A) Greenfield
-B) Brownfield
+# StackShift shows overview, then asks:
+Route: Brownfield
+Transmission: Cruise Control
+Implementation scope: None - Just specs
 
-User: "B"
-
-StackShift:
-Manual or Cruise Control?
-
-User: "Cruise Control"
-
-StackShift:
-Implementation scope?
-A) None - Just specs
-B) P0 - Critical only
-C) P0+P1 - Recommended
-D) All
-
-User: "A - None"
-
-StackShift:
 🚗 Cruise control engaged!
 
 [Shifts through all 6 gears automatically]
@@ -150,22 +133,36 @@ StackShift:
 
 ### Greenfield (Rebuild in New Stack)
 
-```
-User: "Extract business logic from this Rails app"
+```bash
+# Start the process
+/stackshift.start
 
-StackShift:
+# Configuration
 Route: Greenfield
-Mode: Cruise Control
-Scope: All
+Transmission: Cruise Control
+Implementation scope: All
 Target stack: Next.js 15 + TypeScript
 
 🚗 Engaging cruise control...
 
-[Extracts business logic from Rails]
+[Extracts business logic]
 [Creates tech-agnostic specs]
 [Builds NEW Next.js app in greenfield/]
 
 ✅ Complete! New app in greenfield/ ready to deploy!
+```
+
+### Batch Processing (Multiple Repos)
+
+```bash
+# Process 30 widgets at once
+cd ~/git/osiris
+/stackshift.batch
+
+# Answer configuration questions ONCE
+# All 30 widgets use same configuration automatically!
+
+✅ Time saved: 58 minutes on 90 repos!
 ```
 
 ---
@@ -183,16 +180,19 @@ You have:
 
 ```bash
 # Add new feature
-> /speckit.specify
+/speckit.specify
 
 # Plan implementation
-> /speckit.plan
+/speckit.plan
+
+# Generate tasks
+/speckit.tasks
 
 # Build it
-> /speckit.implement
+/speckit.implement
 
-# Validate
-> /speckit.analyze
+# Validate alignment
+/speckit.analyze
 ```
 
 ### Greenfield
@@ -206,47 +206,59 @@ You have:
 
 ---
 
-## Common Commands
-
-### Check Progress
+## Check Progress
 
 ```bash
-# See which gear you're in
-node plugin/scripts/state-manager.js progress
-
-# Or read state file
+# View current state
 cat .stackshift-state.json
+
+# Or use state manager
+node plugin-scripts/state-manager.js progress
 ```
 
-### Switch Modes
+---
+
+## Troubleshooting
+
+### Slash Commands Not Showing?
+
+1. **Update the plugin:**
+   ```bash
+   /plugin update stackshift
+   ```
+
+2. **Restart Claude Code**
+
+3. **Check installation:**
+   ```bash
+   /plugin list
+   ```
+
+### Natural Language Not Working?
+
+**Use slash commands instead!** Natural language prompts like "analyze this codebase" may not trigger StackShift reliably. Always use:
 
 ```bash
-# Enable cruise control mid-process
-node plugin/scripts/state-manager.js cruise
-
-# Switch to manual
-node plugin/scripts/state-manager.js manual
+/stackshift.start    # ← Use this!
 ```
 
-### Resume Interrupted
-
+Not:
 ```
-"Resume StackShift from current gear"
+"analyze this codebase"    # ← Don't use this
+"reverse engineer this app" # ← Don't use this
 ```
-
-Claude reads .stackshift-state.json and continues!
 
 ---
 
 ## Need Help?
 
 - 📖 **Full docs:** See [README.md](README.md)
-- 🔧 **Installation:** See [docs/guides/INSTALLATION.md](docs/guides/INSTALLATION.md)
-- 🐛 **Issues:** [GitHub Issues](https://github.com/jschulte/stackshift/issues)
-- 💡 **Questions:** [Discussions](https://github.com/jschulte/stackshift/discussions)
+- 🔧 **Installation:** See [INSTALL.md](INSTALL.md)
+- 🐛 **Issues:** Report at ghe.coxautoinc.com/DDC-WebPlatform/stackshift/issues
+- 💡 **Questions:** Ask in #web-platform Slack
 
 ---
 
 **Ready to shift gears!** 🚗💨
 
-Choose your installation method above and get started in 5 minutes!
+Run `/stackshift.start` to begin!

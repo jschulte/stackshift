@@ -315,16 +315,20 @@ Restart Claude Code. Skills will now be available:
 
 **Usage:**
 
-Skills auto-activate based on context, or invoke explicitly:
+Use slash commands to invoke StackShift:
 
-```
-# Auto-activation
-User: "I need to reverse engineer this codebase"
-Claude: [analyze skill activates automatically]
+```bash
+# Start the analysis process
+/stackshift.start
 
-# Explicit invocation
-Just ask naturally: "Run initial analysis" or "Analyze this codebase"
+# Batch process multiple repos
+/stackshift.batch
+
+# Check installed version
+/stackshift.version
 ```
+
+**⚠️ Important:** Always use slash commands (not natural language prompts) to ensure StackShift activates correctly.
 
 ### Prerequisites
 
@@ -341,11 +345,11 @@ Just ask naturally: "Run initial analysis" or "Analyze this codebase"
 # Navigate to your project
 cd /path/to/your/project
 
-# Start Claude Code
-# Skills will guide you through the process automatically
+# Start StackShift using the slash command
+/stackshift.start
 ```
 
-Simply say: "I want to reverse engineer this application" and Claude will guide you through all 6 steps.
+This will guide you through all 6 gears automatically.
 
 **Initial Configuration:**
 

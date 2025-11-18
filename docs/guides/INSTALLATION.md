@@ -285,17 +285,20 @@ Once installed:
 2. **Start Claude Code**
 
 3. **Begin the process:**
-   ```
-   "I want to reverse engineer this application"
+   ```bash
+   /stackshift.start
    ```
 
 4. **Choose your route:**
    - Greenfield: Shift to new tech stack
    - Brownfield: Take the wheel on existing code
+   - Osiris: Extract Cox widget + modules
 
 5. **Shift through the gears!**
 
 StackShift will guide you through all 6 gears automatically.
+
+**⚠️ Important:** Always use the `/stackshift.start` slash command (not natural language) to ensure StackShift activates correctly.
 
 ---
 
