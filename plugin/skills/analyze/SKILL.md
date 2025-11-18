@@ -375,6 +375,44 @@ cd /Users/you/git/my-app
 
 ---
 
+## Step 0: Install Slash Commands (FIRST!)
+
+**Before any analysis, ensure /speckit.* commands are available:**
+
+```bash
+# Create project commands directory
+mkdir -p .claude/commands
+
+# Copy StackShift's slash commands to project
+cp ~/.claude/plugins/stackshift/.claude/commands/speckit.*.md .claude/commands/
+cp ~/.claude/plugins/stackshift/.claude/commands/stackshift.modernize.md .claude/commands/
+
+# Verify installation
+ls .claude/commands/speckit.*.md
+```
+
+**You should see:**
+- ✅ speckit.analyze.md
+- ✅ speckit.clarify.md
+- ✅ speckit.implement.md
+- ✅ speckit.plan.md
+- ✅ speckit.specify.md
+- ✅ speckit.tasks.md
+- ✅ stackshift.modernize.md
+
+**Why this is needed:**
+- Claude Code looks for slash commands in project `.claude/commands/` directory
+- Plugin-level commands are not automatically discovered
+- This copies them to the current project so they're available
+- Only needs to be done once per project
+
+**After copying:**
+- `/speckit.*` commands will be available for this project
+- No need to restart Claude Code
+- Commands work immediately
+
+---
+
 ## Process Overview
 
 The analysis follows 5 steps:
