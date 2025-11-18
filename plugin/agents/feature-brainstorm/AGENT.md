@@ -1,11 +1,11 @@
 ---
 name: feature-brainstorm
-description: Feature brainstorming agent using Verbalized Sampling to explore diverse implementation approaches, then seamlessly integrating with GitHub Spec Kit for specification and implementation. Uses AskUserQuestion to present options, then automatically orchestrates /speckit.specify, /speckit.plan, /speckit.tasks workflow.
+description: Feature brainstorming agent that analyzes Constitution constraints and presents 4 solid implementation approaches for new features. Seamlessly integrates with GitHub Spec Kit - presents options via AskUserQuestion, then automatically orchestrates /speckit.specify, /speckit.plan, /speckit.tasks workflow.
 ---
 
 # Feature Brainstorm Agent
 
-**Purpose:** Explore diverse feature implementation approaches using Verbalized Sampling, then seamlessly transition to GitHub Spec Kit for structured development.
+**Purpose:** Analyze project Constitution, present 4 solid implementation approaches, then seamlessly transition to GitHub Spec Kit for structured development.
 
 **When to use:**
 - After completing StackShift Gears 1-6 (app is spec'd and implemented)
@@ -46,89 +46,63 @@ ls .specify/memory/specifications/
 
 ---
 
-### Phase 2: Verbalized Sampling - Generate Diverse Approaches (10-15 min)
+### Phase 2: Generate 4 Solid Implementation Approaches (10-15 min)
 
-**Use VS to explore solution space:**
+**Analyze feature within Constitution constraints:**
 
-```xml
-<instructions>
-Generate 4 distinct implementation approaches for [FEATURE_NAME] feature,
-each within a separate <response> tag.
-Each <response> must include a <text> describing the approach and a numeric
-<probability> representing its viability. Sample from the tails of the
-distribution (probability < 0.10) to ensure diversity.
+Based on:
+- Constitution tech stack (e.g., Next.js + React + Prisma)
+- Constitution principles (e.g., Test-First, 85% coverage)
+- Constitution patterns (e.g., approved state management)
+- Feature requirements
 
-Context:
-- Project Constitution: [SUMMARIZE_KEY_PRINCIPLES]
-- Current Stack: [FROM_CONSTITUTION]
-- Feature: [FEATURE_DESCRIPTION]
+**Generate 4 practical, viable approaches:**
 
-Focus on: implementation complexity, time-to-market, maintainability,
-user experience, alignment with Constitution
+Consider dimensions:
+- **Complexity:** Simple → Complex
+- **Time:** Quick → Thorough
+- **Infrastructure:** Minimal → Full
+- **Cost:** Low → High
 
-Constraints from Constitution:
-[LIST_NON_NEGOTIABLES]
-</instructions>
+**Example: Real-time Notifications Feature**
 
-Design implementation approach for [FEATURE_NAME] that solves [PROBLEM]
-for [USERS] while adhering to project Constitution principles.
-```
+**Approach A: Server-Side Rendering (Balanced)**
+- Server-Sent Events (SSE) with React Server Components
+- Notification state in PostgreSQL (per Constitution)
+- Toast UI using shadcn/ui (per Constitution)
+- Complexity: Medium | Time: 2-3 days | Cost: Low
+- Pros: SEO-friendly, uses existing Next.js SSR, minimal infrastructure
+- Cons: SSE connection management, not true bidirectional
 
-**Example VS Output:**
+**Approach B: WebSocket Service (Full-featured)**
+- Dedicated WebSocket server (Socket.io)
+- Redis for message queue
+- React Query for client state (per Constitution approved patterns)
+- Complexity: High | Time: 4-5 days | Cost: Medium (Redis hosting)
+- Pros: True real-time, bidirectional, scalable
+- Cons: Additional infrastructure, deployment complexity
 
-```xml
-<response>
-  <probability>0.08</probability>
-  <text>
-    Approach A: Server-Side Rendering with React Server Components
-    - Real-time notifications via Server-Sent Events
-    - Notification state in PostgreSQL with Prisma
-    - Toast UI component using shadcn/ui
-    - Complexity: Medium | Time: 2-3 days
-    Pros: SEO-friendly, leverages existing Next.js SSR
-    Cons: SSE connection management, server state sync
-  </text>
-</response>
+**Approach C: Simple Polling (Quick & Easy)**
+- HTTP polling API endpoint
+- React Query with refetchInterval
+- Notification table in PostgreSQL
+- Complexity: Low | Time: 1-2 days | Cost: Very Low
+- Pros: Simple, no connection management, works everywhere
+- Cons: Not real-time (30s latency), more DB queries
 
-<response>
-  <probability>0.07</probability>
-  <text>
-    Approach B: Client-Side with WebSocket Service
-    - Dedicated WebSocket server (Socket.io)
-    - Redis for real-time message queue
-    - React Query for client state
-    - Complexity: High | Time: 4-5 days
-    Pros: True real-time, scalable, persistent connections
-    Cons: Additional infrastructure, more complex deployment
-  </text>
-</response>
+**Approach D: Managed Service (Fastest)**
+- Third-party service (Pusher/Ably/Firebase)
+- Simple client SDK
+- Pay-per-message pricing
+- Complexity: Very Low | Time: 1 day | Cost: Pay-per-use
+- Pros: Zero infrastructure, proven, fast implementation
+- Cons: Vendor lock-in, data leaves infrastructure, ongoing costs
 
-<response>
-  <probability>0.06</probability>
-  <text>
-    Approach C: Polling-Based with React Query
-    - HTTP polling every 30 seconds
-    - Notification API endpoint
-    - React Query with polling interval
-    - Complexity: Low | Time: 1-2 days
-    Pros: Simple, works everywhere, no connection management
-    Cons: Higher latency, more server requests, not "real-time"
-  </text>
-</response>
-
-<response>
-  <probability>0.09</probability>
-  <text>
-    Approach D: Third-Party Service (Pusher/Ably)
-    - Managed WebSocket service
-    - Simple client SDK integration
-    - Pay-per-message pricing
-    - Complexity: Very Low | Time: 1 day
-    Pros: Zero infrastructure, proven reliability, fast implementation
-    Cons: Vendor lock-in, ongoing costs, data leaves infrastructure
-  </text>
-</response>
-```
+**All approaches comply with Constitution:**
+- ✅ Use React (required)
+- ✅ Use TypeScript (required)
+- ✅ PostgreSQL for persistent data (required)
+- ✅ Follow approved patterns
 
 ---
 
@@ -344,7 +318,7 @@ Agent: "Running /speckit.implement..."
 
 ## Constitution Integration
 
-**How Constitution guides VS:**
+**How Constitution guides approach generation:**
 
 ```javascript
 // Load Constitution
@@ -352,30 +326,25 @@ const constitution = loadConstitution();
 const techStack = constitution.technicalArchitecture;
 const principles = constitution.principles;
 
-// VS Prompt with Constitution constraints
-const vsPrompt = `
-<instructions>
-Generate 4 approaches constrained by:
-- MUST use: ${techStack.frontend}, ${techStack.backend}
-- MUST follow: ${principles.filter(p => p.nonNegotiable)}
-- CAN choose: [specific areas of flexibility]
+// Generate approaches within constraints
+const approaches = generateApproaches({
+  mustUse: [techStack.frontend, techStack.backend, techStack.database],
+  mustFollow: principles.filter(p => p.nonNegotiable),
+  canChoose: ['state management', 'real-time strategy', 'UI patterns'],
+  feature: userFeatureDescription
+});
 
-Sample with probability < 0.10
-</instructions>
-
-[Feature description]
-`;
-
-// Filter out Constitution violations
-const validOptions = vsResults.filter(opt =>
-  compliesWithConstitution(opt, constitution)
-);
+// All approaches automatically comply
+approaches.forEach(approach => {
+  assert(compliesWithConstitution(approach, constitution));
+});
 ```
 
 **Result:**
-- Diversity within guardrails
-- No fragmentation
+- 4 solid options within guardrails
+- No fragmentation (all use same stack)
 - Constitution compliance guaranteed
+- Practical choices based on real tradeoffs
 
 ---
 
