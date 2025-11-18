@@ -82,24 +82,51 @@ This skill performs comprehensive initial analysis by:
 
 ### Batch Session Auto-Configuration
 
-**Before showing questions, check for batch session:**
+**Before showing questions, check for batch session by walking up directories:**
 
 ```bash
+# Function to find batch session file (walks up like .git search)
+find_batch_session() {
+  local current_dir="$(pwd)"
+  while [[ "$current_dir" != "/" ]]; do
+    if [[ -f "$current_dir/.stackshift-batch-session.json" ]]; then
+      echo "$current_dir/.stackshift-batch-session.json"
+      return 0
+    fi
+    current_dir="$(dirname "$current_dir")"
+  done
+  return 1
+}
+
 # Check if batch session exists
-if [ -f ~/.claude/stackshift-batch-session.json ]; then
-  echo "✅ Using batch session configuration"
-  cat ~/.claude/stackshift-batch-session.json
+BATCH_SESSION=$(find_batch_session)
+if [[ -n "$BATCH_SESSION" ]]; then
+  echo "✅ Using batch session configuration from: $BATCH_SESSION"
+  cat "$BATCH_SESSION" | jq '.answers'
   # Auto-apply answers from batch session
   # Skip questionnaire entirely
 fi
 ```
 
 **If batch session exists:**
-1. Load answers from `~/.claude/stackshift-batch-session.json`
-2. Show: "Using batch session configuration: route=osiris, spec_output=~/git/specs, ..."
-3. Skip all questions below
-4. Proceed directly to analysis with pre-configured answers
-5. Save answers to local `.stackshift-state.json` as usual
+1. Walk up directory tree to find `.stackshift-batch-session.json`
+2. Load answers from found batch session file
+3. Show: "Using batch session configuration: route=osiris, spec_output=~/git/specs, ..."
+4. Skip all questions below
+5. Proceed directly to analysis with pre-configured answers
+6. Save answers to local `.stackshift-state.json` as usual
+
+**Example directory structure:**
+```
+~/git/osiris/
+  ├── .stackshift-batch-session.json  ← Batch session here
+  ├── ws-vehicle-details/
+  │   └── [agent working here finds parent session]
+  ├── ws-hours/
+  │   └── [agent working here finds parent session]
+  └── ws-contact/
+      └── [agent working here finds parent session]
+```
 
 **If no batch session:**
 - Continue with normal questionnaire below

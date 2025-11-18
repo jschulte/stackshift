@@ -19,6 +19,7 @@ mcp-server/node_modules/
 
 specs/
 .stackshift-state.json
+.stackshift-batch-session.json
 .stackshift/
 analysis-report.md
 docs/reverse-engineering/

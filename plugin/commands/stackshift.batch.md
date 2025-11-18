@@ -110,10 +110,16 @@ I'll ask you:
 - C) Replace in place (destructive)
 
 **Then I'll:**
-1. ✅ Save all answers to `~/.claude/stackshift-batch-session.json`
+1. ✅ Save all answers to `.stackshift-batch-session.json` (in current directory)
 2. ✅ Show batch session summary
 3. ✅ Start processing batches with auto-applied configuration
 4. ✅ Clear batch session when complete (or keep if you want)
+
+**Why directory-scoped?**
+- Multiple batch sessions can run simultaneously in different directories
+- Each batch (Osiris, CMS-web, etc.) has its own isolated configuration
+- No conflicts between parallel batch runs
+- Session file is co-located with the repos being processed
 
 ### Step 3: Create Batch Session & Spawn Agents
 
@@ -121,10 +127,12 @@ I'll ask you:
 
 ```bash
 # After collecting all configuration answers, create batch session
-cat > ~/.claude/stackshift-batch-session.json <<EOF
+# Stored in current directory for isolation from other batch runs
+cat > .stackshift-batch-session.json <<EOF
 {
   "sessionId": "batch-$(date +%s)",
   "startedAt": "$(date -u +%Y-%m-%dT%H:%M:%SZ)",
+  "batchRootDirectory": "$(pwd)",
   "totalRepos": ${TOTAL_REPOS},
   "batchSize": ${BATCH_SIZE},
   "answers": {
@@ -140,7 +148,7 @@ cat > ~/.claude/stackshift-batch-session.json <<EOF
 }
 EOF
 
-echo "✅ Batch session created"
+echo "✅ Batch session created: $(pwd)/.stackshift-batch-session.json"
 echo "📦 Configuration will be auto-applied to all ${TOTAL_REPOS} repos"
 ```
 
@@ -164,7 +172,8 @@ const agents = batch1.map(widget => ({
   prompt: `
     cd ~/git/osiris/${widget}
 
-    IMPORTANT: Batch session is active at ~/.claude/stackshift-batch-session.json
+    IMPORTANT: Batch session is active (will be auto-detected by walking up to parent)
+    Parent directory has: .stackshift-batch-session.json
     All configuration will be auto-applied. DO NOT ask configuration questions.
 
     Run StackShift Gear 1: Analyze
@@ -445,13 +454,25 @@ Next: Review specs and begin migration planning"
 ### View Current Batch Session
 
 ```bash
-# Check if batch session exists and view configuration
-if [ -f ~/.claude/stackshift-batch-session.json ]; then
-  echo "📦 Active Batch Session"
-  cat ~/.claude/stackshift-batch-session.json | jq '.'
+# Check if batch session exists in current directory and view configuration
+if [ -f .stackshift-batch-session.json ]; then
+  echo "📦 Active Batch Session in $(pwd)"
+  cat .stackshift-batch-session.json | jq '.'
 else
-  echo "No active batch session"
+  echo "No active batch session in current directory"
 fi
+```
+
+### View All Batch Sessions
+
+```bash
+# Find all active batch sessions
+echo "🔍 Finding all active batch sessions..."
+find ~/git -name ".stackshift-batch-session.json" -type f 2>/dev/null | while read session; do
+  echo ""
+  echo "📦 $(dirname $session)"
+  cat "$session" | jq -r '"  Route: \(.answers.route) | Repos: \(.processedRepos | length)/\(.totalRepos)"'
+done
 ```
 
 ### Clear Batch Session
@@ -462,28 +483,36 @@ fi
 # "Batch processing complete! Clear batch session? (Y/n)"
 
 # If yes:
-rm ~/.claude/stackshift-batch-session.json
+rm .stackshift-batch-session.json
 echo "✅ Batch session cleared"
 
 # If no:
-echo "✅ Batch session kept (will be used for next batch)"
+echo "✅ Batch session kept (will be used for next batch run in this directory)"
 ```
 
-**Manual clear:**
+**Manual clear (current directory):**
 ```bash
-# Clear batch session anytime
-rm ~/.claude/stackshift-batch-session.json
+# Clear batch session in current directory
+rm .stackshift-batch-session.json
+```
+
+**Manual clear (specific directory):**
+```bash
+# Clear batch session in specific directory
+rm ~/git/osiris/.stackshift-batch-session.json
 ```
 
 **Why keep batch session?**
 - Run another batch with same configuration
-- Process more repos later
+- Process more repos later in same directory
 - Continue interrupted batch
+- Consistent settings for related batches
 
 **Why clear batch session?**
 - Done with current migration
 - Want different configuration for next batch
 - Starting fresh analysis
+- Free up directory for different batch type
 
 ---
 

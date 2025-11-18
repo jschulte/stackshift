@@ -7,7 +7,6 @@
 
 import * as fs from 'fs';
 import * as path from 'path';
-import * as os from 'os';
 
 export interface BatchSessionAnswers {
   route?: 'greenfield' | 'brownfield' | 'osiris' | 'osiris-module' | 'cms-v9' | 'cms-viewmodel';
@@ -24,18 +23,46 @@ export interface BatchSessionAnswers {
 export interface BatchSessionState {
   sessionId: string;
   startedAt: string;
+  batchRootDirectory: string;
   totalRepos: number;
   batchSize: number;
   answers: BatchSessionAnswers;
   processedRepos: string[];
 }
 
-const BATCH_SESSION_FILE = path.join(os.homedir(), '.claude', 'stackshift-batch-session.json');
+const BATCH_SESSION_FILENAME = '.stackshift-batch-session.json';
+
+/**
+ * Find batch session file by checking current directory and walking up
+ * Similar to how .git directories are found
+ */
+function findBatchSessionFile(startDir: string = process.cwd()): string | null {
+  let currentDir = path.resolve(startDir);
+  const root = path.parse(currentDir).root;
+
+  while (currentDir !== root) {
+    const batchSessionPath = path.join(currentDir, BATCH_SESSION_FILENAME);
+    if (fs.existsSync(batchSessionPath)) {
+      return batchSessionPath;
+    }
+    currentDir = path.dirname(currentDir);
+  }
+
+  return null;
+}
+
+/**
+ * Get batch session file path for a directory
+ */
+function getBatchSessionPath(directory: string = process.cwd()): string {
+  return path.join(directory, BATCH_SESSION_FILENAME);
+}
 
 /**
  * Create a new batch session with initial answers
  */
 export function createBatchSession(
+  batchRootDirectory: string,
   totalRepos: number,
   batchSize: number,
   answers: BatchSessionAnswers
@@ -43,28 +70,31 @@ export function createBatchSession(
   const session: BatchSessionState = {
     sessionId: `batch-${Date.now()}`,
     startedAt: new Date().toISOString(),
+    batchRootDirectory: path.resolve(batchRootDirectory),
     totalRepos,
     batchSize,
     answers,
     processedRepos: []
   };
 
-  ensureDirectoryExists(path.dirname(BATCH_SESSION_FILE));
-  fs.writeFileSync(BATCH_SESSION_FILE, JSON.stringify(session, null, 2));
+  const sessionPath = getBatchSessionPath(batchRootDirectory);
+  fs.writeFileSync(sessionPath, JSON.stringify(session, null, 2));
 
   return session;
 }
 
 /**
  * Get current batch session if it exists
+ * Searches current directory and walks up to find batch session
  */
-export function getBatchSession(): BatchSessionState | null {
+export function getBatchSession(startDir: string = process.cwd()): BatchSessionState | null {
   try {
-    if (!fs.existsSync(BATCH_SESSION_FILE)) {
+    const sessionPath = findBatchSessionFile(startDir);
+    if (!sessionPath) {
       return null;
     }
 
-    const content = fs.readFileSync(BATCH_SESSION_FILE, 'utf-8');
+    const content = fs.readFileSync(sessionPath, 'utf-8');
     return JSON.parse(content);
   } catch (error) {
     console.error('Error reading batch session:', error);
@@ -74,34 +104,43 @@ export function getBatchSession(): BatchSessionState | null {
 
 /**
  * Check if we're currently in a batch session
+ * Searches current directory and walks up
  */
-export function hasBatchSession(): boolean {
-  return fs.existsSync(BATCH_SESSION_FILE);
+export function hasBatchSession(startDir: string = process.cwd()): boolean {
+  return findBatchSessionFile(startDir) !== null;
 }
 
 /**
  * Update batch session with processed repo
  */
-export function markRepoProcessed(repoName: string): void {
-  const session = getBatchSession();
-  if (!session) {
+export function markRepoProcessed(repoName: string, startDir: string = process.cwd()): void {
+  const sessionPath = findBatchSessionFile(startDir);
+  if (!sessionPath) {
     return;
   }
 
-  if (!session.processedRepos.includes(repoName)) {
-    session.processedRepos.push(repoName);
-  }
+  try {
+    const content = fs.readFileSync(sessionPath, 'utf-8');
+    const session: BatchSessionState = JSON.parse(content);
 
-  fs.writeFileSync(BATCH_SESSION_FILE, JSON.stringify(session, null, 2));
+    if (!session.processedRepos.includes(repoName)) {
+      session.processedRepos.push(repoName);
+    }
+
+    fs.writeFileSync(sessionPath, JSON.stringify(session, null, 2));
+  } catch (error) {
+    console.error('Error updating batch session:', error);
+  }
 }
 
 /**
- * Clear batch session (called at end or manually)
+ * Clear batch session in specific directory
  */
-export function clearBatchSession(): boolean {
+export function clearBatchSession(directory: string = process.cwd()): boolean {
   try {
-    if (fs.existsSync(BATCH_SESSION_FILE)) {
-      fs.unlinkSync(BATCH_SESSION_FILE);
+    const sessionPath = getBatchSessionPath(directory);
+    if (fs.existsSync(sessionPath)) {
+      fs.unlinkSync(sessionPath);
       return true;
     }
     return false;
@@ -114,8 +153,8 @@ export function clearBatchSession(): boolean {
 /**
  * Get batch session progress
  */
-export function getBatchProgress(): string {
-  const session = getBatchSession();
+export function getBatchProgress(startDir: string = process.cwd()): string {
+  const session = getBatchSession(startDir);
   if (!session) {
     return 'No active batch session';
   }
@@ -139,6 +178,7 @@ export function formatBatchSession(session: BatchSessionState): string {
 📦 Active Batch Session
 
 Session ID: ${session.sessionId}
+Batch Root: ${session.batchRootDirectory}
 Started: ${new Date(session.startedAt).toLocaleString()}
 Duration: ${hours}h ${minutes}m
 Total Repos: ${session.totalRepos}
@@ -151,14 +191,7 @@ Configuration:
   Spec Output: ${session.answers.spec_output_location || 'current directory'}
   Build Location: ${session.answers.build_location || 'greenfield/'}
   Target Stack: ${session.answers.target_stack || 'not set'}
-`.trim();
-}
 
-/**
- * Ensure directory exists
- */
-function ensureDirectoryExists(dirPath: string): void {
-  if (!fs.existsSync(dirPath)) {
-    fs.mkdirSync(dirPath, { recursive: true });
-  }
+Session File: ${session.batchRootDirectory}/${BATCH_SESSION_FILENAME}
+`.trim();
 }
