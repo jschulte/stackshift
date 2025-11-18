@@ -3,7 +3,9 @@ package main
 import (
 	"fmt"
 	"os"
+	"os/exec"
 	"path/filepath"
+	"strings"
 	"time"
 
 	tea "github.com/charmbracelet/bubbletea"
@@ -144,7 +146,48 @@ func discoverRepositories() []Repository {
 		searchPath = os.Args[1]
 	}
 
-	// Recursively find all .git directories
+	// Use find command for much faster discovery (limited depth)
+	// Searches up to 4 levels deep to avoid scanning deep node_modules, etc.
+	cmd := exec.Command("find", searchPath, "-maxdepth", "4", "-name", ".git", "-type", "d")
+	output, err := cmd.Output()
+	if err != nil {
+		// Fallback to slower Walk if find fails
+		return discoverRepositoriesWalk(searchPath)
+	}
+
+	// Parse find output
+	lines := strings.Split(string(output), "\n")
+	for _, line := range lines {
+		if line == "" {
+			continue
+		}
+
+		repoPath := filepath.Dir(line)
+		repoName := filepath.Base(repoPath)
+
+		// Detect language/framework
+		lang, framework := detectTechStack(repoPath)
+
+		// Check current progress
+		currentGear, status := checkProgress(repoPath)
+
+		repos = append(repos, Repository{
+			Name:        repoName,
+			Path:        repoPath,
+			Language:    lang,
+			Framework:   framework,
+			CurrentGear: currentGear,
+			Status:      status,
+		})
+	}
+
+	return repos
+}
+
+// Fallback: slower but works without find command
+func discoverRepositoriesWalk(searchPath string) []Repository {
+	var repos []Repository
+
 	filepath.Walk(searchPath, func(path string, info os.FileInfo, err error) error {
 		if err != nil {
 			return nil
@@ -154,10 +197,7 @@ func discoverRepositories() []Repository {
 			repoPath := filepath.Dir(path)
 			repoName := filepath.Base(repoPath)
 
-			// Detect language/framework
 			lang, framework := detectTechStack(repoPath)
-
-			// Check current progress
 			currentGear, status := checkProgress(repoPath)
 
 			repos = append(repos, Repository{
