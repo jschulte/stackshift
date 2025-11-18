@@ -36,8 +36,10 @@ Transform any application into a fully-specified, spec-driven project with compl
 - **[Quick Start](QUICKSTART.md)** - Get started in 5 minutes!
 - **[Installation Guide](docs/guides/INSTALLATION.md)** - Detailed installation for all platforms
 - **[Plugin Guide](docs/guides/PLUGIN_GUIDE.md)** - Claude Code plugin usage
+- **[Brownfield Upgrade Mode](docs/guides/BROWNFIELD_UPGRADE_MODE.md)** - Spec-driven dependency modernization
 - **[Web Guide](web/README.md)** - Using in Claude Code Web (browser)
 - **[Batch Processing](scripts/BATCH_PROCESSING_GUIDE.md)** - Process multiple projects efficiently
+- **[ws-scripts Reference](docs/osiris/ws-scripts-capabilities.md)** - Osiris widget infrastructure (Cox Automotive)
 
 ---
 
