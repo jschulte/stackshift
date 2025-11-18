@@ -82,19 +82,80 @@ fi
 
 **For V9 Velocity widgets:**
 
+**Assumed repository locations:**
+- CMS-web: `~/git/cms-web`
+- CMS (Java backend): `~/git/cms`
+
 ```bash
 # 1. Find widget.vm entry point
 WIDGET_VM=$(find . -name "widget.vm" | head -1)
+WIDGET_DIR=$(dirname "$WIDGET_VM")
 
-# 2. Extract portlet definition
-WIDGET_NAME=$(grep "componentName" $WIDGET_VM | head -1 || basename $(dirname $WIDGET_VM))
+# 2. Extract widget identity
+# From path: ~/git/cms-web/htdocs/v9/widgets/contact/info/v1/widget.vm
+# Extract: category=contact, name=info, version=v1
+CATEGORY=$(basename $(dirname $(dirname "$WIDGET_DIR")))
+NAME=$(basename $(dirname "$WIDGET_DIR"))
+VERSION=$(basename "$WIDGET_DIR")
+WIDGET_ID="${CATEGORY}.${NAME}.${VERSION}"
 
-# 3. Find portlet XML
-PORTLET_XML=$(find ../../../deploy/widgets/v9 -name "*portlets.xml" -exec grep -l "$WIDGET_NAME" {} \;)
+echo "Widget: v9.widgets.${WIDGET_ID}"
 
-# 4. Find Java backend
-JAVA_CLASS=$(find ../../../cms/src -name "*Portlet.java" | xargs grep -l "$WIDGET_NAME")
+# 3. Find portlet XML (known location)
+PORTLET_XML=~/git/cms-web/deploy/widgets/v9/${CATEGORY}-portlets.xml
+
+if [ -f "$PORTLET_XML" ]; then
+  echo "✅ Found portlet XML: $PORTLET_XML"
+
+  # Extract preferences from portlet XML
+  grep -A 100 "<portlet-name>v9.widgets.${WIDGET_ID}</portlet-name>" "$PORTLET_XML" | \
+    grep -B 1 "<name>" | \
+    grep "<name>" | \
+    sed 's/.*<name>\(.*\)<\/name>.*/\1/' | \
+    sort | \
+    tee .upgrade/widget-preferences.txt
+else
+  echo "⚠️ Portlet XML not found at expected location"
+fi
+
+# 4. Find Java backend portlet class (known pattern)
+# Pattern: cms/src/main/java/com/dealer/portlets/{Category}Portlet.java
+# Example: cms/src/main/java/com/dealer/portlets/ContactPortlet.java
+
+JAVA_CLASS_NAME="${CATEGORY^}Portlet.java"  # Capitalize first letter
+JAVA_CLASS=$(find ~/git/cms/src -name "$JAVA_CLASS_NAME" | head -1)
+
+if [ -f "$JAVA_CLASS" ]; then
+  echo "✅ Found Java backend: $JAVA_CLASS"
+
+  # Extract key methods
+  grep -E "public|protected" "$JAVA_CLASS" | \
+    grep -v "^//" | \
+    tee .upgrade/java-backend-methods.txt
+else
+  echo "⚠️ Java backend not found - trying alternate search..."
+
+  # Fallback: Search for widget name in all portlet files
+  JAVA_CLASS=$(find ~/git/cms/src -name "*Portlet.java" | \
+    xargs grep -l "$WIDGET_ID" | head -1)
+
+  if [ -f "$JAVA_CLASS" ]; then
+    echo "✅ Found via content search: $JAVA_CLASS"
+  else
+    echo "❌ Java backend not found - widget may be template-only"
+  fi
+fi
 ```
+
+**File Locations:**
+
+| Component | Path Pattern | Example |
+|-----------|-------------|---------|
+| **Widget VM** | `~/git/cms-web/htdocs/v9/widgets/{category}/{name}/{version}/widget.vm` | `~/git/cms-web/htdocs/v9/widgets/contact/info/v1/widget.vm` |
+| **Portlet XML** | `~/git/cms-web/deploy/widgets/v9/{category}-portlets.xml` | `~/git/cms-web/deploy/widgets/v9/contact-portlets.xml` |
+| **Java Class** | `~/git/cms/src/main/java/com/dealer/portlets/{Category}Portlet.java` | `~/git/cms/src/.../ContactPortlet.java` |
+| **Components** | `~/git/cms-web/htdocs/v9/components/{subcat}/{name}/{version}/component.vm` | `~/git/cms-web/htdocs/v9/components/vcard/default/v1/component.vm` |
+| **Assembler** | `~/git/cms-web/htdocs/v9/assemblers/component/default/v1/assembler.vm` | (Standard assembler) |
 
 ### Phase 3: Component Dependency Tree Analysis
 
@@ -196,12 +257,40 @@ grep -n "#if" widget.vm component.vm
 
 ### Phase 6: Portlet Configuration Analysis
 
-**Extract widget preferences:**
+**Extract widget preferences from portlet XML:**
 
+**Location:** `~/git/cms-web/deploy/widgets/v9/{category}-portlets.xml`
+
+```bash
+# Read portlet XML
+PORTLET_XML=~/git/cms-web/deploy/widgets/v9/${CATEGORY}-portlets.xml
+
+echo "=== Extracting Portlet Configuration ==="
+
+# Extract the entire portlet definition
+awk "/<portlet-name>v9.widgets.${WIDGET_ID}<\/portlet-name>/,/<\/portlet>/" "$PORTLET_XML" > .upgrade/portlet-definition.xml
+
+# Parse preferences
+echo "=== Widget Preferences ==="
+grep -A 2 "<preference>" .upgrade/portlet-definition.xml | \
+  grep -E "<name>|<value>" | \
+  paste - - | \
+  sed 's/<name>\(.*\)<\/name>.*<value>\(.*\)<\/value>/\1 = \2/' | \
+  tee .upgrade/widget-preferences-parsed.txt
+
+# Count preferences
+PREF_COUNT=$(grep -c "<preference>" .upgrade/portlet-definition.xml)
+echo "Total preferences: $PREF_COUNT"
+```
+
+**Portlet XML Structure:**
 ```xml
-<!-- From portlet XML -->
 <portlet>
   <portlet-name>v9.widgets.contact.info.v1</portlet-name>
+  <portlet-class>com.dealer.portlets.ContactPortlet</portlet-class>
+  <portlet-info>
+    <title>Contact Information</title>
+  </portlet-info>
   <portlet-preferences>
     <preference>
       <name>hideVcard</name>
@@ -211,25 +300,117 @@ grep -n "#if" widget.vm component.vm
       <name>useClosestAccountToZip</name>
       <value>true</value>
     </preference>
+    <preference>
+      <name>idPhone1</name>
+      <value></value>  <!-- Empty = auto-default based on account type -->
+    </preference>
+    <preference>
+      <name>vCardOrder</name>
+      <value>name,address,phone,email,hours,social</value>
+    </preference>
     <!-- 50+ more preferences -->
   </portlet-preferences>
 </portlet>
 ```
 
+**Document for each preference:**
+- Name (configuration key)
+- Default value
+- Business purpose (what it controls)
+- Data type (boolean, string, CSV list, etc.)
+- Impact on widget behavior
+
 ### Phase 7: Java Backend Integration
 
 **Find and analyze Java portlet class:**
 
-```bash
-# Find Java class
-JAVA_FILE=$(find cms/src -name "*ContactPortlet.java")
+**Location:** `~/git/cms/src/main/java/com/dealer/portlets/{Category}Portlet.java`
 
-# Extract business logic:
-# - Data fetching from DVS
-# - Business rule processing
-# - Data transformation
-# - API calls to external services
+```bash
+# Find Java portlet class
+JAVA_CLASS=~/git/cms/src/main/java/com/dealer/portlets/${CATEGORY^}Portlet.java
+
+if [ ! -f "$JAVA_CLASS" ]; then
+  # Try alternate capitalization patterns
+  JAVA_CLASS=$(find ~/git/cms/src -path "*/com/dealer/portlets/*" -name "*${CATEGORY}*Portlet.java" -o -name "*${CATEGORY^}*Portlet.java" | head -1)
+fi
+
+echo "=== Analyzing Java Backend ==="
+echo "Java Class: $JAVA_CLASS"
+
+# Extract business logic from Java class
+if [ -f "$JAVA_CLASS" ]; then
+  # 1. Find all public methods
+  echo "=== Public Methods ==="
+  grep -n "public.*(" "$JAVA_CLASS" | grep -v "^//" | head -30
+
+  # 2. Find DVS queries
+  echo "=== DVS Integration ==="
+  grep -n "dvsClient\|DVSClient\|documentStore" "$JAVA_CLASS" | head -20
+
+  # 3. Find external service calls
+  echo "=== External Services ==="
+  grep -n "httpClient\|restTemplate\|serviceClient" "$JAVA_CLASS" | head -20
+
+  # 4. Find data transformations
+  echo "=== Data Processing ==="
+  grep -n "transform\|format\|convert\|parse" "$JAVA_CLASS" | head -20
+
+  # 5. Find business rule methods
+  echo "=== Business Logic Methods ==="
+  grep -n "calculate\|validate\|process\|determine\|select" "$JAVA_CLASS" | head -20
+
+  # 6. Extract key business logic sections
+  cat "$JAVA_CLASS" > .upgrade/java-backend-full.java
+else
+  echo "❌ Java backend not found at: $JAVA_CLASS"
+  echo "Widget may be template-only (no Java backend logic)"
+fi
 ```
+
+**Java Backend Analysis Focus:**
+
+1. **Data Fetching**
+   ```java
+   // Example from ContactPortlet.java
+   public void doView(RenderRequest request, RenderResponse response) {
+     String accountId = request.getParameter("accountId");
+     Account account = dvsClient.getDocument("accounts", accountId);
+     Department dept = dvsClient.getDocument("departments", deptId);
+
+     request.setAttribute("contactAccount", account);
+     request.setAttribute("departmentAccount", dept);
+   }
+   ```
+   → Document: What data sources, what transformations
+
+2. **Business Rules**
+   ```java
+   // Example: Auto dealer department defaults
+   if (account.getCategories().contains("AUTO")) {
+     if (isEmpty(idPhone1)) {
+       idPhone1 = "SALES";
+     }
+     if (isEmpty(idPhone2)) {
+       idPhone2 = "SERVICE";
+     }
+   }
+   ```
+   → Document: Business logic for auto dealers
+
+3. **External Service Calls**
+   ```java
+   // Example: ZIP proximity service
+   Account nearest = proximityService.findNearestDealer(zipCode, parentAccountId);
+   ```
+   → Document: External dependencies, API contracts
+
+4. **Data Transformations**
+   ```java
+   // Example: Phone formatting
+   String formatted = phoneFormatter.formatForDisplay(phoneNumber);
+   ```
+   → Document: Formatting rules, business logic
 
 ---
 
