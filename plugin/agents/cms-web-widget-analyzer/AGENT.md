@@ -157,103 +157,236 @@ fi
 | **Components** | `~/git/cms-web/htdocs/v9/components/{subcat}/{name}/{version}/component.vm` | `~/git/cms-web/htdocs/v9/components/vcard/default/v1/component.vm` |
 | **Assembler** | `~/git/cms-web/htdocs/v9/assemblers/component/default/v1/assembler.vm` | (Standard assembler) |
 
-### Phase 3: Component Dependency Tree Analysis
+### Phase 3: Component Dependency Tree Analysis (Use Read Tool + LLM!)
 
-**Critical: Trace all #parse calls recursively**
+**Critical: Trace all #parse calls recursively using Read tool**
 
-```bash
-# Start with widget.vm
-echo "=== Analyzing Component Nesting for $WIDGET_NAME ==="
+**Approach:**
 
-# Function to trace #parse calls
-trace_component() {
-  local file=$1
-  local depth=$2
-  local indent=$(printf '%*s' $((depth * 2)) '')
+1. **Read widget.vm using Read tool**
+   - Understand the Velocity template logic
+   - Identify all #parse() calls
+   - Extract component paths from #parse('/v9/assemblers/...')
 
-  echo "${indent}📄 $(basename $file)"
+2. **For each #parse call found:**
+   - Construct full path: `~/git/cms-web/htdocs{component_path}`
+   - Use Read tool to load that component
+   - Analyze what the component does (use LLM comprehension!)
+   - Look for nested #parse calls within that component
+   - Recursively analyze (max depth 10)
 
-  # Find all #parse calls
-  grep "#parse" "$file" | while read line; do
-    # Extract path from #parse( '/path/to/component.vm' )
-    component_path=$(echo "$line" | grep -oE "'/[^']+'" | tr -d "'")
+3. **For each component, understand:**
+   - **Purpose:** What does this component render?
+   - **Inputs:** What variables does it expect ($icon, $button, etc.)?
+   - **Business Logic:** Any conditionals or data processing?
+   - **Output:** What HTML/markup does it generate?
+   - **Nested Includes:** Does it #parse other components?
 
-    if [ -n "$component_path" ]; then
-      full_path="../../../htdocs${component_path}"
+**Example LLM-Native Analysis:**
 
-      if [ -f "$full_path" ]; then
-        echo "${indent}  └─ includes: $component_path"
+```markdown
+## Component: vcard/default/v1
 
-        # Recurse (max depth 10 to prevent infinite loops)
-        if [ $depth -lt 10 ]; then
-          trace_component "$full_path" $((depth + 1))
-        fi
-      fi
-    fi
-  done
-}
+**Read:** ~/git/cms-web/htdocs/v9/components/vcard/default/v1/component.vm
 
-# Start tracing
-trace_component "$WIDGET_VM" 0
+**Analysis:**
+
+**Purpose:** Renders a contact vCard with dealer information
+
+**Inputs Expected:**
+- $contactAccount - Account object with name, address, phone
+- $departmentAccount - Department object (if applicable)
+- $vCardOrder - CSV list controlling display order
+- $idPhone1, $idPhone2, $idPhone3 - Department IDs for phones
+- Multiple CSS class preferences
+
+**Business Logic:**
+1. Loops through $vCardOrder array to render sections in order
+2. For each section (name, address, phone, email, hours):
+   - Checks if data exists ($v.exists())
+   - Checks feature flags ($ff.isEnabled())
+   - Renders section using nested components
+
+3. Phone number handling:
+   - For each phone ID (idPhone1, idPhone2, idPhone3):
+     - Fetches phone from $phone.getNumberForAttribute()
+     - Formats with $phone.formatNumber()
+     - Renders as link if $phoneNumbersAsLinks is true
+     - Uses icon component for phone icon
+
+4. Address rendering:
+   - Checks if account has address
+   - Formats multi-line address
+   - Includes "Get Directions" button if enabled
+   - Uses icon component for location icon
+
+**Nested Components (7 total):**
+1. ui/icon/v1 - For address icon, phone icons
+2. ui/button/v1 - For "Get Directions" button
+3. photo/default/v1 - For dealer/staff photo
+4. ui/state/v1 - For badges/status indicators
+5. [3 more components...]
+
+**Business Rules:**
+- vCardOrder controls display sequence
+- Phone sections only shown if phone numbers exist
+- Directions button feature-flagged
+- Photo display conditional on photoUrl existence
 ```
 
-**Output example:**
+**This uses Claude's understanding of Velocity syntax and business logic, not just grep!**
+
+### Phase 4: Helper Object Analysis (LLM Comprehension!)
+
+**Read the Velocity templates and identify helper usage:**
+
+**Use LLM to understand helper calls in context:**
+
+1. **Read widget.vm and component.vm files**
+2. **Identify all $helper.* calls and understand:**
+   - **What data is being requested?**
+   - **Why is it needed?**
+   - **How is the result used in the template?**
+
+**Example Intelligent Analysis:**
+
+```markdown
+## Helper Object Usage in Contact Widget
+
+### $helper.getAccount($contactAccountId)
+**Purpose:** Fetches account data from DVS
+**Returns:** Account object with name, address, phone, etc.
+**Used for:** Displaying dealer contact information
+**Business Logic:** Primary data source for contact details
+
+### $helper.getClosestChildAccountFromZip($postalcode, $accountId, $exclude, $include)
+**Purpose:** Finds nearest dealer location based on user's ZIP code
+**Business Logic:** Geographic proximity matching
+**Returns:** Account object for nearest dealer
+**Used when:** useClosestAccountToZip preference is true
+**Critical Business Rule:** Shows user most relevant dealer location
+
+### $helper.getDepartment($accountId, $departmentId)
+**Purpose:** Fetches specific department data (SALES, SERVICE, etc.)
+**Returns:** Department object with department-specific contact info
+**Used for:** Showing department phone numbers
+**Business Logic:** Supports multi-department dealer structures
+
+### $npvresourcetool.getAccountCategoryNames($accountId)
+**Purpose:** Gets account categories (AUTO, MARINE, RV, etc.)
+**Returns:** List of category strings
+**Used for:** Conditional logic (AUTO dealers get different defaults)
+**Critical Business Rule:** Industry-specific behavior branching
+
+### $format.escapeHTML($value)
+**Purpose:** XSS protection for user input
+**Security:** Prevents HTML injection
+**Used for:** All user-provided data displayed in template
+
+### $link.page($pageAlias)
+**Purpose:** Generates URL to CMS page
+**Returns:** LinkBuilder for constructing links
+**Used for:** Directions button, contact page links
+**Business Logic:** Deep linking into CMS page structure
+
+### $phone.formatNumber($number)
+**Purpose:** Formats phone for display (e.g., (123) 456-7890)
+**Business Logic:** Locale-aware phone formatting
+**Used for:** All phone number displays
+
+### $v.exists($variable)
+**Purpose:** Null-safe variable existence check
+**Used for:** Defensive rendering (prevent null pointer errors)
+**Pattern:** Wraps all optional data access
 ```
-📄 widget.vm
-  └─ includes: /v9/assemblers/component/default/v1/assembler.vm
-    📄 assembler.vm
-      └─ includes: /v9/components/vcard/default/v1/component.vm
-        📄 component.vm (503 lines)
-          └─ includes: /v9/components/ui/icon/v1/component.vm
-            📄 icon.vm
-          └─ includes: /v9/components/ui/button/v1/component.vm
-            📄 button.vm
-          └─ includes: /v9/components/photo/default/v1/component.vm
-            📄 photo.vm
-          [4 more nested components...]
+
+**This analysis understands the business PURPOSE of each helper, not just that it's called!**
+
+### Phase 5: Conditional Logic Extraction (LLM Understanding!)
+
+**Read Velocity templates and understand conditional logic:**
+
+**For each #if statement, understand:**
+- **What is being checked?**
+- **Why is this check happening?**
+- **What's the business rule?**
+- **What changes based on the condition?**
+
+**Example Intelligent Analysis:**
+
+```markdown
+## Conditional Business Rules in Contact Widget
+
+### Rule 1: ZIP-Based Account Selection
+```velocity
+#if($v.exists($useClosestAccountToZip))
+  #if($v.exists($params.get("geoZip")))
+    #set($postalcode = $!format.escapeHTML($params.get("geoZip")))
+  #end
+  #set($contactAccountId = $helper.getClosestChildAccountFromZip(...).id)
+#else
+  #if($useAccountIdParam == 'true')
+    #set($contactAccountId = $!format.escapeHTML($params.get('accountId')))
+  #end
+#end
 ```
 
-### Phase 4: Helper Object Analysis
+**Business Rule:** "When useClosestAccountToZip is enabled and user's ZIP is available, show the geographically nearest dealer location instead of default account"
 
-**Extract all helper object usage:**
+**Purpose:** Improve user experience by showing most relevant location
+**Impact:** Changes which dealer contact info is displayed
+**Complexity:** Involves proximity service, geographic calculations
 
-```bash
-# Find all helper object calls
-grep -oE '\$[a-z]+\.[a-zA-Z]+' widget.vm component.vm | sort | uniq
-
-# Common helpers:
-# $helper.getAccount()
-# $helper.getDepartment()
-# $helper.getClosestChildAccountFromZip()
-# $npvresourcetool.getAccountCategoryNames()
-# $format.escapeHTML()
-# $link.page()
-# $i18n.getLabel()
-# $phone.formatNumber()
-# $v.exists()
-# $ff.isEnabled()
+### Rule 2: Auto Dealer Department Defaults
+```velocity
+#set($cat = $npvresourcetool.getAccountCategoryNames($catId))
+#if($cat.contains('AUTO'))
+  #if(!$idPhone1 || $idPhone1 == '')
+    #set($idPhone1 = 'SALES')
+  #end
+  #if(!$idPhone2 || $idPhone2 == '')
+    #set($idPhone2 = 'SERVICE')
+  #end
+  #if(!$idPhone3 || $idPhone3 == '')
+    #set($idPhone3 = 'PARTS')
+  #end
+#end
 ```
 
-**Document helper functionality:**
-- What data each helper retrieves
-- Business logic in helper methods
-- DVS integration points
-- External service calls
+**Business Rule:** "Auto dealerships get SALES, SERVICE, PARTS as default department phone numbers if not explicitly configured"
 
-### Phase 5: Conditional Logic Extraction
+**Purpose:** Industry-standard defaults for auto dealers
+**Impact:** Ensures auto dealers show department-specific contact info
+**Why It Matters:** Auto industry convention for customer service structure
 
-**Map all business rules:**
-
-```bash
-# Extract all conditional statements
-grep -n "#if" widget.vm component.vm
-
-# Document:
-# - Feature flag checks: #if($ff.isEnabled('FEATURE_NAME'))
-# - Account type checks: #if($cat.contains('AUTO'))
-# - Data existence checks: #if($v.exists($contactAccount))
-# - Preference-driven logic: #if($hideVcard != "true")
+### Rule 3: vCard Visibility Toggle
+```velocity
+#if($hideVcard != "true")
+  [Render entire vCard component]
+#end
 ```
+
+**Business Rule:** "hideVcard preference completely suppresses vCard rendering"
+
+**Purpose:** Allow pages to include contact widget but hide vCard portion
+**Impact:** Widget can be used for data loading without UI display
+
+### Rule 4: Phone as Link
+```velocity
+#if($vCardPhoneNumbersAsLinks)
+  <a href="tel:${phoneNumber}">$formattedPhone</a>
+#else
+  $formattedPhone
+#end
+```
+
+**Business Rule:** "Phone numbers can be clickable tel: links based on preference"
+
+**Purpose:** Mobile UX - tap to call functionality
+**Impact:** Enables or disables click-to-call on mobile devices
+```
+
+**This extracts the BUSINESS MEANING of conditionals, not just their syntax!**
 
 ### Phase 6: Portlet Configuration Analysis
 
@@ -320,97 +453,117 @@ echo "Total preferences: $PREF_COUNT"
 - Data type (boolean, string, CSV list, etc.)
 - Impact on widget behavior
 
-### Phase 7: Java Backend Integration
+### Phase 7: Java Backend Analysis (Use LLM Intelligence!)
 
-**Find and analyze Java portlet class:**
+**Find the Java portlet class:**
 
-**Location:** `~/git/cms/src/main/java/com/dealer/portlets/{Category}Portlet.java`
+**Expected location:** `~/git/cms/src/main/java/com/dealer/portlets/{Category}Portlet.java`
 
-```bash
-# Find Java portlet class
-JAVA_CLASS=~/git/cms/src/main/java/com/dealer/portlets/${CATEGORY^}Portlet.java
+**Example:** Contact widget → `~/git/cms/src/main/java/com/dealer/portlets/ContactPortlet.java`
 
-if [ ! -f "$JAVA_CLASS" ]; then
-  # Try alternate capitalization patterns
-  JAVA_CLASS=$(find ~/git/cms/src -path "*/com/dealer/portlets/*" -name "*${CATEGORY}*Portlet.java" -o -name "*${CATEGORY^}*Portlet.java" | head -1)
-fi
+**Finding strategy:**
 
-echo "=== Analyzing Java Backend ==="
-echo "Java Class: $JAVA_CLASS"
+1. **Construct path from widget category:**
+   - Widget path: `/v9/widgets/contact/info/v1/`
+   - Category: `contact`
+   - Java class: `ContactPortlet.java`
 
-# Extract business logic from Java class
-if [ -f "$JAVA_CLASS" ]; then
-  # 1. Find all public methods
-  echo "=== Public Methods ==="
-  grep -n "public.*(" "$JAVA_CLASS" | grep -v "^//" | head -30
+2. **Use Glob tool to find the file:**
+   ```typescript
+   Glob({
+     pattern: "**/com/dealer/portlets/*${category}*Portlet.java",
+     path: "~/git/cms/src"
+   })
+   ```
 
-  # 2. Find DVS queries
-  echo "=== DVS Integration ==="
-  grep -n "dvsClient\|DVSClient\|documentStore" "$JAVA_CLASS" | head -20
+3. **Read the Java file using Read tool**
 
-  # 3. Find external service calls
-  echo "=== External Services ==="
-  grep -n "httpClient\|restTemplate\|serviceClient" "$JAVA_CLASS" | head -20
+**Analyze with LLM understanding (not grep!):**
 
-  # 4. Find data transformations
-  echo "=== Data Processing ==="
-  grep -n "transform\|format\|convert\|parse" "$JAVA_CLASS" | head -20
+**Read the entire Java portlet class and analyze:**
 
-  # 5. Find business rule methods
-  echo "=== Business Logic Methods ==="
-  grep -n "calculate\|validate\|process\|determine\|select" "$JAVA_CLASS" | head -20
+1. **Understand the doView() or processAction() methods**
+   - These are the entry points called by the CMS engine
+   - What data does it fetch?
+   - What business logic does it execute?
+   - What does it put in request attributes for Velocity template?
 
-  # 6. Extract key business logic sections
-  cat "$JAVA_CLASS" > .upgrade/java-backend-full.java
-else
-  echo "❌ Java backend not found at: $JAVA_CLASS"
-  echo "Widget may be template-only (no Java backend logic)"
-fi
+2. **Identify business logic methods**
+   - Look for methods that implement business rules
+   - Example: `getDefaultPhoneIdsForAutoDealer()`
+   - Example: `findNearestDealerByZip()`
+   - Understand WHAT they do, not just pattern match
+
+3. **Trace data flow:**
+   - What comes in (request parameters)?
+   - What gets fetched (DVS, external services)?
+   - What gets transformed (calculations, formatting)?
+   - What goes to template (request attributes)?
+
+4. **Extract business rules:**
+   - Conditional logic (if statements)
+   - Example: "If account is AUTO category, default to SALES/SERVICE/PARTS departments"
+   - Example: "If ZIP provided, find closest dealer location"
+   - Understand the WHY behind the logic
+
+5. **Document external dependencies:**
+   - DVS document queries (Account, Department documents)
+   - External service calls (proximity service, phone service)
+   - Helper service methods
+   - What data these provide to the business logic
+
+**Example Analysis (using LLM understanding):**
+
+```markdown
+## Java Backend Business Logic
+
+### ContactPortlet.java Analysis
+
+**Entry Point:** `doView()` method
+
+**Business Logic:**
+
+1. **Account Selection Logic**
+   - If `useClosestAccountToZip` preference is true:
+     - Get user's ZIP code from geoZip parameter
+     - Call proximity service to find nearest dealer location
+     - Use nearest dealer as contactAccountId
+   - Otherwise:
+     - Use accountId from preference or parameter
+   - Purpose: Show user the most relevant dealer location
+
+2. **Auto Dealer Department Defaults**
+   - Check if account has "AUTO" category
+   - If AUTO dealer and phone IDs not specified:
+     - Default idPhone1 = "SALES"
+     - Default idPhone2 = "SERVICE"
+     - Default idPhone3 = "PARTS"
+   - Purpose: Auto dealers get industry-standard department structure
+
+3. **Data Fetching**
+   - Fetch Account document from DVS using accountId
+   - Fetch Department document if departmentId specified
+   - Store in request attributes for Velocity template access
+   - Purpose: Provide contact data to frontend
+
+4. **Helper Service Integration**
+   - Uses AccountService.getAccount() → DVS query
+   - Uses AccountService.getDepartment() → DVS query
+   - Uses ProximityService.findNearestDealer() → ZIP-based search
+   - Uses AccountService.getCategories() → Account type checking
+
+**Business Rules Extracted:**
+- ZIP-based dealer selection (when enabled)
+- AUTO category gets department phone defaults
+- Account fallback hierarchy (nearest → contact → parent)
+
+**External Dependencies:**
+- DVS (document store) - Account and Department documents
+- Proximity Service - Geographic dealer search
+- Account Service - Account data and categorization
 ```
 
-**Java Backend Analysis Focus:**
-
-1. **Data Fetching**
-   ```java
-   // Example from ContactPortlet.java
-   public void doView(RenderRequest request, RenderResponse response) {
-     String accountId = request.getParameter("accountId");
-     Account account = dvsClient.getDocument("accounts", accountId);
-     Department dept = dvsClient.getDocument("departments", deptId);
-
-     request.setAttribute("contactAccount", account);
-     request.setAttribute("departmentAccount", dept);
-   }
-   ```
-   → Document: What data sources, what transformations
-
-2. **Business Rules**
-   ```java
-   // Example: Auto dealer department defaults
-   if (account.getCategories().contains("AUTO")) {
-     if (isEmpty(idPhone1)) {
-       idPhone1 = "SALES";
-     }
-     if (isEmpty(idPhone2)) {
-       idPhone2 = "SERVICE";
-     }
-   }
-   ```
-   → Document: Business logic for auto dealers
-
-3. **External Service Calls**
-   ```java
-   // Example: ZIP proximity service
-   Account nearest = proximityService.findNearestDealer(zipCode, parentAccountId);
-   ```
-   → Document: External dependencies, API contracts
-
-4. **Data Transformations**
-   ```java
-   // Example: Phone formatting
-   String formatted = phoneFormatter.formatForDisplay(phoneNumber);
-   ```
-   → Document: Formatting rules, business logic
+**This is intelligent analysis, not pattern matching!**
 
 ---
 
