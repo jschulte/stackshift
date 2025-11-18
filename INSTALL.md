@@ -6,12 +6,14 @@ Complete guide to installing, updating, and verifying StackShift for Cox Automot
 
 ## Quick Install
 
-### Option 1: From DDC-WebPlatform Repository (Recommended)
+### Option 1: From ddc-webplatform Marketplace (Recommended)
 
 ```bash
 # In any directory
-/plugin install stackshift --source https://ghe.coxautoinc.com/DDC-WebPlatform/stackshift.git
+/plugin install stackshift@ddc-webplatform
 ```
+
+**Note:** Uses the `ddc-webplatform` marketplace (DDC-WebPlatform/stackshift repo). The `cox-innovation-lab` marketplace will be available after PR merge.
 
 ### Option 2: Local Development Install
 
@@ -86,8 +88,8 @@ git pull origin main
 # Remove cached version
 rm -rf ~/.claude/plugins/cache/stackshift
 
-# Reinstall
-/plugin install stackshift --source https://ghe.coxautoinc.com/DDC-WebPlatform/stackshift.git
+# Reinstall from ddc-webplatform marketplace
+/plugin install stackshift@ddc-webplatform
 ```
 
 ---
@@ -119,7 +121,7 @@ cat ~/.claude/plugins/cache/stackshift/.claude-plugin/plugin.json | grep version
 
 # 2. If still showing old version, force reinstall
 rm -rf ~/.claude/plugins/cache/stackshift
-/plugin install stackshift --source https://ghe.coxautoinc.com/DDC-WebPlatform/stackshift.git
+/plugin install stackshift@ddc-webplatform
 
 # 3. Verify new version
 cat ~/.claude/plugins/cache/stackshift/.claude-plugin/plugin.json | grep version
@@ -165,7 +167,7 @@ Share these instructions with team members:
 
 ```bash
 # Everyone should run this
-/plugin install stackshift --source https://ghe.coxautoinc.com/DDC-WebPlatform/stackshift.git
+/plugin install stackshift@ddc-webplatform
 ```
 
 ### For Project Repos

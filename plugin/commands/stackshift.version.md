@@ -50,7 +50,7 @@ git pull origin main
 
 ```bash
 rm -rf ~/.claude/plugins/cache/stackshift
-/plugin install stackshift --source https://ghe.coxautoinc.com/DDC-WebPlatform/stackshift.git
+/plugin install stackshift@ddc-webplatform
 ```
 
 ---
