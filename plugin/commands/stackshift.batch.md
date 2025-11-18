@@ -51,6 +51,8 @@ head -10 /tmp/widgets-to-analyze.txt
 
 ### Step 2: Batch Configuration
 
+**IMPORTANT:** I'll ask ALL configuration questions upfront, ONCE. Your answers will be saved to a batch session file and automatically applied to ALL repos in all batches. You won't need to answer these questions again during this batch run!
+
 I'll ask you:
 
 **Question 1: How many to process?**
@@ -69,15 +71,80 @@ I'll ask you:
 - A) Auto-detect (osiris for ws-*, ask for others)
 - B) Force osiris for all
 - C) Force greenfield for all
+- D) Force brownfield for all
 
-**Question 4: Mode?**
-- A) Gears 1-3 only (analyze → reverse-engineer → create-specs)
-- B) Gears 1-6 (complete implementation)
-- C) Cruise control (full automation)
+**Question 4: Brownfield mode?** _(If route = brownfield)_
+- A) Standard - Just create specs for current state
+- B) Upgrade - Create specs + upgrade all dependencies
 
-### Step 3: Spawn Parallel Agents
+**Question 5: Transmission?**
+- A) Manual - Review each gear before proceeding
+- B) Cruise Control - Shift through all gears automatically
 
-For each batch of 5 widgets:
+**Question 6: Clarifications strategy?** _(If transmission = cruise control)_
+- A) Defer - Mark them, continue around them
+- B) Prompt - Stop and ask questions
+- C) Skip - Only implement fully-specified features
+
+**Question 7: Implementation scope?** _(If transmission = cruise control)_
+- A) None - Stop after specs are ready
+- B) P0 only - Critical features only
+- C) P0 + P1 - Critical + high-value features
+- D) All - Every feature
+
+**Question 8: Spec output location?** _(If route = greenfield or osiris)_
+- A) Current repository (default)
+- B) New application repository
+- C) Separate documentation repository
+- D) Custom location
+
+**Question 9: Target stack?** _(If greenfield/osiris + implementation scope != none)_
+- Examples:
+  - Next.js 15 + TypeScript + Prisma + PostgreSQL
+  - Python/FastAPI + SQLAlchemy + PostgreSQL
+  - Your choice: [specify]
+
+**Question 10: Build location?** _(If greenfield/osiris + implementation scope != none)_
+- A) Subfolder (recommended) - e.g., greenfield/, v2/
+- B) Separate directory - e.g., ~/git/my-new-app
+- C) Replace in place (destructive)
+
+**Then I'll:**
+1. ✅ Save all answers to `~/.claude/stackshift-batch-session.json`
+2. ✅ Show batch session summary
+3. ✅ Start processing batches with auto-applied configuration
+4. ✅ Clear batch session when complete (or keep if you want)
+
+### Step 3: Create Batch Session & Spawn Agents
+
+**First: Create batch session with all answers**
+
+```bash
+# After collecting all configuration answers, create batch session
+cat > ~/.claude/stackshift-batch-session.json <<EOF
+{
+  "sessionId": "batch-$(date +%s)",
+  "startedAt": "$(date -u +%Y-%m-%dT%H:%M:%SZ)",
+  "totalRepos": ${TOTAL_REPOS},
+  "batchSize": ${BATCH_SIZE},
+  "answers": {
+    "route": "${ROUTE}",
+    "transmission": "${TRANSMISSION}",
+    "spec_output_location": "${SPEC_OUTPUT}",
+    "target_stack": "${TARGET_STACK}",
+    "build_location": "${BUILD_LOCATION}",
+    "clarifications_strategy": "${CLARIFICATIONS}",
+    "implementation_scope": "${SCOPE}"
+  },
+  "processedRepos": []
+}
+EOF
+
+echo "✅ Batch session created"
+echo "📦 Configuration will be auto-applied to all ${TOTAL_REPOS} repos"
+```
+
+**Then: Spawn parallel agents (they'll auto-use batch session)**
 
 ```typescript
 // Use Task tool to spawn parallel agents
@@ -97,8 +164,12 @@ const agents = batch1.map(widget => ({
   prompt: `
     cd ~/git/osiris/${widget}
 
+    IMPORTANT: Batch session is active at ~/.claude/stackshift-batch-session.json
+    All configuration will be auto-applied. DO NOT ask configuration questions.
+
     Run StackShift Gear 1: Analyze
-    - Auto-detect route (should be 'osiris')
+    - Will auto-detect route (batch session: ${ROUTE})
+    - Will use spec output location: ${SPEC_OUTPUT}
     - Analyze widget + ws-scripts + wsm-* modules
     - Generate analysis-report.md
 
@@ -113,10 +184,10 @@ const agents = batch1.map(widget => ({
     - Generate feature specs
 
     Save all results to:
-    ~/git/stackshift-batch-results/${widget}/
+    ${SPEC_OUTPUT}/${widget}/
 
     When complete, create completion marker:
-    ~/git/stackshift-batch-results/${widget}/.complete
+    ${SPEC_OUTPUT}/${widget}/.complete
   `
 }));
 
@@ -369,10 +440,89 @@ Next: Review specs and begin migration planning"
 
 ---
 
-**Want me to implement this?** I can create:
-1. `/stackshift.batch` command for batch orchestration
-2. Background agent spawning logic
-3. Progress tracking dashboard
-4. Result aggregation scripts
+## Managing Batch Sessions
 
-This would be PERFECT for your Osiris migration planning! 🚀
+### View Current Batch Session
+
+```bash
+# Check if batch session exists and view configuration
+if [ -f ~/.claude/stackshift-batch-session.json ]; then
+  echo "📦 Active Batch Session"
+  cat ~/.claude/stackshift-batch-session.json | jq '.'
+else
+  echo "No active batch session"
+fi
+```
+
+### Clear Batch Session
+
+**After batch completes:**
+```bash
+# I'll ask you:
+# "Batch processing complete! Clear batch session? (Y/n)"
+
+# If yes:
+rm ~/.claude/stackshift-batch-session.json
+echo "✅ Batch session cleared"
+
+# If no:
+echo "✅ Batch session kept (will be used for next batch)"
+```
+
+**Manual clear:**
+```bash
+# Clear batch session anytime
+rm ~/.claude/stackshift-batch-session.json
+```
+
+**Why keep batch session?**
+- Run another batch with same configuration
+- Process more repos later
+- Continue interrupted batch
+
+**Why clear batch session?**
+- Done with current migration
+- Want different configuration for next batch
+- Starting fresh analysis
+
+---
+
+## Batch Session Benefits
+
+**Without batch session (old way):**
+```
+Batch 1: Answer 10 questions ⏱️ 2 min
+  ↓ Process 3 repos (15 min)
+
+Batch 2: Answer 10 questions AGAIN ⏱️ 2 min
+  ↓ Process 3 repos (15 min)
+
+Batch 3: Answer 10 questions AGAIN ⏱️ 2 min
+  ↓ Process 3 repos (15 min)
+
+Total: 30 questions answered, 6 min wasted
+```
+
+**With batch session (new way):**
+```
+Setup: Answer 10 questions ONCE ⏱️ 2 min
+  ↓ Batch 1: Process 3 repos (15 min)
+  ↓ Batch 2: Process 3 repos (15 min)
+  ↓ Batch 3: Process 3 repos (15 min)
+
+Total: 10 questions answered, 0 min wasted
+Saved: 4 minutes per 9 repos processed
+```
+
+**For 90 repos in batches of 3:**
+- Old way: 300 questions answered (60 min of clicking)
+- New way: 10 questions answered (2 min of clicking)
+- **Time saved: 58 minutes!** ⚡
+
+---
+
+**This batch processing system is perfect for:**
+- Osiris migration (90+ widgets)
+- Multi-repo monorepo analysis
+- Department-wide code audits
+- Portfolio modernization projects

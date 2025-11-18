@@ -80,6 +80,32 @@ This skill performs comprehensive initial analysis by:
 
 **Example:** "Add GitHub Spec Kit to this Next.js app so we can manage it with specs going forward"
 
+### Batch Session Auto-Configuration
+
+**Before showing questions, check for batch session:**
+
+```bash
+# Check if batch session exists
+if [ -f ~/.claude/stackshift-batch-session.json ]; then
+  echo "✅ Using batch session configuration"
+  cat ~/.claude/stackshift-batch-session.json
+  # Auto-apply answers from batch session
+  # Skip questionnaire entirely
+fi
+```
+
+**If batch session exists:**
+1. Load answers from `~/.claude/stackshift-batch-session.json`
+2. Show: "Using batch session configuration: route=osiris, spec_output=~/git/specs, ..."
+3. Skip all questions below
+4. Proceed directly to analysis with pre-configured answers
+5. Save answers to local `.stackshift-state.json` as usual
+
+**If no batch session:**
+- Continue with normal questionnaire below
+
+---
+
 ### Initial Questionnaire
 
 At the start of analysis, you'll answer several questions to configure your journey:
