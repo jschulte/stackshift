@@ -6,27 +6,21 @@ Complete guide to installing, updating, and verifying StackShift for Cox Automot
 
 ## Quick Install
 
-### Option 1: From ddc-webplatform Marketplace (Recommended)
+### Option 1: From DDC Web Platform Marketplace (Recommended)
 
-**First-time setup (add the marketplace):**
+**First time only - add the marketplace:**
 
 ```bash
-# Check if marketplace is already added
-/plugin marketplace list
-# If ddc-webplatform is not listed, add it:
-
-# Add ddc-webplatform marketplace (only needed once)
-/plugin marketplace add ddc-webplatform https://ghe.coxautoinc.com/DDC-WebPlatform/stackshift.git
+/plugin marketplace add ddc-webplatform https://ghe.coxautoinc.com/DDC-WebPlatform/ddc-webplatform-marketplace.git
 ```
 
-**Then install the plugin:**
+**Then install StackShift:**
 
 ```bash
-# Install from marketplace
 /plugin install stackshift@ddc-webplatform
 ```
 
-**Note:** The `ddc-webplatform` marketplace points directly to the DDC-WebPlatform/stackshift repo. The official `cox-innovation-lab` marketplace will be available after the PR is merged.
+**Note:** The `ddc-webplatform` marketplace is the official DDC Web Platform plugin marketplace. StackShift will also be available in the `cox-innovation-lab` marketplace once the PR is merged.
 
 ### Option 2: Local Development Install
 
@@ -180,10 +174,13 @@ Share these instructions with team members:
 
 ```bash
 # Step 1: Add marketplace (first time only)
-/plugin marketplace add ddc-webplatform https://ghe.coxautoinc.com/DDC-WebPlatform/stackshift.git
+/plugin marketplace add ddc-webplatform https://ghe.coxautoinc.com/DDC-WebPlatform/ddc-webplatform-marketplace.git
 
 # Step 2: Install plugin
 /plugin install stackshift@ddc-webplatform
+
+# Step 3: Verify installation
+/stackshift.version
 ```
 
 ### For Project Repos
