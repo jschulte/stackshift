@@ -1,6 +1,47 @@
 # StackShift Installation Guide
 
-## 🧪 Option 1: Install Locally for Testing (Fastest)
+## 📦 Option 1: Install from DDC Web Platform Marketplace (Recommended for Cox Automotive)
+
+### One-Time Setup: Add the Marketplace
+
+```bash
+# Add the DDC Web Platform marketplace
+/plugin marketplace add ddc-webplatform git@ghe.coxautoinc.com:DDC-WebPlatform/stackshift.git
+
+# Update the marketplace
+/plugin marketplace update ddc-webplatform
+```
+
+### Install StackShift
+
+```bash
+# Install from marketplace
+/plugin install stackshift@ddc-webplatform
+
+# Restart Claude Code
+```
+
+### Verify Installation
+
+```bash
+# Check installed plugins
+/plugin list
+
+# Should show: stackshift@ddc-webplatform (installed)
+```
+
+### Update StackShift
+
+```bash
+# Update to latest version
+/plugin update stackshift
+
+# Restart Claude Code
+```
+
+---
+
+## 🧪 Option 2: Install Locally for Testing (Fastest)
 
 ### Quick Install
 
@@ -75,7 +116,7 @@ node ~/.claude/plugins/local/stackshift/plugin/scripts/state-manager.js get-path
 
 ---
 
-## 📦 Option 2: Install from GitHub (Public)
+## 📦 Option 3: Install from GitHub (Public)
 
 Once the repository is public and configured:
 
@@ -100,7 +141,7 @@ Once the repository is public and configured:
 
 ---
 
-## 🌐 Option 3: Publish to Official Claude Code Marketplace
+## 🌐 Option 4: Publish to Official Claude Code Marketplace
 
 To make your plugin available to all Claude Code users:
 

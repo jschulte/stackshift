@@ -8,6 +8,18 @@
 
 ### Via Marketplace (Recommended)
 
+**First, add the DDC Web Platform marketplace (one-time setup):**
+
+```bash
+# Add the marketplace
+/plugin marketplace add ddc-webplatform git@ghe.coxautoinc.com:DDC-WebPlatform/stackshift.git
+
+# Update the marketplace
+/plugin marketplace update ddc-webplatform
+```
+
+**Then install StackShift:**
+
 ```bash
 # Install from marketplace
 /plugin install stackshift@ddc-webplatform
