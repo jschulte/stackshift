@@ -411,6 +411,56 @@ ls .claude/commands/speckit.*.md
 - No need to restart Claude Code
 - Commands work immediately
 
+### Critical: Commit Commands to Git
+
+**Add to .gitignore (or create if missing):**
+
+```bash
+# Allow .claude directory structure
+!.claude/
+!.claude/commands/
+
+# Track slash commands (team needs these!)
+!.claude/commands/*.md
+
+# Ignore user-specific settings
+.claude/settings.json
+.claude/mcp-settings.json
+```
+
+**Then commit:**
+
+```bash
+git add .claude/commands/
+git commit -m "chore: add StackShift and Spec Kit slash commands
+
+Adds /speckit.* and /stackshift.* slash commands for team use.
+
+Commands added:
+- /speckit.specify - Create feature specifications
+- /speckit.plan - Create technical plans
+- /speckit.tasks - Generate task lists
+- /speckit.implement - Execute implementation
+- /speckit.clarify - Resolve ambiguities
+- /speckit.analyze - Validate specs match code
+- /stackshift.modernize - Upgrade dependencies
+
+These commands enable spec-driven development workflow.
+All team members will have access after cloning.
+"
+```
+
+**Why this is critical:**
+- ✅ Teammates get commands when they clone
+- ✅ Commands are versioned with project
+- ✅ No setup needed for new team members
+- ✅ Commands always available
+
+**Without committing:**
+- ❌ Each developer needs to run StackShift or manually copy
+- ❌ Confusion: "Why don't slash commands work?"
+- ❌ Inconsistent developer experience
+
 ---
 
 ## Process Overview
