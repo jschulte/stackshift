@@ -62,6 +62,26 @@ Transform any application into a fully-specified, spec-driven project with compl
 
 **Six Routes - Auto-Detection + Manual Choice:**
 
+<!-- DIAGRAM: workflow-start -->
+### Workflow State Machine
+
+```mermaid
+stateDiagram-v2
+    [*] --> analyze
+    analyze --> reverse-engineer
+    reverse-engineer --> create-specs
+    create-specs --> gap-analysis
+    gap-analysis --> complete-spec
+    complete-spec --> implement
+    analyze --> cruise-control: auto
+    implement --> [*]
+    cruise-control --> [*]
+```
+
+*Last generated: 2025-11-18T13:30:45.122Z*
+<!-- DIAGRAM: workflow-end -->
+
+
 ### 🔀 Route A: Greenfield (Shift to New Stack)
 **Use when:** Rebuilding in a different tech stack or platform
 

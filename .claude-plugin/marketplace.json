@@ -10,8 +10,7 @@
   "plugins": [
     {
       "name": "stackshift",
-      "version": "1.2.0",
-      "source": "./plugin",
+      "version": "1.3.0",
       "description": "Reverse engineering toolkit for Cox Automotive applications. Transform any application into fully-specified, spec-driven codebase through 6-gear process. Three routes: Greenfield (tech-agnostic migration), Brownfield (existing codebase management), Osiris (widget + module extraction). Includes Brownfield Upgrade mode for dependency modernization."
     }
   ]
