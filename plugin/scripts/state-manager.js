@@ -41,7 +41,7 @@ class StateManager {
         version: '1.0.0',
         created: new Date().toISOString(),
         updated: new Date().toISOString(),
-        path: null, // 'greenfield' or 'brownfield'
+        path: null, // 'greenfield' | 'brownfield' | 'osiris' | 'osiris-module' | 'cms-v9' | 'cms-viewmodel'
         auto_mode: false, // cruise control mode
         currentStep: null,
         completedSteps: [],
@@ -50,12 +50,13 @@ class StateManager {
           projectPath: this.cwd
         },
         config: {
-          route: null, // 'greenfield' | 'brownfield'
+          route: null, // 'greenfield' | 'brownfield' | 'osiris' | 'osiris-module' | 'cms-v9' | 'cms-viewmodel'
           mode: null, // 'manual' | 'cruise'
           clarifications_strategy: 'defer', // 'defer' | 'prompt' | 'skip'
           implementation_scope: 'none', // 'none' | 'p0' | 'p0_p1' | 'all'
-          target_stack: null, // For greenfield: target tech stack
-          greenfield_location: 'greenfield/', // Where to build new app
+          target_stack: null, // For greenfield/osiris/cms-v9/cms-viewmodel: target tech stack
+          spec_output_location: null, // For greenfield/osiris/cms-v9/cms-viewmodel: where to write specs
+          build_location: 'greenfield/', // Where to build new app (greenfield/osiris/cms-v9/cms-viewmodel)
           pause_between_gears: false
         },
         stepDetails: {}
@@ -67,20 +68,29 @@ class StateManager {
   }
 
   /**
-   * Set the path (greenfield or brownfield)
+   * Set the path (route)
    */
   setPath(pathChoice) {
     const state = this.loadState() || this.init();
 
-    if (pathChoice !== 'greenfield' && pathChoice !== 'brownfield') {
-      console.error(`Invalid path: ${pathChoice}. Must be 'greenfield' or 'brownfield'`);
+    const validPaths = ['greenfield', 'brownfield', 'osiris', 'osiris-module', 'cms-v9', 'cms-viewmodel'];
+    if (!validPaths.includes(pathChoice)) {
+      console.error(`Invalid path: ${pathChoice}. Must be one of: ${validPaths.join(', ')}`);
       return false;
     }
 
     state.path = pathChoice;
-    state.metadata.pathDescription = pathChoice === 'greenfield'
-      ? 'Build new app from business logic (tech-agnostic)'
-      : 'Manage existing app with Spec Kit (tech-prescriptive)';
+
+    const descriptions = {
+      'greenfield': 'Build new app from business logic (tech-agnostic)',
+      'brownfield': 'Manage existing app with Spec Kit (tech-prescriptive)',
+      'osiris': 'Osiris Widget Service - extract widget + wsm-*/ddc-* modules + ws-scripts (tech-agnostic)',
+      'osiris-module': 'Osiris Shared Module - extract module business logic and API contracts (tech-agnostic)',
+      'cms-v9': 'CMS-web V9 Velocity Widget - extract widget + components + Java backend (tech-agnostic)',
+      'cms-viewmodel': 'CMS-web V9 Viewmodel Widget - extract Groovy viewmodel + backend (tech-agnostic)'
+    };
+
+    state.metadata.pathDescription = descriptions[pathChoice];
 
     this.saveState(state);
     return true;
@@ -368,7 +378,8 @@ if (require.main === module) {
       break;
 
     case 'set-path':
-      if (!arg || (arg !== 'greenfield' && arg !== 'brownfield')) {
+      const validRoutes = ['greenfield', 'brownfield', 'osiris', 'osiris-module', 'cms-v9', 'cms-viewmodel'];
+      if (!arg || !validRoutes.includes(arg)) {
         console.error('Usage: node state-manager.js set-path <greenfield|brownfield>');
         process.exit(1);
       }
