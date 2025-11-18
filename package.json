@@ -34,7 +34,9 @@
   "scripts": {
     "test": "echo \"No tests yet\" && exit 0",
     "build:mcp": "cd mcp-server && npm install && npm run build",
+    "build:cli": "cd cli && go build -o stackshift",
     "build:diagrams": "cd scripts && npx tsc",
+    "build": "npm run build:mcp && npm run build:cli",
     "dev:mcp": "cd mcp-server && npm run dev",
     "start:mcp": "cd mcp-server && npm start",
     "generate-diagrams": "npm run build:diagrams && node scripts/dist/generate-diagrams/index.js",
