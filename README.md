@@ -15,13 +15,19 @@ Transform any application into a fully-specified, spec-driven project with compl
 
 </div>
 
-> **Three routes, complete control:**
+> **Six routes with auto-detection:**
 >
 > **🔀 Greenfield:** Extract business logic from your legacy app, then rebuild in a modern stack using tech-agnostic specs.
 >
 > **⚙️ Brownfield:** Transform your existing codebase into a spec-driven project and manage it with GitHub Spec Kit going forward.
 >
-> **🎯 Osiris:** Extract Cox Automotive Widget Services (ws-*) including widget code, ws-scripts infrastructure, and all wsm-*/ddc-* module dependencies.
+> **🎯 Osiris Widget:** Auto-detects ws-* repos. Extracts widget + ws-scripts + all wsm-*/ddc-* modules.
+>
+> **📦 Osiris Module:** Auto-detects wsm-*/ddc-* repos. Extracts shared module business logic and API contracts.
+>
+> **🏛️ CMS V9 Widget:** Auto-detects Velocity widgets in cms-web/htdocs/v9/widgets/. Extracts widget + components + Java backend.
+>
+> **🎨 CMS Viewmodel:** Auto-detects Groovy viewmodel widgets in cms-web/htdocs/v9/viewmodel/. Simpler than Velocity.
 >
 > **⬆️ Upgrade Mode:** Brownfield route with automatic dependency upgrades to latest versions (modernize while spec'ing).
 >
@@ -54,7 +60,7 @@ Transform any application into a fully-specified, spec-driven project with compl
 5. **✨ Fifth Gear:** Complete Specification - Resolve ambiguities and clarifications
 6. **🚀 Sixth Gear:** Implement - Build features from specs!
 
-**Three Routes - Choose Your Path:**
+**Six Routes - Auto-Detection + Manual Choice:**
 
 ### 🔀 Route A: Greenfield (Shift to New Stack)
 **Use when:** Rebuilding in a different tech stack or platform
@@ -107,6 +113,78 @@ Transform any application into a fully-specified, spec-driven project with compl
 **Example:** "Extract ws-vehicle-details widget and all module dependencies for migration to Next.js"
 
 **Result:** Complete business logic captured from widget AND all shared modules, ready for migration.
+
+### 📦 Route D: Osiris Module (Cox Automotive Shared Modules)
+**Use when:** Analyzing Cox Automotive shared modules (wsm-*, ddc-*)
+
+**Auto-detected when:** Repository name starts with `wsm-` or `ddc-`
+
+**Approach:** Module business logic extraction (tech-agnostic)
+- Extract module functionality and purpose
+- Document configuration options (PropTypes/interfaces)
+- Extract business rules and calculations
+- Document data contracts (inputs/outputs)
+- Analyze edge case handling
+- Document integration patterns
+
+**What Gets Analyzed:**
+1. **Module Code** - React components, hooks, utilities
+2. **Configuration** - PropTypes or TypeScript interfaces
+3. **Business Logic** - Calculations, validations, transformations
+4. **Data Contracts** - Input/output schemas
+5. **Integration Patterns** - How widgets consume the module
+
+**Example:** "Extract wsm-pricing-display module - pricing calculations, formatting, configuration options"
+
+**Result:** Complete module business logic, ready for standalone extraction or widget migration.
+
+### 🏛️ Route E: CMS V9 Widget (Legacy Velocity Widgets)
+**Use when:** Analyzing legacy Velocity-based widgets from cms-web
+
+**Auto-detected when:** Directory contains `widget.vm` in `cms-web/htdocs/v9/widgets/` path
+
+**Approach:** Comprehensive legacy widget extraction (tech-agnostic)
+- Extract Velocity template logic
+- Trace component dependency tree (5-7 levels deep)
+- Analyze helper object usage ($helper, $npvresourcetool, etc.)
+- Extract portlet configuration (preferences)
+- Analyze Java backend business logic
+- Document conditional branches and business rules
+
+**What Gets Analyzed:**
+1. **Widget Entry** - widget.vm setup and context
+2. **Component Nesting** - Complete #parse chain (5-7 levels)
+3. **Helper Objects** - $helper, $npvresourcetool, $format, $link, $i18n, $phone, $v, $ff, $paths
+4. **Portlet XML** - All widget preferences and defaults
+5. **Java Backend** - Portlet class business logic and DVS integration
+6. **Conditional Logic** - All #if branches, feature flags, account type checks
+
+**Complexity:** Very High (1,000-2,000 LOC, 40-100 conditionals, 20-50 helper calls)
+
+**Example:** "Extract contact info widget - account selection, ZIP proximity, department phones, vCard rendering"
+
+**Delegates to:** `cms-web-widget-analyzer` agent (specialized in Velocity patterns)
+
+**Result:** Complete extraction of business logic from complex legacy widget architecture.
+
+### 🎨 Route F: CMS Viewmodel (Groovy Viewmodel Widgets)
+**Use when:** Analyzing Groovy-based viewmodel widgets from cms-web
+
+**Auto-detected when:** Directory path matches `cms-web/htdocs/v9/viewmodel/widgets/`
+
+**Approach:** Groovy viewmodel extraction (tech-agnostic)
+- Extract Groovy viewmodel classes
+- Analyze component usage
+- Document Java backend integration
+- Extract business rules
+
+**Complexity:** Generally lower than V9 Velocity widgets
+
+**Example:** "Extract viewmodel widget - Groovy business logic, component patterns"
+
+**Delegates to:** `cms-web-widget-analyzer` agent (Groovy mode)
+
+**Result:** Complete viewmodel business logic extraction.
 
 **Result**: A fully-documented, specification-driven application ready for enterprise development.
 
