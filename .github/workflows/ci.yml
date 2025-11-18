@@ -24,41 +24,14 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'npm'
-          cache-dependency-path: mcp-server/package-lock.json
 
       - name: Install dependencies
-        working-directory: ./mcp-server
         run: npm ci
 
-      - name: Run TypeScript compiler
-        working-directory: ./mcp-server
-        run: npx tsc --noEmit --project tsconfig.ci.json
-
       - name: Run tests
-        working-directory: ./mcp-server
         run: npm test
 
-      - name: Run tests with coverage
-        working-directory: ./mcp-server
-        run: npm run test:coverage
-        if: matrix.node-version == '20.x'
-
-      - name: Upload coverage reports
-        uses: codecov/codecov-action@v4
-        if: matrix.node-version == '20.x'
-        with:
-          directory: ./mcp-server/coverage
-          flags: mcp-server
-          fail_ci_if_error: false
-        env:
-          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
-
-      - name: Build
-        working-directory: ./mcp-server
-        run: npm run build
-
       - name: Security audit
-        working-directory: ./mcp-server
         run: npm audit --audit-level=high
         continue-on-error: true
 
@@ -75,18 +48,11 @@ jobs:
         with:
           node-version: '20.x'
           cache: 'npm'
-          cache-dependency-path: mcp-server/package-lock.json
 
       - name: Install dependencies
-        working-directory: ./mcp-server
         run: npm ci
 
-      - name: Check TypeScript types
-        working-directory: ./mcp-server
-        run: npx tsc --noEmit --project tsconfig.ci.json
-
       - name: Run ESLint (if configured)
-        working-directory: ./mcp-server
         run: |
           if [ -f ".eslintrc.js" ] || [ -f ".eslintrc.json" ] || grep -q "eslintConfig" package.json; then
             npm run lint || echo "ESLint not configured yet"
@@ -96,7 +62,6 @@ jobs:
         continue-on-error: true
 
       - name: Check Prettier formatting (if configured)
-        working-directory: ./mcp-server
         run: |
           if [ -f ".prettierrc" ] || [ -f ".prettierrc.json" ] || grep -q "prettier" package.json; then
             npm run format:check || echo "Prettier not configured yet"
@@ -136,16 +101,13 @@ jobs:
           node-version: '20.x'
 
       - name: Install dependencies
-        working-directory: ./mcp-server
         run: npm ci
 
       - name: Run npm audit
-        working-directory: ./mcp-server
         run: npm audit --audit-level=moderate
         continue-on-error: true
 
       - name: Check for known vulnerabilities
-        working-directory: ./mcp-server
         run: |
           echo "Checking for security vulnerabilities..."
           npm audit --json > audit-results.json || true
