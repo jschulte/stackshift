@@ -152,6 +152,21 @@ Analyze this V9 Velocity widget and extract the business logic.
 
 ---
 
-**Ready to shift? Just say:** "I want to reverse engineer this application" or "Analyze this codebase"
+## Starting Now
 
-The analyze skill will auto-activate and guide you through the entire process! 🚗💨
+**I'm now going to analyze this codebase and begin the StackShift process!**
+
+Here's what I'll do:
+
+1. ✅ Auto-detect widget/module type (Osiris, CMS-v9, generic, etc.)
+2. ✅ Detect tech stack and architecture
+3. ✅ Assess completeness
+4. ✅ Determine or ask for route
+5. ✅ Set up workflow configuration
+6. ✅ Begin Gear 1: Analyze
+
+Let me start by analyzing this codebase... 🚗💨
+
+---
+
+**Now beginning StackShift Gear 1: Analyze...**
