@@ -49,6 +49,47 @@ Use this skill when:
 
 ---
 
+## Configuration Check (FIRST STEP!)
+
+**Load state file to determine output location:**
+
+```bash
+# Check route
+ROUTE=$(cat .stackshift-state.json | jq -r '.path')
+
+# Check spec output location (Greenfield/Osiris may have custom location)
+SPEC_OUTPUT=$(cat .stackshift-state.json | jq -r '.config.spec_output_location // "."')
+
+echo "Route: $ROUTE"
+echo "Spec output: $SPEC_OUTPUT"
+
+# If custom location, ensure .specify directory exists there
+if [ "$SPEC_OUTPUT" != "." ]; then
+  echo "Creating .specify/ structure at custom location..."
+  mkdir -p "$SPEC_OUTPUT/.specify/memory/specifications"
+  mkdir -p "$SPEC_OUTPUT/.specify/memory/plans"
+  mkdir -p "$SPEC_OUTPUT/.specify/templates"
+  mkdir -p "$SPEC_OUTPUT/.specify/scripts"
+fi
+```
+
+**Where specs will be written:**
+
+| Route | Config | Specs Written To |
+|-------|--------|------------------|
+| Greenfield | spec_output_location set | `{spec_output_location}/.specify/memory/` |
+| Greenfield | Not set (default) | `./.specify/memory/` (current repo) |
+| Brownfield | Always current | `./.specify/memory/` (current repo) |
+| Osiris | spec_output_location set | `{spec_output_location}/.specify/memory/` |
+
+**Common patterns:**
+- Same repo: `spec_output_location: "."` (default)
+- New repo: `spec_output_location: "~/git/my-new-app"`
+- Docs repo: `spec_output_location: "~/git/my-app-docs"`
+- Subfolder: `spec_output_location: "./new-version"`
+
+---
+
 ## 🤖 Execution Instructions
 
 **IMPORTANT**: This skill uses automated spec generation tools from F002.
