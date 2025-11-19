@@ -190,7 +190,30 @@ B) Cruise Control - Shift through all gears automatically
    → Good for experienced users or overnight runs
 ```
 
-**Question 4: Clarifications Strategy** _(If Cruise Control selected)_
+**Question 4: Specification Thoroughness**
+```
+How thorough should specification generation be in Gear 3?
+
+A) Specs only (30 min - fast)
+   → Generate specs for all features
+   → Create plans manually with /speckit.plan as needed
+   → Good for: quick assessment, flexibility
+
+B) Specs + Plans (45-60 min - recommended)
+   → Generate specs for all features
+   → Auto-generate implementation plans for incomplete features
+   → Ready for /speckit.tasks when you implement
+   → Good for: most projects, balanced automation
+
+C) Specs + Plans + Tasks (90-120 min - complete roadmap)
+   → Generate specs for all features
+   → Auto-generate plans for incomplete features
+   → Auto-generate comprehensive task lists (300-500 lines each)
+   → Ready for immediate implementation
+   → Good for: large projects, maximum automation
+```
+
+**Question 5: Clarifications Strategy** _(If Cruise Control selected)_
 ```
 How should [NEEDS CLARIFICATION] markers be handled?
 
@@ -207,7 +230,7 @@ C) Skip - Only implement fully-specified features
    → Some features won't be implemented
 ```
 
-**Question 5: Implementation Scope** _(If Cruise Control selected)_
+**Question 6: Implementation Scope** _(If Cruise Control selected)_
 ```
 What should be implemented in Gear 6?
 
@@ -228,7 +251,7 @@ D) All - Every feature (may take hours/days)
    → Longest runtime
 ```
 
-**Question 5: Spec Output Location** _(If Greenfield or Osiris selected)_
+**Question 7: Spec Output Location** _(If Greenfield or Osiris selected)_
 ```
 Where should specifications and documentation be written?
 
