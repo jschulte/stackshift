@@ -1,5 +1,4 @@
 ---
-name: speckit.analyze
 description: Validate specifications against implementation
 ---
 

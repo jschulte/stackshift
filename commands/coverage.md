@@ -1,5 +1,4 @@
 ---
-name: stackshift.coverage
 description: Generate spec-to-code coverage map showing which code files are covered by which specifications. Creates ASCII diagrams, reverse indexes, and coverage statistics.
 ---
 

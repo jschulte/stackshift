@@ -1,5 +1,4 @@
 ---
-name: stackshift.batch
 description: Batch process multiple widgets/repos with StackShift analysis running in parallel. Analyzes 5 repos at a time, tracks progress, and aggregates results. Perfect for analyzing entire ~/git/osiris/ directory.
 ---
 

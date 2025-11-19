@@ -1,6 +1,6 @@
 {
   "name": "stackshift",
-  "version": "1.5.1",
+  "version": "1.5.2",
   "description": "Reverse engineering toolkit for Cox Automotive applications. Transform any application into fully-specified, spec-driven codebase through 6-gear process. Three routes: Greenfield (tech-agnostic migration), Brownfield (existing codebase management), Osiris (Osiris widget + module extraction). Includes Brownfield Upgrade mode for spec-driven dependency modernization.",
   "author": {
     "name": "Jonah Schulte / DDC Web Platform"

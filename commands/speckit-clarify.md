@@ -1,5 +1,4 @@
 ---
-name: speckit.clarify
 description: Resolve [NEEDS CLARIFICATION] markers interactively
 ---
 

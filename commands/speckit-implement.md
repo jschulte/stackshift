@@ -1,5 +1,4 @@
 ---
-name: speckit.implement
 description: Implement feature from specification and plan
 ---
 

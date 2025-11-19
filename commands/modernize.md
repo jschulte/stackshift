@@ -1,5 +1,4 @@
 ---
-name: stackshift.modernize
 description: Execute Brownfield Upgrade Mode - spec-driven dependency modernization workflow. Runs 4-phase process: spec-guided test coverage, baseline analysis, dependency upgrade with spec-guided fixes, and spec validation. Based on thoth-cli Osiris upgrade process adapted for spec-driven development.
 ---
 

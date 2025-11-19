@@ -1,5 +1,4 @@
 ---
-name: stackshift.version
 description: Show installed StackShift version and check for updates
 ---
 

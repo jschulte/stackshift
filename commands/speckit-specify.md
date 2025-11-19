@@ -1,5 +1,4 @@
 ---
-name: speckit.specify
 description: Create new feature specification
 ---
 

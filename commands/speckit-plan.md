@@ -1,5 +1,4 @@
 ---
-name: speckit.plan
 description: Create implementation plan for a feature
 ---
 

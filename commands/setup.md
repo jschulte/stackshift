@@ -1,5 +1,4 @@
 ---
-name: stackshift.setup
 description: Install StackShift and Spec Kit slash commands to this project for team use. Run this if you joined a project after StackShift analysis was completed.
 ---
 
