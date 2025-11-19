@@ -1,7 +1,10 @@
 #!/bin/bash
 
 # StackShift Slash Commands Installer
-# Installs StackShift slash commands to current project for team use
+# Installs StackShift slash commands to current project for Claude Code use
+#
+# ⚠️ IMPORTANT: Slash commands only work in Claude Code, not VSCode/Copilot!
+# For VSCode/Copilot users, use web/WEB_BOOTSTRAP.md instead.
 
 set -e
 
@@ -81,3 +84,6 @@ echo "  3. Start using StackShift:"
 echo "     /stackshift.start"
 echo ""
 echo "Your team will get these commands when they clone! 🎉"
+echo ""
+echo "⚠️  Note: Slash commands only work in Claude Code."
+echo "   For VSCode/Copilot, use web/WEB_BOOTSTRAP.md instead."

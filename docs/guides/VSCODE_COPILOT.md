@@ -4,70 +4,11 @@
 
 ---
 
-## Option 1: Copy Slash Commands (Simplest - Recommended!)
+## Option 1: Use WEB_BOOTSTRAP.md (Recommended!)
 
-The easiest way to use StackShift in VSCode is to copy the command files to your project.
+**⚠️ Important:** GitHub Copilot and standard VSCode do NOT support `.claude/commands/` slash commands. Slash commands only work in Claude Code.
 
-### Quick Install
-
-```bash
-# Navigate to your project
-cd /path/to/your/project
-
-# Clone StackShift (if you haven't already)
-git clone git@ghe.coxautoinc.com:DDC-WebPlatform/stackshift.git ~/stackshift
-
-# Run the installer script
-~/stackshift/scripts/install-commands.sh
-
-# Commit the commands to your repo
-git add .claude/commands/
-git commit -m "Add StackShift slash commands"
-```
-
-### Manual Install (Alternative)
-
-```bash
-# Create commands directory
-mkdir -p .claude/commands
-
-# Copy all slash commands
-cp ~/stackshift/commands/*.md .claude/commands/
-
-# Commit
-git add .claude/commands/
-git commit -m "Add StackShift slash commands"
-```
-
-### Usage in VSCode
-
-If you have Claude Code extension for VSCode:
-
-```bash
-# Start StackShift
-/stackshift.start
-
-# Batch processing
-/stackshift.batch
-
-# Create feature spec
-/speckit.specify
-
-# Implement feature
-/speckit.implement
-```
-
-**Benefits:**
-- ✅ Commands are versioned with your project
-- ✅ Team members get them when they clone
-- ✅ No plugin installation needed
-- ✅ Works in Claude Code, Copilot, any LLM with slash command support
-
----
-
-## Option 2: Use WEB_BOOTSTRAP.md (Copilot Chat)
-
-For GitHub Copilot users without Claude Code:
+For VSCode/Copilot users, use the web bootstrap prompt instead.
 
 ### Installation
 
@@ -78,33 +19,31 @@ git clone git@ghe.coxautoinc.com:DDC-WebPlatform/stackshift.git ~/stackshift
 
 ### Usage
 
-1. **Open Copilot Chat in VSCode**
-2. **Copy and paste the bootstrap prompt:**
-
-```bash
-cat ~/stackshift/web/WEB_BOOTSTRAP.md
-```
-
+1. **Open Copilot Chat in VSCode** (Cmd+I or Ctrl+I)
+2. **Copy the bootstrap prompt:**
+   ```bash
+   cat ~/stackshift/web/WEB_BOOTSTRAP.md
+   ```
 3. **Paste into Copilot Chat**
-4. **Answer configuration questions**
-5. **StackShift runs through all gears!**
+4. **Copilot becomes StackShift!**
 
-**What it does:**
-- Checks for existing work and resumes appropriately
-- Asks configuration questions upfront
-- Guides through all 6 gears
-- Creates all documentation and specs
-- Implements features (if requested)
+Copilot will then:
+- Check for existing work
+- Ask configuration questions
+- Guide you through all 6 gears
+- Create documentation and specs
+- Implement features (if requested)
 
 **Benefits:**
 - ✅ No installation required
-- ✅ Works in any LLM chat (Copilot, ChatGPT, Claude.ai)
+- ✅ Works immediately
+- ✅ Functionally equivalent to Claude Code plugin
 - ✅ Self-contained prompt
-- ✅ Functionally equivalent to plugin
+- ✅ Works with any LLM (Copilot, ChatGPT, Claude.ai, Gemini)
 
 ---
 
-## Option 3: MCP Server (Advanced)
+## Option 2: MCP Server (Advanced)
 
 **Note:** This requires the MCP tools integration from the separate `mcp-tools` repository.
 
@@ -158,29 +97,32 @@ Add to your VSCode `settings.json`:
 
 ## Comparison of Options
 
-| Feature | Slash Commands | WEB_BOOTSTRAP | MCP Server |
-|---------|---------------|---------------|------------|
-| **Setup Time** | 2 minutes | 1 minute | 10 minutes |
-| **Installation** | Copy files once | None (paste prompt) | Configure VSCode |
-| **Updates** | Manual copy | Manual paste | Git pull + rebuild |
-| **Team Sharing** | ✅ Via git | ❌ Manual | ⚠️ Requires setup |
-| **Works in Copilot** | ⚠️ Limited | ✅ Yes | ✅ Yes |
-| **Works in Claude Code** | ✅ Yes | ✅ Yes | ✅ Yes |
-| **Batch Processing** | ✅ Yes | ✅ Yes | ✅ Yes |
-| **Auto-updates** | ❌ No | ❌ No | ✅ Via git pull |
+| Feature | WEB_BOOTSTRAP | MCP Server |
+|---------|---------------|------------|
+| **Setup Time** | 1 minute | 10 minutes |
+| **Installation** | None (paste prompt) | Configure VSCode + MCP |
+| **Updates** | Manual paste | Git pull + rebuild |
+| **Team Sharing** | ❌ Manual | ⚠️ Requires setup |
+| **Works in Copilot** | ✅ Yes | ✅ Yes (if MCP supported) |
+| **Works in Claude Code** | ✅ Yes | ✅ Yes |
+| **Slash Commands** | ❌ No (natural language only) | ❌ No (tool calls only) |
+| **Batch Processing** | ✅ Yes | ✅ Yes |
+| **Auto-updates** | ❌ No | ✅ Via git pull |
 
 ---
 
 ## Recommended Approach
 
-### For Individual Use
+### For VSCode/Copilot Users
 **Use WEB_BOOTSTRAP.md** - Just paste it into Copilot Chat and go!
 
-### For Team Use
-**Copy slash commands** - Commit to repo so everyone has them
+**Why:** Slash commands don't work in VSCode/Copilot. Only Claude Code supports the `.claude/commands/*.md` pattern.
+
+### For Claude Code Users
+**Install the plugin** - Full slash command support
 
 ### For Power Users
-**MCP Server** - If you want auto-updates and API-style invocation
+**MCP Server** - If you want programmatic tool invocation
 
 ---
 
