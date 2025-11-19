@@ -1,7 +1,10 @@
-# Legacy Prompts - For Historical Reference Only
+# Legacy Prompts - DEPRECATED
 
-**Status**: SUPERSEDED by `plugin/skills/` interactive skills
+**⚠️ These prompts are outdated and no longer maintained.**
+
+**Status**: SUPERSEDED by slash commands and WEB_BOOTSTRAP.md
 **Date Archived**: 2024-11-17
+**Last Updated**: 2025-11-18
 
 ---
 
@@ -30,28 +33,69 @@ The skills provide:
 
 ---
 
-## Migration Guide
+## Use These Instead
 
-| Old Prompt | New Location | Usage |
-|-----------|-------------|-------|
-| `01-initial-analysis.md` | `plugin/skills/analyze/SKILL.md` | `/stackshift:analyze` |
-| `02-reverse-engineer.md` | `plugin/skills/reverse-engineer/SKILL.md` | `/stackshift:reverse-engineer` |
-| `03-create-specifications.md` | `plugin/skills/create-specs/SKILL.md` | `/stackshift:create-specs` |
-| `04-gap-analysis.md` | `plugin/skills/gap-analysis/SKILL.md` | `/stackshift:gap-analysis` |
-| `05-complete-specification.md` | `plugin/skills/complete-spec/SKILL.md` | `/stackshift:complete-spec` |
-| `06-implement-from-spec.md` | `plugin/skills/implement/SKILL.md` | `/stackshift:implement` |
-| `greenfield/02-reverse-engineer-business-logic.md` | Embedded in skills | Auto-detected |
-| `brownfield/02-reverse-engineer-full-stack.md` | Embedded in skills | Auto-detected |
+### For Claude Code Users
+**Slash commands** (recommended):
+```bash
+/stackshift.start     # Start complete process
+/stackshift.batch     # Batch process multiple repos
+/speckit.specify      # Create feature spec
+/speckit.implement    # Implement feature
+```
+
+See: [Quick Start Guide](../../QUICKSTART.md)
+
+### For VSCode/GitHub Copilot Users
+**WEB_BOOTSTRAP.md** - Copy and paste into Copilot Chat:
+```bash
+cat ~/stackshift/web/WEB_BOOTSTRAP.md
+```
+
+See: [VSCode/Copilot Guide](../../docs/guides/VSCODE_COPILOT.md)
+
+### For Other LLM Users (ChatGPT, Claude.ai, Gemini)
+**WEB_BOOTSTRAP.md** - Works with any LLM:
+```bash
+cat ~/stackshift/web/WEB_BOOTSTRAP.md
+```
 
 ---
 
-## If You Need Manual Prompts
+## Why These Are Deprecated
 
-For web-based usage (claude.ai), use:
-- `web/WEB_BOOTSTRAP.md` - Bootstrap prompt for browser use
-- `web/convert-reverse-engineering-to-speckit.md` - Spec conversion
+The legacy prompts (2024-11-17):
+- ❌ Only 2 paths (missing 4 new routes: Osiris, Osiris-module, CMS-v9, CMS-viewmodel)
+- ❌ No batch processing
+- ❌ No directory-scoped sessions
+- ❌ No cross-batch answer persistence
+- ❌ No auto-resume from interruptions
+- ❌ No Brownfield upgrade mode
+- ❌ Manual state management
 
-These are maintained and current.
+Current implementation (2025-11-18):
+- ✅ 6 routes with auto-detection
+- ✅ Batch processing (save 58 min on 90 repos)
+- ✅ Directory-scoped sessions
+- ✅ Cross-batch answer persistence
+- ✅ Auto-resume capability
+- ✅ Brownfield upgrade mode
+- ✅ Automatic state management
+
+---
+
+## Migration Table
+
+| Legacy Prompt | Current Equivalent | How to Use |
+|---------------|-------------------|------------|
+| `01-initial-analysis.md` | `skills/analyze/SKILL.md` | `/stackshift.start` or paste WEB_BOOTSTRAP.md |
+| `02-reverse-engineer.md` | `skills/reverse-engineer/SKILL.md` | Auto-runs in Gear 2 |
+| `03-create-specifications.md` | `skills/create-specs/SKILL.md` | Auto-runs in Gear 3 |
+| `04-gap-analysis.md` | `skills/gap-analysis/SKILL.md` | Auto-runs in Gear 4 |
+| `05-complete-specification.md` | `skills/complete-spec/SKILL.md` | Auto-runs in Gear 5 |
+| `06-implement-from-spec.md` | `skills/implement/SKILL.md` | Auto-runs in Gear 6 |
+| `greenfield/` | Embedded in skills | Auto-detected by route |
+| `brownfield/` | Embedded in skills | Auto-detected by route |
 
 ---
 

@@ -1,6 +1,6 @@
 # Reconcile & Complete Specifications - StackShift Recovery Prompt
 
-**Purpose**: Fix repositories that went through an earlier version of StackShift and have incomplete spec coverage.
+**Purpose**: Fix repositories that went through an earlier version of StackShift and have incomplete spec coverage. Look through all of the folders within this folder to find specs/plans that need tasks added, or to finish a partially complete tasking plan from a prior run.
 
 **Use Case**: You have:
 - ✅ `docs/reverse-engineering/` with comprehensive documentation (8-10 files)
@@ -9,6 +9,10 @@
 - ❌ Can't use `/speckit.*` commands effectively because specs don't cover the full app
 
 **Goal**: Get COMPLETE spec coverage for the ENTIRE application (existing + missing features), properly formatted for GitHub Spec Kit.
+
+**Note**: There are already tasks files in these locations, but they may need to be revised / updated if they are incomplete. Verify completeness.
+
+
 
 ---
 
@@ -25,6 +29,10 @@ Earlier versions of StackShift created specs ONLY for gaps/missing features, not
 - Implementation phase only builds gaps, ignores existing code
 
 **Your mission**: Create specs for EVERYTHING, not just gaps.
+
+The goal is to take the business logic captured in the reverse engineering documents, and use that to build a Github spec kit compatible specification that lays out 
+everything that the application does, end to end, and leaves room for improvements going forward. This approach should put the entire app under "spec control" and we can 
+then continue using Github spec kit moving forward naturally, as if it had always been used in the app.
 
 ---
 
@@ -728,31 +736,3 @@ After reconciliation, you'll have:
 - ✅ Future changes start with spec updates
 - ✅ Existing code evolution is spec-guided
 - ✅ Not just "build missing features" but "manage entire app through specs"
-
----
-
-## Ready to Reconcile!
-
-I'm ready to help reconcile your repository specifications.
-
-**What I need from you**:
-
-1. **Repository path**: Where is the repo with `docs/reverse-engineering/`?
-2. **Confirm access**: Do I have permission to read docs and create specs?
-3. **Existing specs**: Should I merge, archive, or replace existing specs?
-
-**What I'll deliver**:
-
-1. Complete feature inventory (ALL features, not just gaps)
-2. Comprehensive specs for EVERY feature (✅/⚠️/❌)
-3. Implementation plans for incomplete features
-4. Reconciliation report showing before/after
-5. 100% spec coverage enabling true spec-driven development
-
-**Reconciliation Time**: 30-90 minutes depending on app size
-
----
-
-**Let's get your repository into proper spec-driven shape!**
-
-Tell me the repository path and I'll begin the reconciliation process.
