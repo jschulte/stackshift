@@ -61,10 +61,16 @@ jobs:
             ```
 
             ### What's New in v${{ steps.get_version.outputs.VERSION }}
-            - Cross-batch answer persistence
-            - Directory-scoped batch sessions
-            - Multiple simultaneous batch runs supported
-            - Automatic parent directory discovery
+
+            **Gear 3 Thoroughness Options** - Automated plan and task generation:
+            - New configuration option in Gear 1: Choose spec thoroughness upfront
+            - Level 1: Specs only (30 min - original behavior)
+            - Level 2: Specs + automated plans (45-60 min - recommended)
+            - Level 3: Specs + plans + comprehensive tasks (90-120 min - complete roadmap)
+            - Parallel generation: 5 plans or 3 tasks at a time
+            - Saves 2-5 hours of manual planning work per project
+            - Tasks are 300-500 lines with detailed acceptance criteria
+            - Backward compatible: defaults to Level 1 if not configured
 
             ### Usage
             ```bash
