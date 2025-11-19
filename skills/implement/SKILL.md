@@ -542,7 +542,7 @@ Full report: docs/spec-coverage-map.md
 
 ---
 
-**Congratulations!** You've completed the 6-step Reverse Engineering to Spec-Driven Development process. Your codebase is now enterprise-grade, fully specified, and ready for sustainable development using GitHub Spec Kit. 🎉
+**Congratulations!** You've completed the 6-step Reverse Engineering to Spec-Driven Development process. Your codebase is now enterprise-grade, fully specified, and ready for sustainable development using GitHub Spec Kit or continue using StackShift to help develop new functionality. 🎉
 
 ---
 
