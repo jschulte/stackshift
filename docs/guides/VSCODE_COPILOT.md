@@ -4,26 +4,37 @@
 
 ---
 
-## Option 1: Copy Slash Commands (Simplest)
+## Option 1: Copy Slash Commands (Simplest - Recommended!)
 
-The easiest way to use StackShift in VSCode is to copy the command files to your project:
+The easiest way to use StackShift in VSCode is to copy the command files to your project.
 
-### Installation
+### Quick Install
 
 ```bash
 # Navigate to your project
 cd /path/to/your/project
 
-# Create commands directory
-mkdir -p .claude/commands
-
 # Clone StackShift (if you haven't already)
 git clone git@ghe.coxautoinc.com:DDC-WebPlatform/stackshift.git ~/stackshift
 
-# Copy all slash commands to your project
-cp ~/stackshift/commands/*.md .claude/commands/
+# Run the installer script
+~/stackshift/scripts/install-commands.sh
 
 # Commit the commands to your repo
+git add .claude/commands/
+git commit -m "Add StackShift slash commands"
+```
+
+### Manual Install (Alternative)
+
+```bash
+# Create commands directory
+mkdir -p .claude/commands
+
+# Copy all slash commands
+cp ~/stackshift/commands/*.md .claude/commands/
+
+# Commit
 git add .claude/commands/
 git commit -m "Add StackShift slash commands"
 ```

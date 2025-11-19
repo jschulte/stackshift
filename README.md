@@ -42,6 +42,7 @@ Transform any application into a fully-specified, spec-driven project with compl
 - **[Quick Start](QUICKSTART.md)** - Get started in 5 minutes!
 - **[Installation Guide](docs/guides/INSTALLATION.md)** - Detailed installation for all platforms
 - **[Plugin Guide](docs/guides/PLUGIN_GUIDE.md)** - Claude Code plugin usage
+- **[VSCode/Copilot Guide](docs/guides/VSCODE_COPILOT.md)** - Using StackShift with VSCode and GitHub Copilot
 - **[Brownfield Upgrade Mode](docs/guides/BROWNFIELD_UPGRADE_MODE.md)** - Spec-driven dependency modernization
 - **[Web Guide](web/README.md)** - Using in Claude Code Web (browser)
 - **[Batch Processing](scripts/BATCH_PROCESSING_GUIDE.md)** - Process multiple projects efficiently
