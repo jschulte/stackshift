@@ -493,6 +493,55 @@ After completing the reverse engineering process:
 
 ---
 
+## Final Step: Generate Spec Coverage Map
+
+Now let's create a visual coverage map showing the relationship between your specifications and code:
+
+```bash
+# Generate coverage map
+```
+
+I'll analyze all specs in `.specify/memory/specifications/` or `specs/` and create:
+
+1. **ASCII box diagrams** - Visual map of each spec's files
+2. **Reverse index** - Which spec(s) cover each file
+3. **Coverage statistics** - Percentages by category
+4. **Heat map** - Visual coverage representation
+5. **Gap analysis** - Files not covered by specs
+6. **Shared files** - High-risk files used by multiple specs
+
+**Output:** `docs/spec-coverage-map.md`
+
+This provides crucial visibility into spec-code alignment and helps identify any gaps!
+
+---
+
+## Spec Coverage Health Report
+
+After generating the coverage map, I'll show you a summary:
+
+```
+📊 Spec Coverage Health Report
+
+Overall Coverage: 91% (99/109 files)
+
+By Category:
+  Backend:       93% [████████████████░░]
+  Frontend:      92% [████████████████░░]
+  Infrastructure: 83% [███████████████░░░]
+  Database:      100% [████████████████████]
+  Scripts:       67% [█████████░░░░░░░░░]
+
+Status:
+  ✅ 12 specs covering 99 files
+  ⚠️  10 gap files identified (need review)
+  🔴 2 high-risk shared files (used by 4+ specs)
+
+Full report: docs/spec-coverage-map.md
+```
+
+---
+
 **Congratulations!** You've completed the 6-step Reverse Engineering to Spec-Driven Development process. Your codebase is now enterprise-grade, fully specified, and ready for sustainable development using GitHub Spec Kit. 🎉
 
 ---
