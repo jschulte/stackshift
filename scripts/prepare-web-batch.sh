@@ -41,8 +41,8 @@ git checkout -b "$BRANCH_NAME"
 
 # Create .specify/ structure
 echo "2. Creating .specify/ structure..."
-mkdir -p .specify/memory/specifications
-mkdir -p .specify/memory/plans
+mkdir -p .specify/specs
+mkdir -p .specify/memory
 mkdir -p .specify/templates
 mkdir -p .specify/scripts
 
@@ -76,9 +76,9 @@ Built from specifications using: ${TARGET_STACK}
 **Status:** Being built by StackShift Gear 6
 
 **Implementation approach:**
-- Read specs from ../.specify/memory/specifications/
+- Read specs from ../.specify/specs/###-feature-name/spec.md
 - Implement each feature in chosen tech stack
-- Follow implementation plans from ../.specify/memory/plans/
+- Follow implementation plans from ../.specify/specs/###-feature-name/plan.md
 - Test against acceptance criteria from specs
 
 ## Structure
