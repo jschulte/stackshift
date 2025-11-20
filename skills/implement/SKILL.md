@@ -493,6 +493,75 @@ After completing the reverse engineering process:
 
 ---
 
+## Gear 6.5: Validate & Review
+
+Before finalizing, let's ensure everything meets quality standards through systematic validation.
+
+### Step 1: Run Validation
+
+```bash
+# Validate implementation against specs
+/stackshift.validate --fix
+```
+
+This will:
+1. ✅ Run full test suite
+2. ✅ Validate TypeScript compilation
+3. ✅ Check spec compliance
+4. ✅ Categorize any issues
+5. ✅ Auto-fix issues (with --fix flag)
+6. ✅ Rollback if fixes fail
+
+**Expected result:**
+```
+✅ VALIDATION PASSED
+
+   All tests passing: ✅
+   TypeScript compiling: ✅
+   Spec compliance: ✅
+   Code quality: ✅
+
+🚀 Implementation is production-ready!
+```
+
+If validation finds issues, they'll be fixed automatically. If critical issues are found that can't be auto-fixed, I'll report them for manual resolution.
+
+### Step 2: Code Review
+
+```bash
+# Perform comprehensive code review
+/stackshift.review
+```
+
+This reviews across 5 dimensions:
+1. 🔍 **Correctness** - Works as intended, meets requirements
+2. 📏 **Standards** - Follows conventions, well documented
+3. 🔒 **Security** - No vulnerabilities, proper validation
+4. ⚡ **Performance** - Efficient, scalable implementation
+5. 🧪 **Testing** - Adequate coverage, edge cases handled
+
+**Expected result:**
+```
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📋 Review Report
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+### ✅ APPROVED
+
+All quality checks passed
+Ready for deployment
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+```
+
+If issues are found, I'll provide specific feedback with line numbers and recommendations.
+
+### Step 3: Generate Spec Coverage Map
+
+After validation passes, let's create the coverage map...
+
+---
+
 ## Final Step: Generate Spec Coverage Map
 
 Now let's create a visual coverage map showing the relationship between your specifications and code:
