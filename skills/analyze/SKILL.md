@@ -133,22 +133,67 @@ fi
 
 ---
 
-### Initial Questionnaire
+### Step 1: Auto-Detect Application Type
 
-At the start of analysis, you'll answer several questions to configure your journey:
+**Before asking questions, detect what kind of application this is:**
+
+```bash
+# Check repository name and structure
+REPO_NAME=$(basename $(pwd))
+
+# Detection patterns (in priority order)
+if [[ "$REPO_NAME" =~ ^ws- ]]; then
+  DETECTION="osiris-widget"
+  echo "🎯 Detected: Osiris Widget (ws-* repository)"
+elif [[ "$REPO_NAME" =~ ^wsm- || "$REPO_NAME" =~ ^ddc- ]]; then
+  DETECTION="osiris-module"
+  echo "📦 Detected: Osiris Module (wsm-*/ddc-* library)"
+elif [ -d "cms-web/htdocs/v9/widgets" ]; then
+  DETECTION="cms-v9-widget"
+  echo "🏛️ Detected: CMS V9 Widget (Velocity-based)"
+elif [ -d "cms-web/htdocs/v9/viewmodel" ]; then
+  DETECTION="cms-viewmodel-widget"
+  echo "🎨 Detected: CMS Viewmodel Widget (Groovy-based)"
+else
+  DETECTION="generic"
+  echo "🔍 Detected: Generic Application"
+fi
+
+echo "Detection type: $DETECTION"
+```
+
+**Detection determines what to analyze, but NOT how to spec it!**
+
+---
+
+### Step 2: Initial Questionnaire
+
+Now that we know what kind of application this is, let's configure the extraction approach:
 
 **Question 1: Choose Your Route**
 ```
 Which path best aligns with your goals?
 
-A) Greenfield: Shift to new tech stack
+A) Greenfield: Extract for migration to new tech stack
    → Extract business logic only (tech-agnostic)
    → Can implement in any stack
+   → Suitable for platform migrations
+   → Example: Extract Osiris widget logic → rebuild in Next.js
 
-B) Brownfield: Take the wheel on existing code
-   → Extract business logic + technical details (prescriptive)
+B) Brownfield: Extract for maintaining existing codebase
+   → Extract business logic + technical details (tech-prescriptive)
    → Manage existing codebase with specs
+   → Suitable for in-place improvements
+   → Example: Add specs to Osiris widget for ongoing maintenance
 ```
+
+**This applies to ALL detection types:**
+- Osiris Widget + Greenfield = Business logic for migration
+- Osiris Widget + Brownfield = Full Osiris implementation for maintenance
+- CMS V9 + Greenfield = Business logic for migration
+- CMS V9 + Brownfield = Full Velocity/Java details for maintenance
+- Generic + Greenfield = Business logic for rebuild
+- Generic + Brownfield = Full implementation for management
 
 **Question 2: Brownfield Mode** _(If Brownfield selected)_
 ```
@@ -336,7 +381,8 @@ All answers are stored in `.stackshift-state.json` and guide the entire workflow
 **State file example:**
 ```json
 {
-  "path": "greenfield",
+  "detection_type": "osiris-widget",  // What kind of app: osiris-widget, cms-v9-widget, generic, etc.
+  "route": "greenfield",               // How to spec it: greenfield or brownfield
   "config": {
     "spec_output_location": "~/git/my-new-app",  // Where to write specs/docs
     "build_location": "~/git/my-new-app",         // Where to build new code (Gear 6)
@@ -346,6 +392,16 @@ All answers are stored in `.stackshift-state.json` and guide the entire workflow
   }
 }
 ```
+
+**Key fields:**
+- `detection_type` - What we're analyzing (osiris-widget, cms-v9-widget, osiris-module, generic)
+- `route` - How to spec it (greenfield = tech-agnostic, brownfield = tech-prescriptive)
+
+**Examples:**
+- Osiris Widget + Greenfield = Extract business logic for Next.js migration
+- Osiris Widget + Brownfield = Extract full React/Redux details for maintenance
+- CMS V9 + Greenfield = Extract business logic (no Velocity details)
+- CMS V9 + Brownfield = Extract full Velocity/Java implementation
 
 **How it works:**
 

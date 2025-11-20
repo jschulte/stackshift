@@ -13,21 +13,37 @@ description: Route-aware gap analysis. For Brownfield - uses /speckit.analyze to
 
 ---
 
-## Route Detection (FIRST STEP!)
+## Configuration Check (FIRST STEP!)
 
-**CRITICAL:** Check which route was selected:
+**CRITICAL:** Check detection type and route:
 
 ```bash
 # Load state file
-cat .stackshift-state.json | jq -r '.path'
+DETECTION_TYPE=$(cat .stackshift-state.json | jq -r '.detection_type // .path')
+ROUTE=$(cat .stackshift-state.json | jq -r '.route // .path')
+
+echo "Detection: $DETECTION_TYPE (what kind of app)"
+echo "Route: $ROUTE (how to spec it)"
 ```
 
 **Routes:**
 - **greenfield** → Building NEW app (tech-agnostic specs)
 - **brownfield** → Managing EXISTING app (tech-prescriptive specs)
-- **osiris** → Extracting widget + modules (tech-agnostic specs)
+
+**Detection Types:**
+- **generic** → Standard application
+- **osiris-widget** → Cox Osiris widget (ws-*)
+- **osiris-module** → Cox shared module (wsm-*, ddc-*)
+- **cms-v9-widget** → CMS Velocity widget
+- **cms-viewmodel-widget** → CMS Groovy widget
 
 **Based on route, this skill behaves differently!**
+
+**Examples:**
+- Osiris Widget + Greenfield → Analyze spec completeness for Next.js migration
+- Osiris Widget + Brownfield → Compare specs vs current Osiris implementation
+- CMS V9 + Greenfield → Validate specs for rebuild (no Velocity analysis)
+- CMS V9 + Brownfield → Find gaps in current Velocity implementation
 
 ---
 

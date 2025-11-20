@@ -69,14 +69,18 @@ This skill performs deep codebase analysis and generates **9 comprehensive docum
 
 ## Configuration Check (FIRST STEP!)
 
-**Load state file to check:**
+**Load state file to check detection type and route:**
 
 ```bash
-# Check route
-ROUTE=$(cat .stackshift-state.json | jq -r '.path')
+# Check what kind of application we're analyzing
+DETECTION_TYPE=$(cat .stackshift-state.json | jq -r '.detection_type // .path')
+echo "Detection: $DETECTION_TYPE"
+
+# Check extraction approach
+ROUTE=$(cat .stackshift-state.json | jq -r '.route // .path')
 echo "Route: $ROUTE"
 
-# Check spec output location (Greenfield/Osiris only)
+# Check spec output location (Greenfield only)
 SPEC_OUTPUT=$(cat .stackshift-state.json | jq -r '.config.spec_output_location // "."')
 echo "Writing specs to: $SPEC_OUTPUT"
 
@@ -87,13 +91,14 @@ if [ "$SPEC_OUTPUT" != "." ]; then
 fi
 ```
 
-**State file structure:**
+**State file structure (new):**
 ```json
 {
-  "path": "greenfield",
+  "detection_type": "osiris-widget",  // What kind of app
+  "route": "greenfield",               // How to spec it
   "config": {
-    "spec_output_location": "~/git/my-new-app",  // Where to write specs
-    "build_location": "~/git/my-new-app",         // Where to build code (Gear 6)
+    "spec_output_location": "~/git/my-new-app",
+    "build_location": "~/git/my-new-app",
     "target_stack": "Next.js 15..."
   }
 }
@@ -106,12 +111,18 @@ fi
 | **Greenfield** | Custom location | `{spec_output_location}/docs/`, `{spec_output_location}/.specify/` |
 | **Greenfield** | Not set (default) | `./docs/reverse-engineering/`, `./.specify/` (current repo) |
 | **Brownfield** | Always current repo | `./docs/reverse-engineering/`, `./.specify/` |
-| **Osiris** | Custom location | `{spec_output_location}/docs/`, `{spec_output_location}/.specify/` |
 
-**Based on route:**
-- **Greenfield** → Use `prompts/greenfield/02-reverse-engineer-business-logic.md`
-- **Brownfield** → Use `prompts/brownfield/02-reverse-engineer-full-stack.md`
-- **Osiris** → Use custom Osiris extraction workflow
+**Extraction approach based on detection + route:**
+
+| Detection Type | + Greenfield | + Brownfield |
+|----------------|--------------|--------------|
+| **Osiris Widget** | Business logic only (tech-agnostic) | Full React/Redux/ws-scripts (tech-prescriptive) |
+| **CMS V9 Widget** | Business logic only (no Velocity) | Full Velocity/Java details |
+| **Generic App** | Business logic only | Full implementation |
+
+**How it works:**
+- `detection_type` determines WHAT patterns to look for (wsm-* modules, Velocity components, etc.)
+- `route` determines HOW to document them (tech-agnostic vs tech-prescriptive)
 
 ---
 

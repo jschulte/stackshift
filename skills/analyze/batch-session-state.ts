@@ -9,7 +9,8 @@ import * as fs from 'fs';
 import * as path from 'path';
 
 export interface BatchSessionAnswers {
-  route?: 'greenfield' | 'brownfield' | 'osiris' | 'osiris-module' | 'cms-v9' | 'cms-viewmodel';
+  detection_type?: 'generic' | 'osiris-widget' | 'osiris-module' | 'cms-v9-widget' | 'cms-viewmodel-widget';
+  route?: 'greenfield' | 'brownfield';
   brownfield_mode?: 'standard' | 'upgrade';
   transmission?: 'manual' | 'cruise-control';
   clarifications_strategy?: 'defer' | 'prompt' | 'skip';

@@ -15,21 +15,25 @@ Transform any application into a fully-specified, spec-driven project with compl
 
 </div>
 
-> **Six routes with auto-detection:**
+> **Auto-detection + Two Routes:**
 >
-> **🔀 Greenfield:** Extract business logic from your legacy app, then rebuild in a modern stack using tech-agnostic specs.
+> **Step 1: Auto-Detection** - StackShift automatically detects your application type:
+> - 🎯 **Osiris Widget** (ws-* repos) - Cox widget with ws-scripts + wsm-*/ddc-* modules
+> - 📦 **Osiris Module** (wsm-*/ddc-* repos) - Shared library
+> - 🏛️ **CMS V9 Widget** (Velocity) - Legacy CMS widget with Java backend
+> - 🎨 **CMS Viewmodel** (Groovy) - Viewmodel-based CMS widget
+> - 🔍 **Generic** - Any other application
 >
-> **⚙️ Brownfield:** Transform your existing codebase into a spec-driven project and manage it with GitHub Spec Kit going forward.
+> **Step 2: Choose Your Route** - How to extract specifications:
+> - **🔀 Greenfield:** Extract business logic only (tech-agnostic) → Rebuild in modern stack
+> - **⚙️ Brownfield:** Extract business logic + technical details (tech-prescriptive) → Manage existing codebase
+> - **⬆️ Upgrade Mode:** Brownfield + automatic dependency upgrades to latest versions
 >
-> **🎯 Osiris Widget:** Auto-detects ws-* repos. Extracts widget + ws-scripts + all wsm-*/ddc-* modules.
->
-> **📦 Osiris Module:** Auto-detects wsm-*/ddc-* repos. Extracts shared module business logic and API contracts.
->
-> **🏛️ CMS V9 Widget:** Auto-detects Velocity widgets in cms-web/htdocs/v9/widgets/. Extracts widget + components + Java backend.
->
-> **🎨 CMS Viewmodel:** Auto-detects Groovy viewmodel widgets in cms-web/htdocs/v9/viewmodel/. Simpler than Velocity.
->
-> **⬆️ Upgrade Mode:** Brownfield route with automatic dependency upgrades to latest versions (modernize while spec'ing).
+> **All detection types work with BOTH routes:**
+> - Osiris Widget + Greenfield = Business logic for Next.js migration
+> - Osiris Widget + Brownfield = Full React/Redux/ws-scripts for maintenance
+> - CMS V9 + Greenfield = Business logic (no Velocity) for rebuild
+> - CMS V9 + Brownfield = Full Velocity/Java details for in-place improvements
 >
 > Start in reverse (engineering), shift through 6 gears, and cruise into spec-driven development!
 >
@@ -83,8 +87,9 @@ stateDiagram-v2
 <!-- DIAGRAM: workflow-end -->
 
 
-### 🔀 Route A: Greenfield (Shift to New Stack)
-**Use when:** Rebuilding in a different tech stack or platform
+### 🔀 Greenfield Route (Rebuild in New Stack)
+
+**Use when:** Migrating to a different tech stack or building fresh
 
 **Approach:** Extract business logic ONLY (tech-agnostic)
 - Focus on WHAT the system does, not HOW
@@ -92,16 +97,29 @@ stateDiagram-v2
 - Can implement in any technology
 - Perfect for platform migrations
 
-**Example:** "Extract business logic from Rails app to rebuild in Next.js"
+**Works with ALL detection types:**
+- Osiris Widget + Greenfield = Extract widget business logic for Next.js
+- CMS V9 Widget + Greenfield = Extract widget business logic (no Velocity)
+- Generic App + Greenfield = Extract app business logic for rebuild
 
-### ⚙️ Route B: Brownfield (Take the Wheel on Existing Code)
-**Use when:** Managing existing codebase with GitHub Spec Kit
+**Example:** "Extract business logic from Osiris widget ws-vehicle-details to rebuild in Next.js"
+
+### ⚙️ Brownfield Route (Manage Existing Code)
+
+**Use when:** Managing and improving existing codebase with specs
 
 **Approach:** Extract business logic + technical implementation (tech-prescriptive)
 - Document both WHAT and HOW
 - Capture exact tech stack, versions, file paths
 - Enables `/speckit.analyze` validation
 - Perfect for ongoing spec-driven development
+
+**Works with ALL detection types:**
+- Osiris Widget + Brownfield = Full React/Redux/ws-scripts for maintenance
+- CMS V9 Widget + Brownfield = Full Velocity/Java details for refactoring
+- Generic App + Brownfield = Full implementation for spec-driven management
+
+**Example:** "Add specs to existing Osiris widget ws-hours for ongoing maintenance and improvements"
 
 **Two Modes:**
 - **Standard:** Create specs for current state (as-is)
