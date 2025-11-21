@@ -280,10 +280,10 @@ jobs:
 
 ## 🎓 Comparison to Thoth
 
-| Feature | Thoth (Osiris Upgrade) | StackShift CLI |
+| Feature | Migration Tool | StackShift CLI |
 |---------|------------------------|----------------|
 | **Purpose** | Upgrade widgets to Node 22 | Reverse engineer + migrate |
-| **Scope** | 134 Osiris repos | Any codebase |
+| **Scope** | Multiple codebases | Any codebase |
 | **Phases** | 3 (Part 0, 1, 2) | 6 (Gears 1-6) |
 | **Output** | Tests + PRs | Full specs + docs + code |
 | **AI Backend** | OpenCode | Claude Code OR OpenCode |
