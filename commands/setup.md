@@ -126,7 +126,7 @@ All team members will have commands after cloning.
 → Check .gitignore has `!.claude/commands/` rule
 
 **"Don't have StackShift plugin installed"**
-→ Install: `/plugin marketplace add cox-innovation-lab` then `/plugin install stackshift`
+→ Install: `/plugin marketplace add jschulte/claude-plugins` then `/plugin install stackshift`
 
 **"StackShift plugin not in ~/.claude/plugins/"**
 → Commands might be in different location, manually copy from project that has them

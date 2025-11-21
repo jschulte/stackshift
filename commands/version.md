@@ -31,10 +31,18 @@ ls -la ~/.claude/plugins/cache/stackshift
 
 ## Update Instructions
 
-### If Installed from Git URL
+### If Installed from Marketplace
+
+**Important:** Update the marketplace FIRST, then update the plugin!
 
 ```bash
+# Step 1: Update marketplace
+/plugin marketplace update jschulte
+
+# Step 2: Update StackShift
 /plugin update stackshift
+
+# Step 3: Restart Claude Code
 ```
 
 ### If Installed Locally
@@ -48,8 +56,17 @@ git pull origin main
 ### Force Reinstall
 
 ```bash
-rm -rf ~/.claude/plugins/cache/stackshift
-/plugin install stackshift@ddc-webplatform
+# Remove old installation
+/plugin uninstall stackshift
+
+# Reinstall from marketplace
+/plugin marketplace add jschulte/claude-plugins
+/plugin install stackshift
+
+# Or install locally
+git clone https://github.com/jschulte/stackshift.git
+cd stackshift
+./install-local.sh
 ```
 
 ---
