@@ -16,6 +16,8 @@
 
 You are reconciling incomplete specifications for a repository that has been partially processed by StackShift.
 
+The goal is to take the business logic captured in the reverse engineering documents, and use that to build a Github spec kit compatible specification that lays out everything that the application does, end to end, and leaves room for improvements going forward. This approach should put the entire app under "spec control" and we can then continue using Github spec kit moving forward naturally, as if it had always been used in the app.
+
 ### The Problem
 
 Earlier versions of StackShift created specs ONLY for gaps/missing features, not for existing functionality. This means:
