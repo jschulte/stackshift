@@ -151,7 +151,7 @@ export async function createConstitutionToolHandler(args: CreateConstitutionArgs
       template = await templateEngine.loadTemplate(templateName);
     } catch (error) {
       throw new Error(
-        `Constitution template not found: ${templateName}.md. Ensure plugin/templates/ directory exists with required templates.`
+        `Constitution template not found: ${templateName}.md. Ensure mcp-server/templates/ directory exists with required templates.`
       );
     }
 

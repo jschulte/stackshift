@@ -37,7 +37,7 @@ export class TemplateError extends Error {
  * - Loops: {{#each items}}...{{/each}}
  */
 export class TemplateEngine {
-  constructor(private templateDir: string = 'plugin/templates') {}
+  constructor(private templateDir: string = path.join(__dirname, '../../templates')) {}
 
   /**
    * Load a template file
