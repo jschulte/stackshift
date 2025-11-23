@@ -34,8 +34,9 @@ describe('Create Specs Tool Tests', () => {
     );
     await fs.writeFile(path.join(docsDir, 'functional-specification.md'), sampleSpec);
 
-    // Copy templates from root project to test directory
-    const sourceTemplatesDir = path.join(process.cwd(), '..', 'plugin', 'templates');
+    // Copy templates from mcp-server/templates to test directory
+    // Templates are expected in {directory}/plugin/templates by create-constitution
+    const sourceTemplatesDir = path.join(process.cwd(), 'templates');
     const destTemplatesDir = path.join(dir, 'plugin', 'templates');
     await fs.mkdir(destTemplatesDir, { recursive: true });
 
@@ -132,7 +133,7 @@ describe('Create Specs Tool Tests', () => {
 
       const result = await createSpecsToolHandler({ directory: testDir });
 
-      expect(result.content[0].text).toContain('Greenfield');
+      expect(result.content[0].text).toContain('Route: Greenfield');
       expect(result.content[0].text).toContain('Automated Spec Generation Complete');
       expect(result.content[0].text).toContain('Feature Specifications');
       expect(result.content[0].text).toContain('Constitution');
@@ -143,7 +144,7 @@ describe('Create Specs Tool Tests', () => {
 
       const result = await createSpecsToolHandler({ directory: testDir });
 
-      expect(result.content[0].text).toContain('Brownfield');
+      expect(result.content[0].text).toContain('Route: Brownfield');
       expect(result.content[0].text).toContain('Automated Spec Generation Complete');
       expect(result.content[0].text).toContain('Feature Specifications');
       expect(result.content[0].text).toContain('Constitution');
@@ -217,6 +218,7 @@ describe('Create Specs Tool Tests', () => {
       expect(result.content).toHaveLength(1);
       expect(result.content[0].type).toBe('text');
       expect(result.content[0].text).toContain('# StackShift - Gear 3');
+      expect(result.content[0].text).toContain('Shift into 4th gear: Gap Analysis');
       expect(result.content[0].text).toContain('stackshift_gap_analysis');
     });
 
@@ -229,6 +231,8 @@ describe('Create Specs Tool Tests', () => {
       expect(result.content[0].text).toContain('Feature Specifications');
       expect(result.content[0].text).toContain('Total Features');
       expect(result.content[0].text).toContain('Implementation Plans');
+      // Check for actual stats from automated generation
+      expect(result.content[0].text).toMatch(/(Complete|Partial|Missing)/);
     });
 
     it('should include output structure for both routes', async () => {
@@ -239,6 +243,8 @@ describe('Create Specs Tool Tests', () => {
 
         const result = await createSpecsToolHandler({ directory: testDir });
 
+        // Check for output structure section
+        expect(result.content[0].text).toContain('Output Structure');
         expect(result.content[0].text).toContain('specs/');
         expect(result.content[0].text).toContain('.specify/');
         expect(result.content[0].text).toContain('memory/');
@@ -258,7 +264,9 @@ describe('Create Specs Tool Tests', () => {
       // Greenfield
       await stateManager.initialize(testDir, 'greenfield');
       let result = await createSpecsToolHandler({ directory: testDir });
+      expect(result.content[0].text).toContain('Validate Specifications');
       expect(result.content[0].text).toContain('/speckit.analyze');
+      expect(result.content[0].text).toContain('Ready for Gear 4');
       expect(result.content[0].text).toContain('stackshift_gap_analysis');
 
       // Brownfield
@@ -271,7 +279,9 @@ describe('Create Specs Tool Tests', () => {
 
       await stateManager.initialize(testDir, 'brownfield');
       result = await createSpecsToolHandler({ directory: testDir });
+      expect(result.content[0].text).toContain('Validate Specifications');
       expect(result.content[0].text).toContain('/speckit.analyze');
+      expect(result.content[0].text).toContain('Ready for Gear 4');
       expect(result.content[0].text).toContain('stackshift_gap_analysis');
     });
   });
@@ -305,7 +315,7 @@ describe('Create Specs Tool Tests', () => {
 
       const result = await createSpecsToolHandler({ directory: testDir });
 
-      expect(result.content[0].text).toContain('4th gear: Gap Analysis');
+      expect(result.content[0].text).toContain('Shift into 4th gear: Gap Analysis');
       expect(result.content[0].text).toContain('stackshift_gap_analysis');
       expect(result.content[0].text).toContain('/speckit.analyze');
     });
