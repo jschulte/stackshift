@@ -61,7 +61,7 @@ describe('StateManager', () => {
   });
 
   describe('State Validation', () => {
-    it('should reject state with dangerous properties', async () => {
+    it('should sanitize dangerous properties instead of rejecting', async () => {
       // Write malicious state with __proto__ directly in JSON string
       // (creating it as an object doesn't work because JS handles __proto__ specially)
       const stateFile = path.join(testDir, '.stackshift-state.json');
@@ -78,8 +78,21 @@ describe('StateManager', () => {
       }`;
       await fs.writeFile(stateFile, maliciousJson);
 
-      // Should throw when loading
-      await expect(stateManager.load()).rejects.toThrow(/dangerous properties/);
+      // SECURITY: Should sanitize dangerous properties BEFORE validation
+      // This is more secure than rejecting because:
+      // 1. Dangerous properties are removed immediately after parse
+      // 2. No window for exploitation during validation
+      const state = await stateManager.load();
+
+      // Verify state loaded successfully (dangerous props were sanitized)
+      expect(state.version).toBe('1.0.0');
+      expect(state.path).toBe('greenfield');
+
+      // Verify dangerous property was removed as an own property
+      // Note: __proto__ accessor always returns Object.prototype, so we check hasOwnProperty
+      expect(Object.prototype.hasOwnProperty.call(state, '__proto__')).toBe(false);
+      expect(Object.prototype.hasOwnProperty.call(state, 'constructor')).toBe(false);
+      expect(Object.prototype.hasOwnProperty.call(state, 'prototype')).toBe(false);
     });
 
     it('should reject state with invalid route', async () => {

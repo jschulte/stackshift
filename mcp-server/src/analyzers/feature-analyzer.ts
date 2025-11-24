@@ -12,6 +12,8 @@ import { FileSearcher } from './utils/file-searcher.js';
 import { ASTParser } from './utils/ast-parser.js';
 import { ConfidenceScorer } from './utils/confidence-scorer.js';
 import { GapDetectionError } from '../types/errors.js';
+import { readFileSafe } from '../utils/file-utils.js';
+import { createLogger } from '../utils/logger.js';
 import type {
   FeatureGap,
   DocumentationClaim,
@@ -21,6 +23,8 @@ import type {
   FeatureGapRecommendation,
 } from '../types/roadmap.js';
 import { createEvidence } from '../types/roadmap.js';
+
+const logger = createLogger('feature-analyzer');
 
 const md = new MarkdownIt();
 
@@ -320,21 +324,33 @@ export class FeatureAnalyzer {
         // docs/ doesn't exist
       }
 
-      // Parse each file
+      // Parse each file (with size limit to prevent DoS)
+      const MAX_DOC_SIZE = 5 * 1024 * 1024; // 5MB max per doc file
       for (const filePath of files) {
-        const content = await fs.readFile(filePath, 'utf-8');
-        const type = this.classifyDocType(path.basename(filePath));
-        const claims = this.parseDocumentation(content);
+        try {
+          const content = await readFileSafe(filePath, MAX_DOC_SIZE);
+          const type = this.classifyDocType(path.basename(filePath));
+          const claims = this.parseDocumentation(content);
 
-        docFiles.push({
-          path: filePath,
-          type,
-          content,
-          claims,
-        });
+          docFiles.push({
+            path: filePath,
+            type,
+            content,
+            claims,
+          });
+        } catch (error) {
+          // Log but continue with other files
+          logger.warn(`Could not read documentation file`, {
+            file: filePath,
+            error: error instanceof Error ? error.message : String(error),
+          });
+        }
       }
     } catch (error) {
-      this.log(`Warning: Could not read documentation directory ${docsDir}`);
+      logger.warn(`Could not read documentation directory`, {
+        directory: docsDir,
+        error: error instanceof Error ? error.message : String(error),
+      });
     }
 
     return docFiles;

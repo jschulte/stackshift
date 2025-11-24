@@ -253,16 +253,33 @@ export class FileSearcher {
 
   /**
    * Convert a glob pattern to a RegExp
+   * Includes ReDoS protection to prevent exponential backtracking
+   *
    * @param glob - Glob pattern
    * @returns Regular expression
+   * @throws Error if glob pattern is invalid or potentially dangerous
    */
   private globToRegex(glob: string): RegExp {
+    // ReDoS Protection: Limit pattern length
+    const MAX_GLOB_LENGTH = 500;
+    if (glob.length > MAX_GLOB_LENGTH) {
+      throw new Error(`Glob pattern too long: ${glob.length} chars (max ${MAX_GLOB_LENGTH})`);
+    }
+
+    // ReDoS Protection: Detect pathological patterns that could cause exponential backtracking
+    // Examples: a*a*a*a*b, .*.*.*.*x, patterns with many overlapping wildcards
+    const consecutiveWildcards = glob.match(/\*[^/*]*\*/g) || [];
+    if (consecutiveWildcards.length > 3) {
+      throw new Error(`Potentially dangerous glob pattern detected (ReDoS risk): too many wildcards`);
+    }
+
+    // Escape special regex characters except our glob wildcards (* and ?)
     let regex = glob
-      .replace(/\./g, '\\.')
-      .replace(/\*\*/g, '§DOUBLESTAR§')
-      .replace(/\*/g, '[^/]*')
-      .replace(/§DOUBLESTAR§/g, '.*')
-      .replace(/\?/g, '.');
+      .replace(/[.+^${}()|[\]\\]/g, '\\$&') // Escape regex special chars
+      .replace(/\*\*/g, '§DOUBLESTAR§') // Temporarily mark **
+      .replace(/\*/g, '[^/]*?') // * matches anything except / (non-greedy)
+      .replace(/§DOUBLESTAR§/g, '.*?') // ** matches anything including / (non-greedy)
+      .replace(/\?/g, '.'); // ? matches single character
 
     return new RegExp(`^${regex}$`);
   }

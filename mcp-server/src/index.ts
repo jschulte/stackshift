@@ -28,6 +28,8 @@ import { generateAllSpecsToolHandler } from './tools/generate-all-specs.js';
 import { createConstitutionToolHandler } from './tools/create-constitution.js';
 import { createFeatureSpecsToolHandler } from './tools/create-feature-specs.js';
 import { createImplPlansToolHandler } from './tools/create-impl-plans.js';
+import { specQualityTool, executeSpecQuality } from './tools/spec-quality.js';
+import { specDiffTool, executeSpecDiff } from './tools/spec-diff.js';
 import { getStateResource, getProgressResource, getRouteResource } from './resources/index.js';
 
 const server = new Server(
@@ -295,6 +297,50 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
           },
         },
       },
+      {
+        name: 'stackshift_spec_quality',
+        description:
+          'Analyze specification quality and get scores on completeness, testability, and clarity. Provides actionable feedback for improving specs.',
+        inputSchema: {
+          type: 'object',
+          properties: {
+            directory: {
+              type: 'string',
+              description: 'Project directory containing .specify/ folder',
+            },
+            format: {
+              type: 'string',
+              enum: ['json', 'markdown'],
+              description: 'Output format (default: markdown)',
+            },
+          },
+          required: ['directory'],
+        },
+      },
+      {
+        name: 'stackshift_spec_diff',
+        description:
+          'Compare specifications between two directories to visualize what changed. Useful for PR reviews and tracking spec evolution.',
+        inputSchema: {
+          type: 'object',
+          properties: {
+            base_directory: {
+              type: 'string',
+              description: 'Base directory for comparison',
+            },
+            compare_directory: {
+              type: 'string',
+              description: 'Directory to compare against base',
+            },
+            format: {
+              type: 'string',
+              enum: ['json', 'markdown'],
+              description: 'Output format (default: markdown)',
+            },
+          },
+          required: ['base_directory', 'compare_directory'],
+        },
+      },
     ],
   };
 });
@@ -370,6 +416,12 @@ server.setRequestHandler(CallToolRequestSchema, async request => {
 
       case 'stackshift_create_impl_plans':
         return await createImplPlansToolHandler(args || {});
+
+      case 'stackshift_spec_quality':
+        return await executeSpecQuality(args as { directory: string; format?: 'json' | 'markdown' });
+
+      case 'stackshift_spec_diff':
+        return await executeSpecDiff(args as { base_directory: string; compare_directory: string; format?: 'json' | 'markdown' });
 
       default:
         throw new Error(`Unknown tool: ${name}`);

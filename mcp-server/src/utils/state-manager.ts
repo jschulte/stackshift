@@ -202,6 +202,9 @@ export class StateManager {
    */
   async load(): Promise<State> {
     try {
+      // Clean up any orphaned temp files first
+      await this.cleanupOrphanedTempFiles();
+
       const data = await fs.readFile(this.stateFile, 'utf-8');
 
       // Limit file size to 10MB to prevent DoS
@@ -209,20 +212,16 @@ export class StateManager {
         throw new Error('State file too large (>10MB)');
       }
 
-      // Parse JSON first (without sanitizing yet)
-      const parsed = JSON.parse(data);
+      // SECURITY: Sanitize IMMEDIATELY after parsing to prevent prototype pollution
+      // This must happen BEFORE any validation or other operations on the object
+      const parsed = this.safeJsonParse(data);
 
-      // Validate BEFORE sanitizing, so we can detect dangerous properties
+      // Now validate the sanitized object
       const validation = this.validateState(parsed);
 
       if (!validation.valid) {
         throw new Error(`Invalid state file structure:\n${validation.errors.join('\n')}`);
       }
-
-      // Now sanitize the validated object
-      delete parsed.__proto__;
-      delete parsed.constructor;
-      delete parsed.prototype;
 
       return parsed as State;
     } catch (error: any) {
@@ -231,6 +230,39 @@ export class StateManager {
         throw new Error('State file does not exist. Run stackshift_analyze first.');
       }
       throw error;
+    }
+  }
+
+  /**
+   * Clean up orphaned temporary files from failed writes
+   * Removes temp files older than 1 hour
+   */
+  private async cleanupOrphanedTempFiles(): Promise<void> {
+    try {
+      const dir = path.dirname(this.stateFile);
+      const basename = path.basename(this.stateFile);
+      const files = await fs.readdir(dir);
+
+      const tempFiles = files.filter(
+        f => f.startsWith(basename) && f.endsWith('.tmp')
+      );
+
+      const ONE_HOUR = 3600000;
+      const now = Date.now();
+
+      for (const temp of tempFiles) {
+        try {
+          const tempPath = path.join(dir, temp);
+          const stats = await fs.stat(tempPath);
+          if (now - stats.mtimeMs > ONE_HOUR) {
+            await fs.unlink(tempPath);
+          }
+        } catch {
+          // Ignore errors for individual file cleanup
+        }
+      }
+    } catch {
+      // Ignore cleanup errors - this is best-effort
     }
   }
 
