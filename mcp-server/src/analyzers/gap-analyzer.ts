@@ -12,6 +12,7 @@ import { FileSearcher } from './utils/file-searcher.js';
 import { ASTParser, FunctionSignature } from './utils/ast-parser.js';
 import { ConfidenceScorer } from './utils/confidence-scorer.js';
 import { GapDetectionError } from '../types/errors.js';
+import { createLogger } from '../utils/logger.js';
 import type {
   SpecGap,
   ParsedSpec,
@@ -25,6 +26,40 @@ import {
   createEffortEstimate,
   combineEvidence,
 } from '../types/roadmap.js';
+
+// ============================================================================
+// Module-level logger
+// ============================================================================
+const logger = createLogger('gap-analyzer');
+
+// ============================================================================
+// PRE-COMPILED REGEX PATTERNS (Performance optimization)
+// Compiling regex once at module load instead of per-call
+// ============================================================================
+
+/** Pattern to extract dependency references from text (e.g., "depends on FR001") */
+const DEPENDENCY_PATTERN = /depends on ([A-Z]+\d+)/gi;
+
+/** Pattern to extract camelCase to kebab-case conversion points */
+const CAMEL_TO_KEBAB_PATTERN = /([a-z])([A-Z])/g;
+
+/** Pattern to remove non-alphanumeric characters for keyword extraction */
+const NON_ALPHANUM_PATTERN = /[^a-z0-9\s]/g;
+
+/** Pattern to split on whitespace */
+const WHITESPACE_PATTERN = /\s+/;
+
+// ============================================================================
+// STATIC DATA (Moved from function scope for performance)
+// ============================================================================
+
+/** Common words to exclude from keyword extraction (using Set for O(1) lookup) */
+const COMMON_WORDS = new Set([
+  'the', 'a', 'an', 'and', 'or', 'but', 'in', 'on', 'at', 'to', 'for', 'of',
+  'with', 'by', 'from', 'as', 'is', 'was', 'are', 'were', 'be', 'been', 'being',
+  'have', 'has', 'had', 'do', 'does', 'did', 'will', 'would', 'should', 'could',
+  'may', 'might', 'must', 'can', 'system',
+]);
 
 /**
  * Gap Analyzer Configuration
@@ -326,7 +361,10 @@ export class SpecGapAnalyzer {
       }
     } catch (error) {
       // Directory might not exist or not be readable
-      this.log(`Warning: Could not read directory ${specsDir}`);
+      logger.warn('Could not read specs directory', {
+        directory: specsDir,
+        error: error instanceof Error ? error.message : String(error),
+      });
     }
 
     return specFiles;
@@ -550,6 +588,8 @@ export class SpecGapAnalyzer {
 
   /**
    * Generate expected file locations for a requirement
+   * Uses pre-compiled CAMEL_TO_KEBAB_PATTERN for performance
+   *
    * @param requirement - Requirement
    * @param spec - Spec
    * @returns Array of expected locations
@@ -561,7 +601,8 @@ export class SpecGapAnalyzer {
     const keywords = this.extractKeywords(requirement.title);
 
     for (const keyword of keywords) {
-      const kebab = keyword.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase();
+      // Use pre-compiled pattern for camelCase to kebab-case conversion
+      const kebab = keyword.replace(CAMEL_TO_KEBAB_PATTERN, '$1-$2').toLowerCase();
       locations.push(`src/${kebab}.ts`);
       locations.push(`src/${spec.id.toLowerCase()}/${kebab}.ts`);
     }
@@ -679,14 +720,19 @@ export class SpecGapAnalyzer {
 
   /**
    * Extract dependencies from requirement
+   * Uses pre-compiled DEPENDENCY_PATTERN for performance
+   *
    * @param requirement - Requirement
    * @returns Array of dependency IDs
    */
   private extractDependencies(requirement: Requirement): string[] {
     const deps: string[] = [];
 
-    // Look for "depends on" in description
-    const depMatch = requirement.description.match(/depends on ([A-Z]+\d+)/gi);
+    // Reset regex lastIndex for global pattern (required for reuse)
+    DEPENDENCY_PATTERN.lastIndex = 0;
+
+    // Look for "depends on" in description using pre-compiled pattern
+    const depMatch = requirement.description.match(DEPENDENCY_PATTERN);
     if (depMatch) {
       deps.push(...depMatch.map(m => m.replace(/depends on /i, '')));
     }
@@ -696,70 +742,32 @@ export class SpecGapAnalyzer {
 
   /**
    * Extract keywords from text
+   * Uses pre-compiled patterns and Set-based lookup for performance
+   *
    * @param text - Text to extract keywords from
    * @returns Array of keywords
    */
   private extractKeywords(text: string): string[] {
-    // Remove common words and split into keywords
-    const commonWords = [
-      'the',
-      'a',
-      'an',
-      'and',
-      'or',
-      'but',
-      'in',
-      'on',
-      'at',
-      'to',
-      'for',
-      'of',
-      'with',
-      'by',
-      'from',
-      'as',
-      'is',
-      'was',
-      'are',
-      'were',
-      'be',
-      'been',
-      'being',
-      'have',
-      'has',
-      'had',
-      'do',
-      'does',
-      'did',
-      'will',
-      'would',
-      'should',
-      'could',
-      'may',
-      'might',
-      'must',
-      'can',
-      'system',
-      'must',
-    ];
-
+    // Use pre-compiled patterns for better performance
     const words = text
       .toLowerCase()
-      .replace(/[^a-z0-9\s]/g, ' ')
-      .split(/\s+/)
-      .filter(w => w.length > 3 && !commonWords.includes(w));
+      .replace(NON_ALPHANUM_PATTERN, ' ')
+      .split(WHITESPACE_PATTERN)
+      .filter(w => w.length > 3 && !COMMON_WORDS.has(w));
 
     // Return unique words, sorted by length (longer = more specific)
     return [...new Set(words)].sort((a, b) => b.length - a.length);
   }
 
   /**
-   * Log message if verbose
+   * Log message if verbose mode is enabled
+   * Uses structured logger for better observability
+   *
    * @param message - Message to log
    */
   private log(message: string): void {
     if (this.config.verbose) {
-      console.log(`[SpecGapAnalyzer] ${message}`);
+      logger.debug(message);
     }
   }
 }

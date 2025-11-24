@@ -15,6 +15,10 @@ import * as path from 'path';
 import { createDefaultValidator, validateRoute } from '../utils/security.js';
 import { StateManager } from '../utils/state-manager.js';
 import { countFiles, fileExists, readJsonSafe } from '../utils/file-utils.js';
+import { createToolErrorHandler } from '../utils/error-handler.js';
+
+// Create error handler for this tool
+const errorHandler = createToolErrorHandler('analyze');
 
 interface AnalyzeArgs {
   directory?: string;
@@ -116,7 +120,8 @@ Access state via: \`stackshift://state\` resource
       ],
     };
   } catch (error) {
-    throw new Error(`Analysis failed: ${error instanceof Error ? error.message : String(error)}`);
+    // Use error handler for consistent error wrapping and logging
+    throw errorHandler.wrap('execute', error, { directory: args.directory });
   }
 }
 
@@ -166,7 +171,11 @@ async function detectTechStack(directory: string) {
       result.buildSystem = 'Cargo';
     }
   } catch (error) {
-    // Return defaults if detection fails
+    // Log but return defaults - tech stack detection is not critical
+    errorHandler.logWarning('detectTechStack', 'Tech stack detection failed, using defaults', {
+      directory,
+      error: error instanceof Error ? error.message : String(error),
+    });
   }
 
   return result;
@@ -205,6 +214,12 @@ async function assessCompleteness(directory: string) {
       (result.backend + result.frontend + result.tests + result.documentation) / 4
     );
   } catch (error) {
+    // Log but return defaults - completeness assessment is not critical
+    errorHandler.logWarning('assessCompleteness', 'Completeness assessment failed, using defaults', {
+      directory,
+      error: error instanceof Error ? error.message : String(error),
+    });
+
     // Return defaults
     result.overall = 50;
     result.backend = 50;
