@@ -44,7 +44,6 @@ describe('Create Specs Tool Tests', () => {
       'constitution-agnostic-template.md',
       'constitution-prescriptive-template.md',
       'feature-spec-template.md',
-      'implementation-status-template.md',
     ];
 
     for (const template of templates) {
