@@ -160,7 +160,53 @@ Ready to proceed to:
 **YES analyzing:** Old codebase vs specs
 **Using:** /speckit.analyze to find gaps
 
-### Step 1: Run /speckit.analyze
+### Step 1: Verify GitHub Spec Kit Scripts Exist
+
+**CRITICAL:** Check if prerequisite scripts are installed:
+
+```bash
+# Check for scripts
+if [ ! -f .specify/scripts/bash/check-prerequisites.sh ]; then
+  echo "⚠️  GitHub Spec Kit scripts not found!"
+  echo ""
+  echo "The /speckit.analyze command requires prerequisite scripts."
+  echo "These should have been installed during Gear 3."
+  echo ""
+  echo "Fix options:"
+  echo "1. Run the installer:"
+  echo "   ~/stackshift/scripts/install-speckit-scripts.sh ."
+  echo ""
+  echo "2. Download directly from GitHub:"
+  echo "   mkdir -p .specify/scripts/bash"
+  echo "   curl -sSL https://raw.githubusercontent.com/github/spec-kit/main/scripts/bash/check-prerequisites.sh -o .specify/scripts/bash/check-prerequisites.sh"
+  echo "   # ... download other scripts ..."
+  echo ""
+  echo "3. Skip /speckit.analyze and do manual gap analysis (see Step 2b below)"
+  echo ""
+
+  # Offer to download now
+  read -p "Download scripts now? (y/n) " -n 1 -r
+  echo
+  if [[ $REPLY =~ ^[Yy]$ ]]; then
+    ~/stackshift/scripts/install-speckit-scripts.sh . || {
+      echo "❌ Installer not found, downloading directly..."
+      mkdir -p .specify/scripts/bash
+      BASE_URL="https://raw.githubusercontent.com/github/spec-kit/main/scripts"
+      curl -sSL "$BASE_URL/bash/check-prerequisites.sh" -o .specify/scripts/bash/check-prerequisites.sh
+      curl -sSL "$BASE_URL/bash/setup-plan.sh" -o .specify/scripts/bash/setup-plan.sh
+      curl -sSL "$BASE_URL/bash/create-new-feature.sh" -o .specify/scripts/bash/create-new-feature.sh
+      curl -sSL "$BASE_URL/bash/update-agent-context.sh" -o .specify/scripts/bash/update-agent-context.sh
+      curl -sSL "$BASE_URL/bash/common.sh" -o .specify/scripts/bash/common.sh
+      chmod +x .specify/scripts/bash/*.sh
+      echo "✅ Scripts downloaded!"
+    }
+  else
+    echo "Skipping /speckit.analyze - will do manual gap analysis instead"
+  fi
+fi
+```
+
+### Step 2a: Run /speckit.analyze (if scripts exist)
 
 GitHub Spec Kit's built-in validation:
 
@@ -174,25 +220,44 @@ GitHub Spec Kit's built-in validation:
 - Inconsistencies between related specifications
 - Conflicting requirements across specs
 - Outdated implementation status
+
+**If this command fails with "Script not found"**, the scripts weren't installed. Use Step 2b instead.
+
+### Step 2b: Manual Gap Analysis (fallback if scripts missing)
+
+If `/speckit.analyze` can't run, do manual analysis:
+
+```bash
+# For each spec, check implementation status
+for spec in .specify/specs/*/spec.md; do
+  feature=$(dirname "$spec" | xargs basename)
+  echo "Analyzing: $feature"
+
+  # Extract status from spec
+  status=$(grep "^## Status" "$spec" -A 1 | tail -1)
+  echo "  Status: $status"
+
+  # Look for [NEEDS CLARIFICATION] markers
+  clarifications=$(grep -c "\[NEEDS CLARIFICATION\]" "$spec" 2>/dev/null || echo "0")
+  echo "  Clarifications needed: $clarifications"
+
+  echo ""
+done
+```
+
+This is less thorough than `/speckit.analyze` but will identify the basics.
 
 ---
 
 ## Process Overview
 
-### Step 1: Run /speckit.analyze
+### Step 1: Verify Scripts
 
-GitHub Spec Kit's built-in validation:
+Check that GitHub Spec Kit scripts are installed (see above).
 
-```bash
-> /speckit.analyze
-```
+### Step 2: Run Analysis
 
-**What it checks:**
-- Specifications marked ✅ COMPLETE but implementation missing
-- Implementation exists but not documented in specs
-- Inconsistencies between related specifications
-- Conflicting requirements across specs
-- Outdated implementation status
+Try `/speckit.analyze` first. If it fails, fall back to manual analysis.
 
 **Output example:**
 ```

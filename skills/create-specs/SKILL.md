@@ -146,7 +146,39 @@ fi
 
 **IMPORTANT**: This skill uses automated spec generation tools from F002.
 
-### Step 1: Call the MCP Tool
+### Step 1: Install GitHub Spec Kit Scripts
+
+**CRITICAL FIRST STEP:** Install the prerequisite scripts needed by `/speckit.*` commands:
+
+```bash
+# Install Spec Kit scripts to enable /speckit.* commands
+if [ -f ~/git/stackshift/scripts/install-speckit-scripts.sh ]; then
+  ~/git/stackshift/scripts/install-speckit-scripts.sh .
+elif [ -f ~/stackshift/scripts/install-speckit-scripts.sh ]; then
+  ~/stackshift/scripts/install-speckit-scripts.sh .
+else
+  # Download directly if script not available
+  mkdir -p .specify/scripts/bash
+  BASE_URL="https://raw.githubusercontent.com/github/spec-kit/main/scripts"
+  curl -sSL "$BASE_URL/bash/check-prerequisites.sh" -o .specify/scripts/bash/check-prerequisites.sh
+  curl -sSL "$BASE_URL/bash/setup-plan.sh" -o .specify/scripts/bash/setup-plan.sh
+  curl -sSL "$BASE_URL/bash/create-new-feature.sh" -o .specify/scripts/bash/create-new-feature.sh
+  curl -sSL "$BASE_URL/bash/update-agent-context.sh" -o .specify/scripts/bash/update-agent-context.sh
+  curl -sSL "$BASE_URL/bash/common.sh" -o .specify/scripts/bash/common.sh
+  chmod +x .specify/scripts/bash/*.sh
+  echo "✅ Downloaded GitHub Spec Kit scripts"
+fi
+```
+
+**Why this is needed:**
+- `/speckit.analyze` requires `scripts/bash/check-prerequisites.sh`
+- `/speckit.implement` requires `scripts/bash/check-prerequisites.sh`
+- `/speckit.plan` requires `scripts/bash/setup-plan.sh`
+- `/speckit.specify` requires `scripts/bash/create-new-feature.sh`
+
+**Without these scripts, Gear 4 (Gap Analysis) will fail when trying to run `/speckit.analyze`!**
+
+### Step 2: Call the MCP Tool
 
 Run the `stackshift_create_specs` MCP tool to automatically generate ALL specifications:
 
@@ -177,7 +209,7 @@ const result = await mcp.callTool('stackshift_create_specs', {
 - 100% feature coverage
 - Implementation plans for incomplete features
 
-### Step 2: Verify Success
+### Step 3: Verify Success
 
 After the tool completes, verify:
 1. `.specify/memory/constitution.md` exists
