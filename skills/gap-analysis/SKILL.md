@@ -158,7 +158,9 @@ Ready to proceed to:
 **Goal:** Identify gaps in EXISTING codebase implementation
 
 **YES analyzing:** Old codebase vs specs
-**Using:** /speckit.analyze to find gaps
+**Using:** AST-powered analysis with fallback to /speckit.analyze
+
+**IMPORTANT**: You MUST run the AST analysis tool - don't just read the instructions!
 
 ### Step 1: Verify GitHub Spec Kit Scripts Exist
 
@@ -206,31 +208,31 @@ if [ ! -f .specify/scripts/bash/check-prerequisites.sh ]; then
 fi
 ```
 
-### Step 2a: Run AST-Powered Analysis (Recommended)
+### Step 2a: Run AST-Powered Analysis (PRIMARY METHOD - RUN THIS!)
 
-**Use AST analysis for deep, accurate gap detection:**
+**ACTION REQUIRED**: Execute the AST analysis command now:
 
 ```bash
 # Run AST-powered roadmap generation (includes gap analysis)
 ~/stackshift/scripts/run-ast-analysis.mjs roadmap . --format=markdown
-
-# Or if StackShift is installed elsewhere:
-npx stackshift-mcp roadmap . --format=markdown
 ```
 
-**What AST analysis provides:**
+**What this provides** (far superior to /speckit.analyze):
 - ✅ Function signature verification (not just "exists")
 - ✅ Stub detection (functions returning placeholder text)
 - ✅ Missing parameters detection
 - ✅ Business logic pattern analysis
 - ✅ Test coverage gaps
 - ✅ Confidence scoring (0-100%)
+- ✅ Detailed roadmap with phases, priorities, and effort estimates
 
-**Output**: Detailed roadmap with phases, priorities, and effort estimates
+**If this command fails** (script not found, Node.js issue, etc.), proceed to Step 2b.
+
+**Otherwise**: Use the AST analysis output and skip Step 2b/2c entirely.
 
 ---
 
-### Step 2b: Run /speckit.analyze (Fallback)
+### Step 2b: Run /speckit.analyze (FALLBACK ONLY)
 
 If AST analysis unavailable, use GitHub Spec Kit's validation:
 
