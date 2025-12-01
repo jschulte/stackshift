@@ -1,6 +1,6 @@
 {
   "name": "stackshift-mcp",
-  "version": "1.8.0",
+  "version": "1.9.0",
   "description": "MCP server for StackShift - reverse engineering toolkit with manual control",
   "keywords": [
     "mcp",
