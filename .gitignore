@@ -31,3 +31,6 @@ docs/reverse-engineering/
 .stackshift/
 .speckit/
 .stackshift-state.json
+
+# StackShift Analysis Cache
+.stackshift-analysis/
