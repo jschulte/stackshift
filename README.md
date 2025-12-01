@@ -115,6 +115,7 @@ stateDiagram-v2
 ├─────────────────────────────────────────────────────────────┤
 │                                                              │
 │  Gear 1: Initial Analysis + Route Selection                 │
+│  ├─ Run AST analysis (parse codebase, save to cache)        │
 │  ├─ Detect technology stack                                 │
 │  ├─ Identify application type                               │
 │  ├─ Map directory structure                                 │
@@ -129,6 +130,7 @@ stateDiagram-v2
 │  Gear 2: Reverse Engineer (Reverse Gear! 🔄)                │
 │  ├─ Extract business logic ONLY ◄── Greenfield              │
 │  ├─ OR business logic + tech details ◄── Brownfield         │
+│  ├─ Enhanced with AST: auto-extract APIs & logic            │
 │  └─ Generate 9 comprehensive docs                           │
 │         │                                                    │
 │         ▼                                                    │
@@ -136,19 +138,20 @@ stateDiagram-v2
 │  ├─ Initialize .specify/ (GitHub Spec Kit)                  │
 │  ├─ Agnostic constitution ◄── Greenfield                    │
 │  ├─ OR prescriptive constitution ◄── Brownfield             │
-│  └─ Generate feature specs, plans                           │
+│  ├─ Auto-detect status from AST (✅/⚠️/❌)                    │
+│  └─ Generate feature specs with actual signatures           │
 │         │                                                    │
 │         ▼                                                    │
 │  Gear 4: Gap Analysis                                       │
-│  ├─ Run /speckit.analyze                                    │
-│  ├─ Identify missing features                               │
+│  ├─ Read cached AST roadmap (instant)                       │
+│  ├─ Identify missing features with confidence scores        │
 │  ├─ Brownfield: ~100% match initially                       │
 │  └─ Greenfield: All features marked MISSING                 │
 │         │                                                    │
 │         ▼                                                    │
 │  Gear 5: Complete Specification                             │
 │  ├─ Use /speckit.clarify                                    │
-│  ├─ Answer clarifications                                   │
+│  ├─ Answer clarifications (evidence-based from AST)         │
 │  ├─ Define missing details                                  │
 │  └─ Prioritize implementation                               │
 │         │                                                    │
@@ -157,7 +160,7 @@ stateDiagram-v2
 │  ├─ Use /speckit.tasks & /speckit.implement                 │
 │  ├─ Greenfield: Build in new stack                          │
 │  ├─ Brownfield: Fill gaps in existing                       │
-│  ├─ Validate with /speckit.analyze                          │
+│  ├─ Verify with AST (signatures, stubs, tests)              │
 │  └─ Achieve 100% completion - cruise into production!       │
 │                                                              │
 └─────────────────────────────────────────────────────────────┘
@@ -412,6 +415,7 @@ stackshift/
 ### Step 1: Initial Analysis (5 minutes)
 
 **What it does:**
+- **Runs AST analysis** - Parses codebase with Babel, saves to `.stackshift-analysis/`
 - Detects programming language and framework
 - Identifies application type (web, mobile, API, etc.)
 - Maps directory structure
@@ -420,7 +424,17 @@ stackshift/
 
 **Output:**
 - `analysis-report.md` with tech stack summary
+- **`.stackshift-analysis/`** cache directory:
+  - `roadmap.md` - Gap analysis with confidence scores
+  - `raw-analysis.json` - Full AST data (functions, classes, APIs)
+  - `summary.json` - Metadata and timestamps
 - Quick assessment of what exists
+
+**AST Cache Benefits:**
+- ✅ Parse codebase ONCE in Gear 1
+- ✅ All other gears read from cache (instant)
+- ✅ Auto-refresh if stale (> 1 hour)
+- ✅ 50-90% performance improvement
 
 **Plugin Skill:** `/stackshift:analyze`
 **Manual:** Use `web/WEB_BOOTSTRAP.md` (Gear 1)
@@ -431,6 +445,7 @@ stackshift/
 
 **What it does:**
 - Deep codebase analysis using specialized agents
+- **Enhanced with AST cache** - Auto-extracts APIs, business logic from parsed code
 - Extracts all data models, API endpoints, components
 - Documents configuration, infrastructure, operations
 - Analyzes technical debt and test coverage
