@@ -206,9 +206,33 @@ if [ ! -f .specify/scripts/bash/check-prerequisites.sh ]; then
 fi
 ```
 
-### Step 2a: Run /speckit.analyze (if scripts exist)
+### Step 2a: Run AST-Powered Analysis (Recommended)
 
-GitHub Spec Kit's built-in validation:
+**Use AST analysis for deep, accurate gap detection:**
+
+```bash
+# Run AST-powered roadmap generation (includes gap analysis)
+~/stackshift/scripts/run-ast-analysis.mjs roadmap . --format=markdown
+
+# Or if StackShift is installed elsewhere:
+npx stackshift-mcp roadmap . --format=markdown
+```
+
+**What AST analysis provides:**
+- ✅ Function signature verification (not just "exists")
+- ✅ Stub detection (functions returning placeholder text)
+- ✅ Missing parameters detection
+- ✅ Business logic pattern analysis
+- ✅ Test coverage gaps
+- ✅ Confidence scoring (0-100%)
+
+**Output**: Detailed roadmap with phases, priorities, and effort estimates
+
+---
+
+### Step 2b: Run /speckit.analyze (Fallback)
+
+If AST analysis unavailable, use GitHub Spec Kit's validation:
 
 ```bash
 > /speckit.analyze
@@ -221,9 +245,11 @@ GitHub Spec Kit's built-in validation:
 - Conflicting requirements across specs
 - Outdated implementation status
 
-**If this command fails with "Script not found"**, the scripts weren't installed. Use Step 2b instead.
+**Note**: This is less thorough than AST analysis (checks existence only, not correctness)
 
-### Step 2b: Manual Gap Analysis (fallback if scripts missing)
+**If this command fails with "Script not found"**, the scripts weren't installed. Use Step 2c instead.
+
+### Step 2c: Manual Gap Analysis (last resort if scripts missing)
 
 If `/speckit.analyze` can't run, do manual analysis:
 
