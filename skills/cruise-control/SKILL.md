@@ -52,7 +52,14 @@ At the start, you'll be asked:
    B) Brownfield - Manage existing code
    ```
 
-2. **Clarifications Handling:**
+2. **Implementation Framework:**
+   ```
+   Choose implementation framework:
+   A) GitHub Spec Kit - Feature specs in .specify/, /speckit.* commands
+   B) BMAD Method - PRD + Architecture in docs/, agent-driven workflow
+   ```
+
+3. **Clarifications Handling:** (Spec Kit only)
    ```
    How to handle [NEEDS CLARIFICATION] markers?
    A) Defer - Mark them, implement around them, clarify later
@@ -60,7 +67,7 @@ At the start, you'll be asked:
    C) Skip - Only implement fully-specified features
    ```
 
-3. **Implementation Scope:**
+4. **Implementation Scope:** (Spec Kit only)
    ```
    What to implement in Gear 6?
    A) P0 only - Critical features only
@@ -71,24 +78,28 @@ At the start, you'll be asked:
 
 Then cruise control takes over!
 
+**Note**: For BMAD Method, questions 3-4 are skipped. BMAD agents handle clarifications and implementation through their interactive workflow.
+
 ---
 
 ## Execution Flow
 
-### Gear 1: Analyze (Auto)
+### GitHub Spec Kit Path
+
+#### Gear 1: Analyze (Auto)
 - Detects tech stack
 - Assesses completeness
-- Sets route (from your selection)
+- Sets route and framework (from your selections)
 - Saves state with `auto_mode: true`
 - **Auto-shifts to Gear 2** ✅
 
-### Gear 2: Reverse Engineer (Auto)
+#### Gear 2: Reverse Engineer (Auto)
 - Launches `stackshift:code-analyzer` agent
 - Extracts documentation based on route
 - Generates all 9 files (including integration-points.md)
 - **Auto-shifts to Gear 3** ✅
 
-### Gear 3: Create Specifications (Auto)
+#### Gear 3: Create Specifications (Auto)
 - Calls automated spec generation (F002)
 - Generates constitution (appropriate template for route)
 - Creates all feature specs programmatically
@@ -96,26 +107,52 @@ Then cruise control takes over!
 - Sets up `/speckit.*` slash commands
 - **Auto-shifts to Gear 4** ✅
 
-### Gear 4: Gap Analysis (Auto)
+#### Gear 4: Gap Analysis (Auto)
 - Runs `/speckit.analyze`
 - Identifies PARTIAL/MISSING features
 - Creates prioritized roadmap
 - Marks [NEEDS CLARIFICATION] items
 - **Auto-shifts to Gear 5** ✅
 
-### Gear 5: Complete Specification (Conditional)
+#### Gear 5: Complete Specification (Conditional)
 - If clarifications handling = "Defer": Skips, moves to Gear 6
 - If clarifications handling = "Prompt": Asks questions interactively, then continues
 - If clarifications handling = "Skip": Marks unclear features as P2, moves on
 - **Auto-shifts to Gear 6** ✅
 
-### Gear 6: Implement (Based on Scope)
+#### Gear 6: Implement (Based on Scope)
 - If scope = "None": Stops, specs ready
 - If scope = "P0 only": Implements critical features only
 - If scope = "P0 + P1": Implements critical + high-value
 - If scope = "All": Implements everything
 - Uses `/speckit.tasks` and `/speckit.implement` for each feature
 - **Completes!** 🏁
+
+---
+
+### BMAD Method Path
+
+#### Gear 1: Analyze (Auto)
+- Detects tech stack
+- Assesses completeness
+- Sets route and framework (from your selections)
+- Saves state with `auto_mode: true`
+- **Auto-shifts to Gear 2** ✅
+
+#### Gear 2: Reverse Engineer (Auto)
+- Launches `stackshift:code-analyzer` agent
+- Extracts documentation in BMAD `docs/` format
+- Generates: `docs/index.md`, `docs/architecture/`, `docs/architecture.md`, `docs/prd.md`
+- **Skips to Gear 6** ✅
+
+#### Gears 3-5: Skipped
+- BMAD agents handle specs, gap analysis, and clarifications
+- Documentation is already in BMAD format from Gear 2
+
+#### Gear 6: BMAD Handoff
+- Displays instructions for BMAD installation and setup
+- Provides `*workflow-init` command to start BMAD workflow
+- **StackShift completes - BMAD takes over!** 🏁
 
 ---
 
@@ -330,14 +367,26 @@ State saved, you can continue manually from that point.
 
 ## Success Criteria
 
+### GitHub Spec Kit Path
+
 After cruise control completes:
 
 - ✅ All 6 gears complete
 - ✅ `.stackshift-state.json` shows 6/6 gears
 - ✅ All output files generated
-- ✅ GitHub Spec Kit initialized
+- ✅ GitHub Spec Kit initialized (`.specify/` directory)
 - ✅ Features implemented (based on scope)
 - ✅ Ready for production (or clarifications if deferred)
+
+### BMAD Method Path
+
+After cruise control completes:
+
+- ✅ Gears 1, 2, 6 complete (3-5 skipped)
+- ✅ `.stackshift-state.json` shows framework: "bmad"
+- ✅ `docs/` structure generated with all required files
+- ✅ BMAD handoff instructions displayed
+- ✅ Ready for `*workflow-init` to take over
 
 ---
 

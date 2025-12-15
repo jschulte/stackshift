@@ -28,7 +28,7 @@ First, use the Bash tool to execute comprehensive AST analysis:
 
 **Cache duration**: 1 hour (auto-refreshes if stale)
 
-## Step 2: Detect Tech Stack and Route
+## Step 2: Detect Tech Stack, Route, and Framework
 
 After AST analysis completes, use the Skill tool to detect tech stack:
 
@@ -38,6 +38,11 @@ Use the Skill tool with skill="analyze".
 - Read file structure
 - Detect frameworks from package.json
 - Choose route (Greenfield/Brownfield)
+- Choose implementation framework (GitHub Spec Kit / BMAD Method)
 - Auto-detect app type (monorepo, Nx, etc.)
 - Create analysis-report.md
 - Save to .stackshift-state.json
+
+**Framework choice determines output format**:
+- **GitHub Spec Kit**: Creates `.specify/` structure, uses `/speckit.*` commands
+- **BMAD Method**: Creates `docs/` structure, hands off to `*workflow-init`

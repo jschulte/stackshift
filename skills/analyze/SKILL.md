@@ -222,7 +222,28 @@ B) Brownfield: Extract for maintaining existing codebase
 - Generic + Greenfield = Business logic for rebuild
 - Generic + Brownfield = Full implementation for management
 
-**Question 2: Brownfield Mode** _(If Brownfield selected)_
+**Question 2: Implementation Framework**
+```
+Which implementation framework do you want to use?
+
+A) GitHub Spec Kit (Recommended for most projects)
+   → Feature-level specifications in .specify/
+   → Task-driven implementation with /speckit.* commands
+   → Simpler, lightweight workflow
+   → Best for: small-medium projects, focused features
+
+B) BMAD Method (For larger/enterprise projects)
+   → PRD + Architecture docs in docs/
+   → Agent-driven workflow (PM, Architect, Dev agents)
+   → Scale-adaptive planning (Quick Flow → Enterprise)
+   → Best for: large projects, multi-team, enterprise
+
+After StackShift extracts documentation:
+- Spec Kit: Creates .specify/ structure, use /speckit.implement
+- BMAD: Creates docs/ structure, hand off to *workflow-init
+```
+
+**Question 3: Brownfield Mode** _(If Brownfield selected)_
 ```
 Do you want to upgrade dependencies after establishing specs?
 
@@ -247,7 +268,7 @@ B) Upgrade - Create specs + upgrade all dependencies
 - Coverage improvement to 85%+
 ```
 
-**Question 3: Choose Your Transmission**
+**Question 4: Choose Your Transmission**
 ```
 How do you want to shift through the gears?
 
@@ -262,7 +283,7 @@ B) Cruise Control - Shift through all gears automatically
    → Good for experienced users or overnight runs
 ```
 
-**Question 4: Specification Thoroughness**
+**Question 5: Specification Thoroughness**
 ```
 How thorough should specification generation be in Gear 3?
 
@@ -285,7 +306,7 @@ C) Specs + Plans + Tasks (90-120 min - complete roadmap)
    → Good for: large projects, maximum automation
 ```
 
-**Question 5: Clarifications Strategy** _(If Cruise Control selected)_
+**Question 6: Clarifications Strategy** _(If Cruise Control selected)_
 ```
 How should [NEEDS CLARIFICATION] markers be handled?
 
@@ -302,7 +323,7 @@ C) Skip - Only implement fully-specified features
    → Some features won't be implemented
 ```
 
-**Question 6: Implementation Scope** _(If Cruise Control selected)_
+**Question 7: Implementation Scope** _(If Cruise Control selected)_
 ```
 What should be implemented in Gear 6?
 
@@ -323,7 +344,7 @@ D) All - Every feature (may take hours/days)
    → Longest runtime
 ```
 
-**Question 7: Spec Output Location** _(If Greenfield selected)_
+**Question 8: Spec Output Location** _(If Greenfield selected)_
 ```
 Where should specifications and documentation be written?
 
@@ -348,7 +369,7 @@ D) Custom location
 Default: Current repository (A)
 ```
 
-**Question 6: Target Stack** _(If Greenfield + Implementation selected)_
+**Question 9: Target Stack** _(If Greenfield + Implementation selected)_
 ```
 What tech stack for the new implementation?
 
@@ -359,7 +380,7 @@ Examples:
 - Your choice: [specify your preferred stack]
 ```
 
-**Question 7: Build Location** _(If Greenfield + Implementation selected)_
+**Question 10: Build Location** _(If Greenfield + Implementation selected)_
 ```
 Where should the new application be built?
 
@@ -410,6 +431,7 @@ All answers are stored in `.stackshift-state.json` and guide the entire workflow
 {
   "detection_type": "monorepo-service",  // What kind of app: monorepo-service, nx-app, generic, etc.
   "route": "greenfield",                  // How to spec it: greenfield or brownfield
+  "implementation_framework": "speckit",  // speckit or bmad
   "config": {
     "spec_output_location": "~/git/my-new-app",  // Where to write specs/docs
     "build_location": "~/git/my-new-app",         // Where to build new code (Gear 6)
@@ -423,6 +445,7 @@ All answers are stored in `.stackshift-state.json` and guide the entire workflow
 **Key fields:**
 - `detection_type` - What we're analyzing (monorepo-service, nx-app, turborepo-package, generic)
 - `route` - How to spec it (greenfield = tech-agnostic, brownfield = tech-prescriptive)
+- `implementation_framework` - Which tool for implementation (speckit = GitHub Spec Kit, bmad = BMAD Method)
 
 **Examples:**
 - Monorepo Service + Greenfield = Extract business logic for platform migration
@@ -466,6 +489,21 @@ AskUserQuestion({
       ]
     },
     {
+      question: "Which implementation framework do you want to use?",
+      header: "Framework",
+      multiSelect: false,
+      options: [
+        {
+          label: "GitHub Spec Kit (Recommended)",
+          description: "Feature specs in .specify/, task-driven, simpler workflow"
+        },
+        {
+          label: "BMAD Method",
+          description: "PRD + Architecture in docs/, agent-driven, enterprise-scale"
+        }
+      ]
+    },
+    {
       question: "How do you want to shift through the gears?",
       header: "Transmission",
       multiSelect: false,
@@ -487,6 +525,8 @@ AskUserQuestion({
 // - If cruise control: Ask clarifications strategy, implementation scope
 // - If greenfield + implementing: Ask target stack
 // - If greenfield subfolder: Ask folder name (or accept default: greenfield/)
+// - If BMAD selected: Skip spec thoroughness question (BMAD handles its own planning)
+// - If BMAD + cruise control: Gear 6 hands off to BMAD instead of /speckit.implement
 ```
 
 **For custom folder name:** Use free-text input or accept default.

@@ -4,7 +4,20 @@ description: Gear 4 - Analyze gaps and create prioritized implementation roadmap
 
 # Gear 4: Gap Analysis
 
-**IMPORTANT**: This reads from cached AST analysis files (no re-analysis needed).
+**IMPORTANT**: Behavior depends on `implementation_framework` from Gear 1.
+
+## Step 0: Check Implementation Framework
+
+```bash
+IMPL_FRAMEWORK=$(cat .stackshift-state.json 2>/dev/null | grep -o '"implementation_framework"[^,]*' | cut -d'"' -f4)
+echo "Framework: ${IMPL_FRAMEWORK:-speckit}"
+```
+
+---
+
+## Path A: GitHub Spec Kit (implementation_framework: speckit)
+
+**This reads from cached AST analysis files (no re-analysis needed).**
 
 ## Step 1: Read Cached AST Analysis (Deterministic - Reads Files)
 
@@ -40,3 +53,29 @@ The roadmap shows:
 If `.stackshift-analysis/` doesn't exist:
 
 Use the Skill tool with skill="gap-analysis" for manual analysis.
+
+---
+
+## Path B: BMAD Method (implementation_framework: bmad)
+
+### Optional: Review AST Gap Analysis
+
+For BMAD projects, you can optionally review the AST-generated gap analysis:
+
+```bash
+~/stackshift/scripts/run-ast-analysis.mjs roadmap .
+```
+
+This shows:
+- Implementation completeness from AST analysis
+- Missing/partial features detected
+- Prioritized implementation phases
+
+### BMAD Handles Gap Analysis Differently
+
+BMAD's workflow (`*workflow-init`) handles gap analysis through its agents:
+- **Analyst agent** reviews the `docs/` structure
+- **PM agent** identifies gaps from `docs/prd.md`
+- **Architect agent** analyzes technical gaps from `docs/architecture.md`
+
+**Recommended**: Proceed to Gear 6 for BMAD handoff. Let BMAD agents handle their own gap analysis with the comprehensive docs StackShift generated.

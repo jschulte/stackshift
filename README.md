@@ -20,11 +20,15 @@ Transform any application into a fully-specified, spec-driven project with compl
 
 </div>
 
-> **Two paths, complete control:**
+> **Two paths, two frameworks, complete control:**
 >
 > **🔀 Greenfield:** Extract business logic from your legacy app, then rebuild in a modern stack using tech-agnostic specs.
 >
-> **⚙️ Brownfield:** Transform your existing codebase into a spec-driven project and manage it with GitHub Spec Kit going forward.
+> **⚙️ Brownfield:** Transform your existing codebase into a spec-driven project for ongoing management.
+>
+> **🛠️ Choose Your Implementation Framework:**
+> - **GitHub Spec Kit** - Feature specs in `.specify/`, task-driven workflow
+> - **BMAD Method** - PRD + Architecture in `docs/`, agent-driven workflow
 >
 > Start in reverse (engineering), shift through 6 gears, and cruise into spec-driven development!
 >
@@ -114,54 +118,38 @@ stateDiagram-v2
 │                  Shift Through 6 Gears                       │
 ├─────────────────────────────────────────────────────────────┤
 │                                                              │
-│  Gear 1: Initial Analysis + Route Selection                 │
+│  Gear 1: Initial Analysis + Route + Framework Selection     │
 │  ├─ Run AST analysis (parse codebase, save to cache)        │
 │  ├─ Detect technology stack                                 │
-│  ├─ Identify application type                               │
-│  ├─ Map directory structure                                 │
-│  └─ Choose your route: Greenfield or Brownfield?            │
+│  ├─ Choose route: Greenfield or Brownfield?                 │
+│  └─ Choose framework: GitHub Spec Kit or BMAD Method?       │
 │         │                                                    │
 │         ├─────────────────┬────────────────────┐            │
 │         │                 │                    │            │
-│    Greenfield         Brownfield               │            │
-│  (Tech-Agnostic)   (Tech-Prescriptive)         │            │
+│    Spec Kit           BMAD Method              │            │
+│   (All 6 gears)     (Gears 1-2, handoff)      │            │
 │         │                 │                    │            │
 │         ▼                 ▼                    │            │
 │  Gear 2: Reverse Engineer (Reverse Gear! 🔄)                │
-│  ├─ Extract business logic ONLY ◄── Greenfield              │
-│  ├─ OR business logic + tech details ◄── Brownfield         │
+│  ├─ Extract business logic + tech details                   │
 │  ├─ Enhanced with AST: auto-extract APIs & logic            │
-│  └─ Generate 9 comprehensive docs                           │
+│  ├─ Spec Kit: Generate 9 docs to docs/reverse-engineering/  │
+│  └─ BMAD: Generate docs/ structure (PRD, Architecture)      │
 │         │                                                    │
-│         ▼                                                    │
-│  Gear 3: Create Specifications                              │
-│  ├─ Initialize .specify/ (GitHub Spec Kit)                  │
-│  ├─ Agnostic constitution ◄── Greenfield                    │
-│  ├─ OR prescriptive constitution ◄── Brownfield             │
-│  ├─ Auto-detect status from AST (✅/⚠️/❌)                    │
-│  └─ Generate feature specs with actual signatures           │
-│         │                                                    │
-│         ▼                                                    │
-│  Gear 4: Gap Analysis                                       │
-│  ├─ Read cached AST roadmap (instant)                       │
-│  ├─ Identify missing features with confidence scores        │
-│  ├─ Brownfield: ~100% match initially                       │
-│  └─ Greenfield: All features marked MISSING                 │
-│         │                                                    │
-│         ▼                                                    │
-│  Gear 5: Complete Specification                             │
-│  ├─ Use /speckit.clarify                                    │
-│  ├─ Answer clarifications (evidence-based from AST)         │
-│  ├─ Define missing details                                  │
-│  └─ Prioritize implementation                               │
-│         │                                                    │
-│         ▼                                                    │
-│  Gear 6: Implement from Spec (Kick it into 6th! 🚀)         │
-│  ├─ Use /speckit.tasks & /speckit.implement                 │
-│  ├─ Greenfield: Build in new stack                          │
-│  ├─ Brownfield: Fill gaps in existing                       │
-│  ├─ Verify with AST (signatures, stubs, tests)              │
-│  └─ Achieve 100% completion - cruise into production!       │
+│         ├─────────────────┬────────────────────┐            │
+│         │                 │                    │            │
+│    Spec Kit           BMAD Method              │            │
+│         │          (Skip to Gear 6)            │            │
+│         ▼                 │                    │            │
+│  Gears 3-5: Spec Kit Path                     │            │
+│  ├─ Gear 3: Create .specify/ specs            │            │
+│  ├─ Gear 4: Gap analysis                      │            │
+│  └─ Gear 5: Complete specification            │            │
+│         │                 │                    │            │
+│         ▼                 ▼                    │            │
+│  Gear 6: Implement / Handoff                                │
+│  ├─ Spec Kit: /speckit.tasks & /speckit.implement           │
+│  └─ BMAD: Handoff to *workflow-init (agents take over)      │
 │                                                              │
 └─────────────────────────────────────────────────────────────┘
 ```
@@ -230,9 +218,10 @@ Simply say: "I want to reverse engineer this application" and Claude will guide 
 
 StackShift will ask a few questions upfront:
 1. Route: Greenfield or Brownfield?
-2. Transmission: Manual or Cruise Control?
-3. (If Cruise Control) Clarifications strategy & implementation scope
-4. (If Greenfield) Target tech stack
+2. Implementation Framework: GitHub Spec Kit or BMAD Method?
+3. Transmission: Manual or Cruise Control?
+4. (If Cruise Control + Spec Kit) Clarifications strategy & implementation scope
+5. (If Greenfield) Target tech stack
 
 All answers saved to `.stackshift-state.json` - configure once, use throughout!
 
@@ -356,8 +345,71 @@ See [`mcp-server/README.md`](mcp-server/README.md) for complete instructions.
 | **Specifications** | Agnostic | Prescriptive |
 | **Implementation** | Build new | Manage existing |
 | **Flexibility** | High | Constrained to current stack |
-| **Validation** | Manual | `/speckit.analyze` automated |
+| **Validation** | Manual | Automated |
 | **Use Case** | Platform migration | Ongoing development |
+
+---
+
+## 🛠️ Implementation Framework Choice
+
+After choosing your route (Greenfield/Brownfield), StackShift asks which implementation framework to use:
+
+### GitHub Spec Kit (Recommended for most projects)
+
+**Output structure:**
+```
+.specify/
+├── memory/
+│   ├── constitution.md      # Project principles
+│   └── [feature-name]/      # Per-feature specs
+│       ├── spec.md
+│       ├── plan.md
+│       └── tasks.md
+└── templates/               # Spec templates
+```
+
+**Workflow:**
+- `/speckit.specify` - Create feature specs
+- `/speckit.plan` - Create implementation plans
+- `/speckit.tasks` - Generate task lists
+- `/speckit.implement` - Execute implementation
+
+**Best for:** Most projects, task-driven development, smaller teams
+
+### BMAD Method (For larger/enterprise projects)
+
+**Output structure:**
+```
+docs/
+├── index.md                    # Navigation for BMAD agents
+├── architecture/
+│   ├── tech-stack.md          # Lean - loaded every dev session
+│   ├── coding-standards.md    # Lean - loaded every dev session
+│   └── project-structure.md   # Lean - loaded every dev session
+├── architecture.md            # Full architecture documentation
+└── prd.md                     # Product requirements document
+```
+
+**Workflow:**
+1. StackShift generates `docs/` structure (Gears 1-2)
+2. Gears 3-5 skipped (BMAD handles specs/gaps/clarifications)
+3. Gear 6 hands off to BMAD's `*workflow-init`
+4. BMAD's 21 agents (PM, Architect, Dev, etc.) take over
+
+**Best for:** Large projects, enterprise teams, agent-driven workflows
+
+### Framework Comparison
+
+| Aspect | GitHub Spec Kit | BMAD Method |
+|--------|-----------------|-------------|
+| **Output** | `.specify/` directory | `docs/` directory |
+| **Specs** | Feature-level specs | PRD + Architecture |
+| **Workflow** | `/speckit.*` commands | Agent-driven (`*workflow-init`) |
+| **Gears Used** | All 6 gears | Gears 1-2, then handoff |
+| **Team Size** | Any | Larger teams |
+| **Automation** | Task-driven | Agent-driven |
+
+**Note:** StackShift's reverse engineering (Gear 2) replaces BMAD's Phase 0 (`document-project`) with deeper AST-powered analysis.
 
 ---
 
