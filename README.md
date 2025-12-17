@@ -124,17 +124,11 @@ stateDiagram-v2
 │  ├─ Choose route: Greenfield or Brownfield?                 │
 │  └─ Choose framework: GitHub Spec Kit or BMAD Method?       │
 │         │                                                    │
-│         ├─────────────────┬────────────────────┐            │
-│         │                 │                    │            │
-│    Spec Kit           BMAD Method              │            │
-│   (All 6 gears)     (Gears 1-2, handoff)      │            │
-│         │                 │                    │            │
-│         ▼                 ▼                    │            │
+│         ▼                                                    │
 │  Gear 2: Reverse Engineer (Reverse Gear! 🔄)                │
 │  ├─ Extract business logic + tech details                   │
 │  ├─ Enhanced with AST: auto-extract APIs & logic            │
-│  ├─ Spec Kit: Generate 9 docs to docs/reverse-engineering/  │
-│  └─ BMAD: Generate docs/ structure (PRD, Architecture)      │
+│  └─ Generate 9 docs to docs/reverse-engineering/ (BOTH)     │
 │         │                                                    │
 │         ├─────────────────┬────────────────────┐            │
 │         │                 │                    │            │
@@ -149,7 +143,7 @@ stateDiagram-v2
 │         ▼                 ▼                    │            │
 │  Gear 6: Implement / Handoff                                │
 │  ├─ Spec Kit: /speckit.tasks & /speckit.implement           │
-│  └─ BMAD: Handoff to *workflow-init (agents take over)      │
+│  └─ BMAD: Handoff to *workflow-init (collaborative PRD)     │
 │                                                              │
 └─────────────────────────────────────────────────────────────┘
 ```
@@ -378,23 +372,27 @@ After choosing your route (Greenfield/Brownfield), StackShift asks which impleme
 
 ### BMAD Method (For larger/enterprise projects)
 
-**Output structure:**
+**Output structure (same as Spec Kit):**
 ```
-docs/
-├── index.md                    # Navigation for BMAD agents
-├── architecture/
-│   ├── tech-stack.md          # Lean - loaded every dev session
-│   ├── coding-standards.md    # Lean - loaded every dev session
-│   └── project-structure.md   # Lean - loaded every dev session
-├── architecture.md            # Full architecture documentation
-└── prd.md                     # Product requirements document
+docs/reverse-engineering/
+├── functional-specification.md   # Business logic, requirements
+├── integration-points.md         # External services, APIs
+├── configuration-reference.md    # All config options
+├── data-architecture.md          # Data models, API contracts
+├── operations-guide.md           # Deployment, infrastructure
+├── technical-debt-analysis.md    # Issues, improvements
+├── observability-requirements.md # Monitoring, logging
+├── visual-design-system.md       # UI/UX patterns
+└── test-documentation.md         # Testing requirements
 ```
 
 **Workflow:**
-1. StackShift generates `docs/` structure (Gears 1-2)
-2. Gears 3-5 skipped (BMAD handles specs/gaps/clarifications)
-3. Gear 6 hands off to BMAD's `*workflow-init`
-4. BMAD's 21 agents (PM, Architect, Dev, etc.) take over
+1. StackShift generates `docs/reverse-engineering/` (Gears 1-2) - same output as Spec Kit
+2. Gears 3-5 skipped (BMAD's agents handle PRD/Architecture collaboratively)
+3. Gear 6 hands off to BMAD's `*workflow-init` with rich context
+4. BMAD's PM and Architect agents create artifacts through conversation
+
+**Key difference:** StackShift provides the same reverse-engineering docs as input. BMAD's value is the **collaborative artifact creation** - PM agent discusses requirements with you, Architect agent discusses technical decisions with you. The PRD and Architecture emerge from conversation, not auto-generation.
 
 **Best for:** Large projects, enterprise teams, agent-driven workflows
 
@@ -402,14 +400,13 @@ docs/
 
 | Aspect | GitHub Spec Kit | BMAD Method |
 |--------|-----------------|-------------|
-| **Output** | `.specify/` directory | `docs/` directory |
-| **Specs** | Feature-level specs | PRD + Architecture |
-| **Workflow** | `/speckit.*` commands | Agent-driven (`*workflow-init`) |
-| **Gears Used** | All 6 gears | Gears 1-2, then handoff |
-| **Team Size** | Any | Larger teams |
-| **Automation** | Task-driven | Agent-driven |
+| **Gear 2 Output** | Same 9 docs | Same 9 docs |
+| **Gears 3-5** | Create `.specify/` specs | Skipped (BMAD handles) |
+| **Gear 6** | `/speckit.implement` | Handoff to `*workflow-init` |
+| **Artifact Creation** | Automated from docs | Collaborative with BMAD agents |
+| **Best For** | Task-driven teams | Agent-driven enterprise teams |
 
-**Note:** StackShift's reverse engineering (Gear 2) replaces BMAD's Phase 0 (`document-project`) with deeper AST-powered analysis.
+**Note:** StackShift's reverse engineering (Gear 2) replaces BMAD's Phase 0 (`document-project`) with deeper AST-powered analysis. Both frameworks get the same rich context.
 
 ---
 

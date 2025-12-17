@@ -233,14 +233,15 @@ A) GitHub Spec Kit (Recommended for most projects)
    → Best for: small-medium projects, focused features
 
 B) BMAD Method (For larger/enterprise projects)
-   → PRD + Architecture docs in docs/
-   → Agent-driven workflow (PM, Architect, Dev agents)
-   → Scale-adaptive planning (Quick Flow → Enterprise)
+   → Uses same reverse-engineering docs as Spec Kit
+   → Hands off to BMAD's collaborative PM/Architect agents
+   → BMAD creates PRD + Architecture through conversation
    → Best for: large projects, multi-team, enterprise
 
-After StackShift extracts documentation:
-- Spec Kit: Creates .specify/ structure, use /speckit.implement
-- BMAD: Creates docs/ structure, hand off to *workflow-init
+After StackShift extracts documentation (Gear 2):
+- Both frameworks get the same 9 docs in docs/reverse-engineering/
+- Spec Kit: Gears 3-6 create .specify/ specs, use /speckit.implement
+- BMAD: Skip to Gear 6, hand off to *workflow-init with rich context
 ```
 
 **Question 3: Brownfield Mode** _(If Brownfield selected)_

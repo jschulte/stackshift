@@ -56,7 +56,7 @@ At the start, you'll be asked:
    ```
    Choose implementation framework:
    A) GitHub Spec Kit - Feature specs in .specify/, /speckit.* commands
-   B) BMAD Method - PRD + Architecture in docs/, agent-driven workflow
+   B) BMAD Method - Same docs, hands off to BMAD's collaborative agents
    ```
 
 3. **Clarifications Handling:** (Spec Kit only)
@@ -141,17 +141,18 @@ Then cruise control takes over!
 
 #### Gear 2: Reverse Engineer (Auto)
 - Launches `stackshift:code-analyzer` agent
-- Extracts documentation in BMAD `docs/` format
-- Generates: `docs/index.md`, `docs/architecture/`, `docs/architecture.md`, `docs/prd.md`
+- Extracts documentation (same 9 files as Spec Kit path)
+- Generates all docs in `docs/reverse-engineering/`
 - **Skips to Gear 6** ✅
 
 #### Gears 3-5: Skipped
-- BMAD agents handle specs, gap analysis, and clarifications
-- Documentation is already in BMAD format from Gear 2
+- BMAD agents handle PRD creation, architecture, and clarifications collaboratively
+- StackShift's reverse-engineering docs provide rich context for BMAD
 
 #### Gear 6: BMAD Handoff
 - Displays instructions for BMAD installation and setup
 - Provides `*workflow-init` command to start BMAD workflow
+- Explains how to point BMAD to `docs/reverse-engineering/`
 - **StackShift completes - BMAD takes over!** 🏁
 
 ---
@@ -384,9 +385,9 @@ After cruise control completes:
 
 - ✅ Gears 1, 2, 6 complete (3-5 skipped)
 - ✅ `.stackshift-state.json` shows framework: "bmad"
-- ✅ `docs/` structure generated with all required files
+- ✅ `docs/reverse-engineering/` structure generated (same 9 files as Spec Kit)
 - ✅ BMAD handoff instructions displayed
-- ✅ Ready for `*workflow-init` to take over
+- ✅ Ready for `*workflow-init` to create PRD/Architecture collaboratively
 
 ---
 

@@ -45,18 +45,20 @@ After implementing each feature, verify with AST:
 
 ### StackShift Complete - Handoff to BMAD
 
-StackShift has prepared your codebase with comprehensive documentation in BMAD's format.
+StackShift has prepared your codebase with comprehensive reverse-engineering documentation.
 
-**Generated files:**
+**Generated files (same as Spec Kit path):**
 ```
-docs/
-├── index.md                    # Navigation for BMAD agents
-├── architecture/
-│   ├── tech-stack.md          # Loaded every dev session
-│   ├── coding-standards.md    # Loaded every dev session
-│   └── project-structure.md   # Loaded every dev session
-├── architecture.md            # Full technical details
-└── prd.md                     # Product requirements
+docs/reverse-engineering/
+├── functional-specification.md   # Business logic, requirements, user stories
+├── integration-points.md         # External services, APIs, dependencies
+├── configuration-reference.md    # All config options, env vars
+├── data-architecture.md          # Data models, API contracts, schemas
+├── operations-guide.md           # Deployment, infrastructure
+├── technical-debt-analysis.md    # Issues, improvements
+├── observability-requirements.md # Monitoring, logging
+├── visual-design-system.md       # UI/UX patterns
+└── test-documentation.md         # Testing requirements
 ```
 
 ### Next Steps for BMAD
@@ -66,29 +68,44 @@ docs/
    npx bmad-method@alpha install
    ```
 
-2. **Load the Analyst agent** in your IDE (see `docs/ide-info/` for instructions)
+2. **Load the Analyst agent** in your IDE (see BMAD docs for instructions)
 
 3. **Run workflow-init**:
    ```
    *workflow-init
    ```
 
-   BMAD will:
-   - Detect existing `docs/` documentation
-   - Recognize this as a brownfield project
-   - Route to appropriate workflow (Quick Flow or BMad Method)
-   - Use your StackShift-generated docs as context
+4. **Point BMAD to StackShift's documentation**:
 
-4. **BMAD takes over** - PM, Architect, and Dev agents proceed with full context
+   When BMAD asks about your project, tell it:
+   ```
+   This project has been analyzed by StackShift. Comprehensive reverse-engineering
+   documentation is available in docs/reverse-engineering/. Please use these 9
+   documents as context for creating the PRD and architecture.
+
+   Key documents:
+   - functional-specification.md - Business requirements and user stories
+   - data-architecture.md - Data models and API contracts
+   - integration-points.md - External dependencies and services
+   ```
+
+5. **BMAD takes over** - PM and Architect agents will:
+   - Read StackShift's reverse-engineering docs
+   - Collaboratively create PRD through conversation with you
+   - Collaboratively create Architecture through conversation with you
+   - Dev agent implements based on finalized docs
 
 ### Why This Works
 
-StackShift performed BMAD's "Phase 0: Documentation" with deeper analysis:
-- AST-powered extraction (vs BMAD's file flattener)
-- Semantic understanding of business logic
-- Accurate API and data model documentation
-- Lean `docs/architecture/*.md` files ready for dev agent context
+**StackShift provides rich context, BMAD provides collaborative refinement:**
+
+| StackShift Does | BMAD Does |
+|-----------------|-----------|
+| AST-powered code extraction | Collaborative PRD creation with PM agent |
+| Semantic business logic analysis | Collaborative Architecture with Architect agent |
+| Accurate API/data documentation | Agent-driven implementation workflow |
+| Comprehensive 9-doc output | Scale-adaptive planning (Quick → Enterprise) |
 
 **You get the best of both worlds:**
-- StackShift's deep reverse engineering
-- BMAD's agent-driven implementation workflow
+- StackShift's deep, accurate reverse engineering as input
+- BMAD's interactive, collaborative artifact creation as output
