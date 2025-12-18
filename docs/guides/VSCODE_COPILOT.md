@@ -14,7 +14,7 @@ For VSCode/Copilot users, use the web bootstrap prompt instead.
 
 ```bash
 # Clone StackShift
-git clone git@ghe.coxautoinc.com:DDC-WebPlatform/stackshift.git ~/stackshift
+git clone https://github.com/jschulte/stackshift.git ~/stackshift
 ```
 
 ### Usage
@@ -56,7 +56,7 @@ Copilot will then:
 
 ```bash
 # Clone mcp-tools
-git clone git@ghe.coxautoinc.com:Jonah-Schulte/mcp-tools.git
+# git clone <mcp-tools-repository-url>
 cd mcp-tools
 
 # Install dependencies
