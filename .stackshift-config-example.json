@@ -1,0 +1,49 @@
+{
+  "$schema": "https://stackshift.dev/config-schema.json",
+  "version": "1.0",
+  "description": "StackShift Configuration - Copy to .stackshift-config.json to customize",
+
+  "frameworks": {
+    "_comment": "Framework preferences (overrides prompts)",
+    "implementation_framework": null,
+    "_valid_values": ["speckit", "bmad", "both", null],
+    "_note": "Set to null to be prompted, or pre-configure for automation"
+  },
+
+  "route": {
+    "_comment": "Route preference",
+    "default_route": null,
+    "_valid_values": ["greenfield", "brownfield", null]
+  },
+
+  "generation": {
+    "_comment": "Control what to generate (cost optimization)",
+    "generate_specs": true,
+    "generate_plans": true,
+    "generate_tasks": false,
+    "_note": "Set generate_tasks to false for faster analysis"
+  },
+
+  "cruise_control": {
+    "_comment": "Cruise control settings",
+    "clarifications_strategy": "defer",
+    "_valid_strategies": ["defer", "prompt", "skip"],
+    "implementation_scope": "p0_p1",
+    "_valid_scopes": ["none", "p0", "p0_p1", "all"]
+  },
+
+  "tool_modes": {
+    "_comment": "Enable tool-specific optimizations",
+    "opencode_enabled": false,
+    "skip_interactive_prompts": false,
+    "use_explicit_mentions": true,
+    "_note": "Set skip_interactive_prompts to true for CI/CD"
+  },
+
+  "paths": {
+    "_comment": "Custom output paths (optional)",
+    "spec_output_location": null,
+    "build_location": null,
+    "_note": "Set to null to use defaults (current directory)"
+  }
+}
