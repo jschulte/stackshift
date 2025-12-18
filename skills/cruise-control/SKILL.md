@@ -52,14 +52,20 @@ At the start, you'll be asked:
    B) Brownfield - Manage existing code
    ```
 
-2. **Implementation Framework:**
+2. **Implementation Framework (BE RAD!):**
    ```
-   Choose implementation framework:
+   ╔═══════════════════════════════════════════════════════════════╗
+   ║         Choose Your Implementation Framework                  ║
+   ╚═══════════════════════════════════════════════════════════════╝
+
    A) GitHub Spec Kit - Feature specs in .specify/, /speckit.* commands
-   B) BMAD Method - Same docs, hands off to BMAD's collaborative agents
+   B) BMAD Method - Hands off to BMAD's collaborative agents
+   C) BOTH (Recommended!) - BE RAD: Best of All Worlds!
+
+   Press Enter for C (BOTH)
    ```
 
-3. **Clarifications Handling:** (Spec Kit only)
+3. **Clarifications Handling:** (Spec Kit or BOTH)
    ```
    How to handle [NEEDS CLARIFICATION] markers?
    A) Defer - Mark them, implement around them, clarify later
@@ -67,7 +73,7 @@ At the start, you'll be asked:
    C) Skip - Only implement fully-specified features
    ```
 
-4. **Implementation Scope:** (Spec Kit only)
+4. **Implementation Scope:** (Spec Kit or BOTH)
    ```
    What to implement in Gear 6?
    A) P0 only - Critical features only
@@ -78,7 +84,9 @@ At the start, you'll be asked:
 
 Then cruise control takes over!
 
-**Note**: For BMAD Method, questions 3-4 are skipped. BMAD agents handle clarifications and implementation through their interactive workflow.
+**Note**:
+- For BMAD-only, questions 3-4 are skipped (BMAD agents handle everything)
+- For BOTH, questions 3-4 apply to the Spec Kit portion; BMAD handoff always happens
 
 ---
 
@@ -154,6 +162,55 @@ Then cruise control takes over!
 - Provides `*workflow-init` command to start BMAD workflow
 - Explains how to point BMAD to `docs/reverse-engineering/`
 - **StackShift completes - BMAD takes over!** 🏁
+
+---
+
+### BOTH Path (BE RAD!) 🚀
+
+**The recommended path for maximum flexibility!**
+
+#### Gear 1: Analyze (Auto)
+- Detects tech stack
+- Assesses completeness
+- Sets route and framework to "both"
+- Saves state with `auto_mode: true`
+- **Auto-shifts to Gear 2** ✅
+
+#### Gear 2: Reverse Engineer (Auto)
+- Launches `stackshift:code-analyzer` agent
+- Extracts documentation (9 files to `docs/reverse-engineering/`)
+- **Auto-shifts to Gear 3** ✅
+
+#### Gear 3: Create Specifications (Auto)
+- Creates `.specify/` structure with Spec Kit specs
+- Generates constitution and feature specs
+- Creates implementation plans for incomplete features
+- **Auto-shifts to Gear 4** ✅
+
+#### Gear 4: Gap Analysis (Auto)
+- Runs `/speckit.analyze`
+- Identifies PARTIAL/MISSING features
+- Creates prioritized roadmap
+- **Auto-shifts to Gear 5** ✅
+
+#### Gear 5: Complete Specification (Conditional)
+- Handles clarifications based on your setting
+- **Auto-shifts to Gear 6** ✅
+
+#### Gear 6: Implement + BMAD Handoff
+- **First**: Runs Spec Kit implementation (based on scope)
+- **Then**: Displays BMAD handoff instructions
+- **Result**: You have BOTH:
+  - `.specify/` with Spec Kit artifacts
+  - `docs/reverse-engineering/` ready for BMAD
+  - Can use either workflow going forward!
+- **Completes!** 🏁
+
+**Why BOTH is powerful:**
+- Use Spec Kit for quick task-driven implementation
+- Use BMAD when you need collaborative refinement
+- Switch between workflows as needed
+- No commitment required upfront
 
 ---
 

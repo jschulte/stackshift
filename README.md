@@ -20,7 +20,7 @@ Transform any application into a fully-specified, spec-driven project with compl
 
 </div>
 
-> **Two paths, two frameworks, complete control:**
+> **Two paths, three frameworks, complete control:**
 >
 > **🔀 Greenfield:** Extract business logic from your legacy app, then rebuild in a modern stack using tech-agnostic specs.
 >
@@ -28,7 +28,10 @@ Transform any application into a fully-specified, spec-driven project with compl
 >
 > **🛠️ Choose Your Implementation Framework:**
 > - **GitHub Spec Kit** - Feature specs in `.specify/`, task-driven workflow
-> - **BMAD Method** - PRD + Architecture in `docs/`, agent-driven workflow
+> - **BMAD Method** - PRD + Architecture through collaborative agents
+> - **BOTH (BE RAD!)** - Get both workflows for maximum flexibility 🚀
+>
+> **🌐 Works Everywhere:** Claude Code, OpenCode, Cursor, Windsurf, Codex, VSCode
 >
 > Start in reverse (engineering), shift through 6 gears, and cruise into spec-driven development!
 >
@@ -150,9 +153,46 @@ stateDiagram-v2
 
 ---
 
+## 🌐 Universal LLM Tool Support
+
+StackShift works with multiple LLM coding tools:
+
+| Tool | Status | Installation |
+|------|--------|--------------|
+| **Claude Code** | ✅ Full support | Plugin or slash commands |
+| **OpenCode** | ✅ Full support | Slash commands + agents |
+| **Cursor** | ✅ Supported | Natural language + bash |
+| **Windsurf** | ✅ Supported | Natural language + bash |
+| **Codex** | ✅ Supported | Natural language + bash |
+| **VSCode** | ✅ Supported | Continue extension + bash |
+
+### Universal Installer
+
+Install StackShift commands to any/all detected tools:
+
+```bash
+./scripts/install-universal.sh
+```
+
+The installer will:
+- Auto-detect installed LLM tools
+- Let you choose which tools to install to
+- Copy commands to appropriate locations
+
+### Pre-Configuration (CI/CD Friendly)
+
+Create `.stackshift-config.json` to skip interactive prompts:
+
+```bash
+cp .stackshift-config-example.json .stackshift-config.json
+# Edit to set your preferences
+```
+
+---
+
 ## 🚀 Quick Start
 
-### Three Ways to Use StackShift
+### Four Ways to Use StackShift
 
 #### Option 1: Claude Code Plugin (Local - Best Experience)
 
@@ -396,17 +436,49 @@ docs/reverse-engineering/
 
 **Best for:** Large projects, enterprise teams, agent-driven workflows
 
+### BOTH (BE RAD!) - Recommended 🚀
+
+**Why choose when you can have both?**
+
+```
+BE RAD = Business logic Extraction + Reverse engineering + Agent-Driven development
+```
+
+**Output structure:**
+```
+.specify/                         # Spec Kit artifacts
+├── memory/
+│   ├── constitution.md
+│   └── [feature-name]/
+│       ├── spec.md
+│       ├── plan.md
+│       └── tasks.md
+
+docs/reverse-engineering/         # BMAD context (same 9 files)
+├── functional-specification.md
+├── data-architecture.md
+└── ... (9 files total)
+```
+
+**Benefits:**
+- Use Spec Kit for quick, focused tasks
+- Use BMAD when you need collaborative refinement
+- Switch between workflows as your needs change
+- No commitment required upfront
+
+**Best for:** Teams that want maximum flexibility
+
 ### Framework Comparison
 
-| Aspect | GitHub Spec Kit | BMAD Method |
-|--------|-----------------|-------------|
-| **Gear 2 Output** | Same 9 docs | Same 9 docs |
-| **Gears 3-5** | Create `.specify/` specs | Skipped (BMAD handles) |
-| **Gear 6** | `/speckit.implement` | Handoff to `*workflow-init` |
-| **Artifact Creation** | Automated from docs | Collaborative with BMAD agents |
-| **Best For** | Task-driven teams | Agent-driven enterprise teams |
+| Aspect | GitHub Spec Kit | BMAD Method | BOTH (BE RAD!) |
+|--------|-----------------|-------------|----------------|
+| **Gear 2 Output** | 9 docs | 9 docs | 9 docs |
+| **Gears 3-5** | Create `.specify/` specs | Skipped | Create `.specify/` specs |
+| **Gear 6** | `/speckit.implement` | BMAD handoff | Both! |
+| **Artifact Creation** | Automated | Collaborative | Your choice |
+| **Best For** | Task-driven | Agent-driven | Flexibility |
 
-**Note:** StackShift's reverse engineering (Gear 2) replaces BMAD's Phase 0 (`document-project`) with deeper AST-powered analysis. Both frameworks get the same rich context.
+**Note:** StackShift's reverse engineering (Gear 2) replaces BMAD's Phase 0 (`document-project`) with deeper AST-powered analysis. All frameworks get the same rich context.
 
 ---
 

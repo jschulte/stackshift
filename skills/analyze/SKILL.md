@@ -223,26 +223,50 @@ B) Brownfield: Extract for maintaining existing codebase
 - Generic + Brownfield = Full implementation for management
 
 **Question 2: Implementation Framework**
+
+**Present this prominently with visual emphasis:**
+
 ```
-Which implementation framework do you want to use?
+╔═══════════════════════════════════════════════════════════════╗
+║         Choose Your Implementation Framework                  ║
+╚═══════════════════════════════════════════════════════════════╝
 
-A) GitHub Spec Kit (Recommended for most projects)
-   → Feature-level specifications in .specify/
-   → Task-driven implementation with /speckit.* commands
-   → Simpler, lightweight workflow
-   → Best for: small-medium projects, focused features
+A) GitHub Spec Kit
+   ✓ Feature-level specifications in .specify/
+   ✓ Task-driven implementation with /speckit.* commands
+   ✓ Simpler, lightweight workflow
+   ✓ Best for: small-medium projects, focused features
 
-B) BMAD Method (For larger/enterprise projects)
-   → Uses same reverse-engineering docs as Spec Kit
-   → Hands off to BMAD's collaborative PM/Architect agents
-   → BMAD creates PRD + Architecture through conversation
-   → Best for: large projects, multi-team, enterprise
+B) BMAD Method
+   ✓ Uses same reverse-engineering docs as Spec Kit
+   ✓ Hands off to BMAD's collaborative PM/Architect agents
+   ✓ BMAD creates PRD + Architecture through conversation
+   ✓ Best for: large projects, multi-team, enterprise
+
+C) BOTH (Recommended for maximum power! 🚀)
+   ✓ Generate Spec Kit specs (.specify/)
+   ✓ Generate reverse-engineering docs
+   ✓ Hand off to BMAD with rich context
+   ✓ BE RAD: Reverse Engineer + Spec Kit + BMAD = Best of All Worlds!
+   ✓ Use whichever workflow fits your current task
+   ✓ Best for: Teams that want flexibility and maximum context
+
+Your choice (A/B/C - or press Enter for C):
+```
+
+**Default to "BOTH" (C)** - Users who are uncertain get maximum power.
+
+**Why "BOTH" as default:**
+- Most powerful option - no commitment required upfront
+- Generates all artifacts - user can choose later which to use
+- Provides maximum context to downstream systems
+- Removes decision paralysis - "when in doubt, get both"
 
 After StackShift extracts documentation (Gear 2):
-- Both frameworks get the same 9 docs in docs/reverse-engineering/
-- Spec Kit: Gears 3-6 create .specify/ specs, use /speckit.implement
-- BMAD: Skip to Gear 6, hand off to *workflow-init with rich context
-```
+- All frameworks get the same 9 docs in docs/reverse-engineering/
+- Spec Kit path: Gears 3-6 create .specify/ specs, use /speckit.implement
+- BMAD path: Skip to Gear 6, hand off to *workflow-init with rich context
+- BOTH path: Create .specify/ specs AND hand off to BMAD with full context
 
 **Question 3: Brownfield Mode** _(If Brownfield selected)_
 ```
@@ -432,7 +456,7 @@ All answers are stored in `.stackshift-state.json` and guide the entire workflow
 {
   "detection_type": "monorepo-service",  // What kind of app: monorepo-service, nx-app, generic, etc.
   "route": "greenfield",                  // How to spec it: greenfield or brownfield
-  "implementation_framework": "speckit",  // speckit or bmad
+  "implementation_framework": "both",     // speckit, bmad, or both
   "config": {
     "spec_output_location": "~/git/my-new-app",  // Where to write specs/docs
     "build_location": "~/git/my-new-app",         // Where to build new code (Gear 6)
@@ -446,7 +470,10 @@ All answers are stored in `.stackshift-state.json` and guide the entire workflow
 **Key fields:**
 - `detection_type` - What we're analyzing (monorepo-service, nx-app, turborepo-package, generic)
 - `route` - How to spec it (greenfield = tech-agnostic, brownfield = tech-prescriptive)
-- `implementation_framework` - Which tool for implementation (speckit = GitHub Spec Kit, bmad = BMAD Method)
+- `implementation_framework` - Which tool for implementation:
+  - `speckit` = GitHub Spec Kit only (task-driven)
+  - `bmad` = BMAD Method only (agent-driven)
+  - `both` = Both frameworks (recommended - BE RAD!)
 
 **Examples:**
 - Monorepo Service + Greenfield = Extract business logic for platform migration
@@ -468,10 +495,12 @@ All answers are stored in `.stackshift-state.json` and guide the entire workflow
 
 ### Implementing the Questionnaire
 
-Use the `AskUserQuestion` tool to collect all configuration upfront:
+**For Claude Code users:** Use the `AskUserQuestion` tool to collect all configuration upfront.
+
+**For OpenCode/Cursor/VSCode users:** Use bash prompts with the visual presentation shown above.
 
 ```typescript
-// Example implementation
+// Claude Code implementation with AskUserQuestion
 AskUserQuestion({
   questions: [
     {
@@ -495,12 +524,16 @@ AskUserQuestion({
       multiSelect: false,
       options: [
         {
-          label: "GitHub Spec Kit (Recommended)",
-          description: "Feature specs in .specify/, task-driven, simpler workflow"
+          label: "GitHub Spec Kit",
+          description: "Feature specs in .specify/, task-driven workflow"
         },
         {
           label: "BMAD Method",
-          description: "PRD + Architecture in docs/, agent-driven, enterprise-scale"
+          description: "Hands off to BMAD's collaborative PM/Architect agents"
+        },
+        {
+          label: "BOTH (Recommended)",
+          description: "BE RAD! Generate both Spec Kit specs AND BMAD handoff for maximum flexibility"
         }
       ]
     },
