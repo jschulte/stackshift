@@ -28,7 +28,7 @@ Transform any application into a fully-specified, spec-driven project with compl
 >
 > **🛠️ Choose Your Implementation Framework:**
 > - **GitHub Spec Kit** - Feature specs in `.specify/`, task-driven workflow
-> - **BMAD Method** - PRD + Architecture in `docs/`, agent-driven workflow
+> - **BMAD Method** - Handoff to BMAD agents for collaborative artifact creation
 >
 > Start in reverse (engineering), shift through 6 gears, and cruise into spec-driven development!
 >
