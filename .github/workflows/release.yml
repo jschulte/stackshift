@@ -110,6 +110,15 @@ jobs:
 
       - name: Package Plugin
         run: |
+          # Build plugin directory from root-level files
+          mkdir -p plugin/.claude-plugin plugin/.claude/commands
+          cp -r .claude-plugin/* plugin/.claude-plugin/
+          cp -r skills plugin/
+          cp -r agents plugin/
+          cp .claude/commands/stackshift*.md plugin/.claude/commands/
+          cp .claude/commands/speckit*.md plugin/.claude/commands/
+
+          # Create tarball
           tar -czf stackshift-plugin-${{ github.ref_name }}.tar.gz plugin/
 
       - name: Package MCP Server

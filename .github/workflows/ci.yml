@@ -178,21 +178,21 @@ jobs:
         run: |
           echo "Validating Claude Code plugin structure..."
 
-          # Check for required plugin files
-          [ -f "plugin/.claude-plugin/plugin.json" ] && echo "✅ plugin.json found" || echo "❌ plugin.json missing"
+          # Check for required plugin files at root level
+          [ -f ".claude-plugin/plugin.json" ] && echo "✅ plugin.json found" || echo "❌ plugin.json missing"
 
           # Validate plugin.json
-          if [ -f "plugin/.claude-plugin/plugin.json" ]; then
-            cat plugin/.claude-plugin/plugin.json | jq empty && echo "✅ Valid plugin.json"
+          if [ -f ".claude-plugin/plugin.json" ]; then
+            cat .claude-plugin/plugin.json | jq empty && echo "✅ Valid plugin.json"
           fi
 
           # Check for skills
           echo "Checking skills..."
-          find plugin/skills -name "SKILL.md" -type f | wc -l | xargs -I {} echo "Found {} skills"
+          find skills -name "SKILL.md" -type f | wc -l | xargs -I {} echo "Found {} skills"
 
           # Check for agents
           echo "Checking agents..."
-          find plugin/agents -type d -mindepth 1 -maxdepth 1 | wc -l | xargs -I {} echo "Found {} agents"
+          find agents -type d -mindepth 1 -maxdepth 1 | wc -l | xargs -I {} echo "Found {} agents"
 
   diagrams:
     name: Validate Diagram Generation
