@@ -51,3 +51,52 @@ jobs:
           # Check for agents
           echo "Checking agents..."
           find agents -type d -mindepth 1 -maxdepth 1 | wc -l | xargs -I {} echo "Found {} agents"
+
+  typecheck:
+    name: TypeScript Type Check
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: cd scripts/ast-analysis && npm ci
+
+      - name: Type check
+        run: cd scripts/ast-analysis && npx tsc --noEmit
+
+  test:
+    name: Unit Tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: cd scripts/ast-analysis && npm ci
+
+      - name: Run tests
+        run: cd scripts/ast-analysis && npm test
+
+  validate-plugin:
+    name: Validate Plugin Integrity
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Run validation script
+        run: bash scripts/validate-plugin.sh

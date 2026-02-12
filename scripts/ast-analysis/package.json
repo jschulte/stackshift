@@ -1,13 +1,15 @@
 {
   "name": "stackshift-ast-analysis",
-  "version": "1.6.0",
+  "version": "2.0.0",
   "private": true,
   "type": "module",
   "description": "AST-powered analysis tools for StackShift - function signature verification, stub detection, gap analysis, and roadmap generation",
   "main": "dist/tools/generate-roadmap.js",
   "scripts": {
     "build": "tsc",
-    "clean": "rm -rf dist"
+    "clean": "rm -rf dist",
+    "test": "vitest run",
+    "test:watch": "vitest"
   },
   "dependencies": {
     "@babel/parser": "^7.28.5",
@@ -21,6 +23,7 @@
     "@types/js-yaml": "^4.0.9",
     "@types/markdown-it": "^14.1.2",
     "@types/node": "^24.10.1",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "vitest": "^4.0.18"
   }
 }

@@ -29,7 +29,9 @@
     "url": "https://github.com/jschulte/stackshift/issues"
   },
   "scripts": {
-    "test": "echo \"No tests yet\" && exit 0",
+    "test": "cd scripts/ast-analysis && npm test",
+    "test:watch": "cd scripts/ast-analysis && npm run test:watch",
+    "validate": "bash scripts/validate-plugin.sh",
     "build:ast": "cd scripts/ast-analysis && npm install && npm run build"
   },
   "files": [

@@ -226,11 +226,11 @@ export class Prioritizer {
       inDegree.set(item.id, 0);
     }
 
-    // Calculate in-degrees
+    // Calculate in-degrees (each dependency adds an incoming edge to the dependent item)
     for (const item of items) {
       if (item.dependencies) {
-        for (const depId of item.dependencies) {
-          inDegree.set(depId, (inDegree.get(depId) || 0) + 1);
+        for (const _depId of item.dependencies) {
+          inDegree.set(item.id, (inDegree.get(item.id) || 0) + 1);
         }
       }
     }
