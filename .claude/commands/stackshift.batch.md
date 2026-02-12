@@ -34,6 +34,29 @@ I'll:
 
 ### Step 1: Discovery
 
+**First, check for a pre-populated batch session from `/stackshift.discover`:**
+
+```bash
+# Check if a discover-created batch session exists
+if [ -f .stackshift-batch-session.json ]; then
+  # Check if it has discoveredRepos (created by /stackshift.discover)
+  DISCOVERED=$(cat .stackshift-batch-session.json | jq -r '.discoveredRepos // empty')
+  if [ -n "$DISCOVERED" ]; then
+    echo "=== Using ecosystem map from /stackshift.discover ==="
+    REPO_COUNT=$(cat .stackshift-batch-session.json | jq '.discoveredRepos | length')
+    echo "Found $REPO_COUNT pre-discovered repos"
+
+    # Extract repo paths from discoveredRepos
+    cat .stackshift-batch-session.json | jq -r '.discoveredRepos[] | "\(.name)\t\(.path)\t\(.confidence)"'
+
+    # Use these paths as the repo list — skip manual discovery
+    # Filter by confidence if desired (e.g., only CONFIRMED + HIGH)
+  fi
+fi
+```
+
+**If no discover session exists, fall back to directory scanning:**
+
 ```bash
 echo "=== Discovering repositories in ~/git/my-monorepo/services ==="
 
@@ -47,6 +70,8 @@ echo "Found $SERVICE_COUNT services"
 # Show first 10
 head -10 /tmp/services-to-analyze.txt
 ```
+
+**Tip:** Run `/stackshift.discover` first to auto-find all related repos, then `/stackshift.batch` will pick up the discovered repo list automatically.
 
 ### Step 2: Batch Configuration
 

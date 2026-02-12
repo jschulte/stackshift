@@ -42,6 +42,7 @@ Transform any application into a fully-specified, spec-driven project with compl
 - **[Plugin Guide](docs/guides/PLUGIN_GUIDE.md)** - Claude Code plugin usage
 - **[Web Guide](web/README.md)** - Using in Claude Code Web (browser)
 - **[Batch Processing](scripts/BATCH_PROCESSING_GUIDE.md)** - Process multiple projects efficiently
+- **[Ecosystem Discovery](#-ecosystem-discovery)** - Auto-discover all related repos from a single starting point
 
 ---
 
@@ -169,6 +170,7 @@ Restart Claude Code. Skills will now be available:
 - `gap-analysis` - Gap Analysis
 - `complete-spec` - Complete Specification
 - `implement` - Implement from Spec
+- `discover` - Ecosystem Discovery (find all related repos from one starting point)
 
 **Usage:**
 
@@ -602,6 +604,42 @@ This toolkit works for:
 - Works even with minimal documentation
 - Infers behavior from code
 - Creates modernization roadmap
+
+---
+
+## Ecosystem Discovery
+
+**Start with one repo. Discover the entire platform.**
+
+When reverse-engineering a large system, the hardest part is figuring out *which repos matter*. The `discover` skill solves this:
+
+```
+/stackshift.discover
+```
+
+**What it does:**
+1. Scans your starting repo for 10 categories of integration signals (npm packages, Docker Compose, env vars, API calls, CI/CD triggers, workspace configs, message queues, infrastructure refs, and more)
+2. Auto-detects the GitHub org from your git remote
+3. Searches GitHub for related repos in the same org
+4. Scans your local filesystem for matching repos
+5. Merges everything, deduplicates, and scores confidence (CONFIRMED / HIGH / MEDIUM / LOW)
+6. Presents an ecosystem map with a Mermaid dependency graph
+7. Hands off to `/stackshift.batch` or `/stackshift.reimagine`
+
+**Example workflow:**
+```
+You: /stackshift.discover
+StackShift: "Scanning user-service... Found 12 related repos!"
+
+  CONFIRMED: user-service, shared-utils, auth-service
+  HIGH:      inventory-api, notification-hub, billing-api, order-service
+  MEDIUM:    admin-dashboard, reporting-service, config-repo
+  LOW:       legacy-gateway, monitoring-stack
+
+StackShift: "Run batch on all 12 repos?"
+You: "Yes"
+→ /stackshift.batch picks up the discovered repo list automatically
+```
 
 ---
 
