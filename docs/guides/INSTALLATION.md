@@ -64,13 +64,7 @@ Try these trigger phrases:
 
 ```bash
 # See current progress (which gear you're in)
-node ~/.claude/plugins/local/stackshift/plugin/scripts/state-manager.js status
-
-# See detailed progress
-node ~/.claude/plugins/local/stackshift/plugin/scripts/state-manager.js progress
-
-# Check which route you chose
-node ~/.claude/plugins/local/stackshift/plugin/scripts/state-manager.js get-path
+cat .stackshift-state.json
 ```
 
 ---
@@ -249,16 +243,6 @@ ls -la ~/.claude/plugins/local/
    "Run the analyze skill"
    "Use the reverse-engineer skill"
    ```
-
-### State Manager Not Working
-
-```bash
-# Make sure it's executable
-chmod +x plugin/scripts/state-manager.js
-
-# Test it
-node plugin/scripts/state-manager.js init
-```
 
 ### Manual Fallback
 

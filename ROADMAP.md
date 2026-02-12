@@ -10,8 +10,7 @@ Future features and enhancements planned for StackShift.
 
 - ✅ 6-gear reverse engineering process
 - ✅ Dual workflow (Greenfield/Brownfield)
-- ✅ Claude Code plugin (7 skills, 2 agents)
-- ✅ MCP server (7 tools, 3 resources)
+- ✅ Claude Code plugin (skills, agents)
 - ✅ Web orchestrator (browser support)
 - ✅ Cruise control (automatic mode)
 - ✅ Batch processing tools
@@ -62,31 +61,10 @@ Future features and enhancements planned for StackShift.
 
 **Estimated effort:** 2-3 hours
 
-**CLI:**
-```bash
-# Compare and sync
-stackshift sync ~/git/legacy ~/git/new --interactive
-
-# Analyze only
-stackshift sync ~/git/legacy ~/git/new --analyze-only
-
-# Auto-sync forward
-stackshift sync ~/git/legacy ~/git/new --direction forward --auto
-```
-
 **Skill:**
 ```
 "Sync specs between legacy and new app"
 → Guided interactive synchronization
-```
-
-**MCP Tool:**
-```typescript
-stackshift_sync({
-  legacy_path: "~/git/legacy",
-  new_path: "~/git/new",
-  mode: "interactive"
-})
 ```
 
 ### Dual-Spec Mode
@@ -133,7 +111,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - run: stackshift validate-alignment
+      - run: npx stackshift validate-alignment
 ```
 
 **Alert if:**
@@ -146,8 +124,6 @@ jobs:
 **Web UI for comparing specs:**
 
 ```
-stackshift-diff.vercel.app
-
 Upload two .specify/ folders
 → Visual side-by-side comparison
 → Highlight differences
@@ -166,10 +142,10 @@ Upload two .specify/ folders
 
 **Manage specs across microservices:**
 
-```bash
-stackshift sync-multi \
-  --services api-service,web-app,worker \
-  --shared-specs ./shared-specs/
+```
+Sync specs across services:
+- api-service, web-app, worker
+- Shared specs in ./shared-specs/
 ```
 
 ### Spec Quality Scoring
@@ -203,13 +179,6 @@ Code changed → AI detects change → Updates spec → Creates PR
 ### Framework Converters
 
 **Auto-convert between stacks:**
-
-```bash
-stackshift convert \
-  --from rails \
-  --to nextjs \
-  --spec user-authentication.md
-```
 
 Generates implementation in target framework from agnostic spec!
 

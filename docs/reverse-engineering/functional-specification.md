@@ -32,7 +32,7 @@ StackShift is a comprehensive reverse engineering toolkit that transforms codeba
 Users must be able to analyze any codebase to detect technology stack, assess completeness, and choose between Greenfield (tech-agnostic extraction) or Brownfield (tech-prescriptive management) workflows.
 
 ### Current Implementation
-- **MCP Tool**: `stackshift_analyze` in `mcp-server/src/tools/analyze.ts` (210 lines)
+- **Plugin Skill**: `plugin/skills/analyze/SKILL.md`
 - **Plugin Skill**: `plugin/skills/analyze/SKILL.md` (437 lines with 5 operations)
 - **State Management**: Creates `.stackshift-state.json` with workflow configuration
 - **Tech Detection**: Supports Node.js, Python, Go, Rust via manifest file parsing
@@ -62,7 +62,6 @@ Users must be able to analyze any codebase to detect technology stack, assess co
 - `file-utils.ts` - Safe file counting (replaces shell commands)
 
 **Files:**
-- `mcp-server/src/tools/analyze.ts` (210 lines)
 - `plugin/skills/analyze/SKILL.md` (437 lines)
 - `plugin/skills/analyze/operations/*.md` (5 operation guides)
 
@@ -83,7 +82,7 @@ Users must be able to analyze any codebase to detect technology stack, assess co
 Users must extract comprehensive documentation (8 files) that captures either business logic only (Greenfield) or business logic + technical implementation (Brownfield).
 
 ### Current Implementation
-- **MCP Tool**: `stackshift_reverse_engineer` in `mcp-server/src/tools/reverse-engineer.ts` (115 lines)
+- **Plugin Skill**: `plugin/skills/reverse-engineer/SKILL.md`
 - **Plugin Skill**: `plugin/skills/reverse-engineer/SKILL.md` (282 lines)
 - **Route-Aware**: Adapts extraction based on `.stackshift-state.json` path selection
 - **Agent Integration**: Uses `stackshift:code-analyzer` agent for thorough extraction
@@ -119,7 +118,6 @@ Users must extract comprehensive documentation (8 files) that captures either bu
 - Uses `stackshift:code-analyzer` agent (or Explore fallback)
 
 **Files:**
-- `mcp-server/src/tools/reverse-engineer.ts` (115 lines)
 - `plugin/skills/reverse-engineer/SKILL.md` (282 lines)
 - `plugin/agents/stackshift-code-analyzer/AGENT.md` (defines extraction agent)
 
@@ -139,7 +137,7 @@ Users must extract comprehensive documentation (8 files) that captures either bu
 Users must transform documentation into formal GitHub Spec Kit specifications with constitution, feature specs, and implementation plans.
 
 ### Current Implementation
-- **MCP Tool**: `stackshift_create_specs` in `mcp-server/src/tools/create-specs.ts` (140 lines)
+- **Plugin Skill**: `plugin/skills/create-specs/SKILL.md`
 - **Plugin Skill**: `plugin/skills/create-specs/SKILL.md` (463 lines)
 - **Integration**: GitHub Spec Kit CLI (`specify init`) or fallback templates
 - **Templates**: Dual constitution templates (agnostic vs prescriptive)
@@ -196,7 +194,6 @@ specs/FEATURE-ID/
 - Optional: GitHub Spec Kit CLI (falls back to templates)
 
 **Files:**
-- `mcp-server/src/tools/create-specs.ts` (140 lines)
 - `plugin/skills/create-specs/SKILL.md` (463 lines)
 - `plugin/templates/constitution-*.md` (2 templates)
 - `plugin/templates/feature-spec-template.md` (272 lines)
@@ -218,7 +215,7 @@ specs/FEATURE-ID/
 Users must identify missing/partial features, catalog technical debt, and create prioritized implementation roadmap (P0/P1/P2/P3).
 
 ### Current Implementation
-- **MCP Tool**: `stackshift_gap_analysis` in `mcp-server/src/tools/gap-analysis.ts` (103 lines)
+- **Plugin Skill**: `plugin/skills/gap-analysis/SKILL.md`
 - **Plugin Skill**: `plugin/skills/gap-analysis/SKILL.md` (392 lines)
 - **Integration**: Uses `/speckit.analyze` to validate specs against code
 - **Output**: Detailed gap analysis report with priorities
@@ -256,7 +253,6 @@ Users must identify missing/partial features, catalog technical debt, and create
 - Uses /speckit.analyze command
 
 **Files:**
-- `mcp-server/src/tools/gap-analysis.ts` (103 lines)
 - `plugin/skills/gap-analysis/SKILL.md` (392 lines)
 
 **Acceptance Criteria:**
@@ -275,7 +271,7 @@ Users must identify missing/partial features, catalog technical debt, and create
 Users must resolve all `[NEEDS CLARIFICATION]` markers interactively to ensure specifications are fully actionable before implementation.
 
 ### Current Implementation
-- **MCP Tool**: `stackshift_complete_spec` in `mcp-server/src/tools/complete-spec.ts` (161 lines)
+- **Plugin Skill**: `plugin/skills/complete-spec/SKILL.md`
 - **Plugin Skill**: `plugin/skills/complete-spec/SKILL.md` (250 lines)
 - **Integration**: GitHub Spec Kit `/speckit.clarify` workflow
 - **Validation**: Comprehensive input validation (max 100 clarifications, max 5000 chars each)
@@ -331,7 +327,6 @@ const MAX_STRING_LENGTH = 5000;
 - Optional: GitHub Spec Kit CLI for /speckit.clarify
 
 **Files:**
-- `mcp-server/src/tools/complete-spec.ts` (161 lines)
 - `plugin/skills/complete-spec/SKILL.md` (250 lines)
 
 **Acceptance Criteria:**
@@ -351,7 +346,7 @@ const MAX_STRING_LENGTH = 5000;
 Users must systematically implement missing/partial features using `/speckit.implement` workflow, tracking completion against spec requirements.
 
 ### Current Implementation
-- **MCP Tool**: `stackshift_implement` in `mcp-server/src/tools/implement.ts` (198 lines)
+- **Plugin Skill**: `plugin/skills/implement/SKILL.md`
 - **Plugin Skill**: `plugin/skills/implement/SKILL.md` (487 lines)
 - **Integration**: GitHub Spec Kit `/speckit.tasks` → `/speckit.implement` → `/speckit.analyze`
 - **Modes**: Specific feature or all features
@@ -421,7 +416,6 @@ const MAX_FEATURE_NAME_LENGTH = 200;
 - Uses /speckit.tasks, /speckit.implement, /speckit.analyze
 
 **Files:**
-- `mcp-server/src/tools/implement.ts` (198 lines)
 - `plugin/skills/implement/SKILL.md` (487 lines)
 - `plugin/skills/implement/operations/handoff.md` (handoff workflow)
 
@@ -442,7 +436,7 @@ const MAX_FEATURE_NAME_LENGTH = 200;
 Users must be able to run the complete 6-gear workflow automatically without manual intervention between gears (hands-off mode).
 
 ### Current Implementation
-- **MCP Tool**: `stackshift_cruise_control` in `mcp-server/src/tools/cruise-control.ts` (144 lines)
+- **Plugin Skill**: `plugin/skills/cruise-control/SKILL.md`
 - **Plugin Skill**: `plugin/skills/cruise-control/SKILL.md` (298 lines)
 - **Configuration**: Route, clarifications strategy, implementation scope
 - **Monitoring**: State file tracks progress through all gears
@@ -504,11 +498,8 @@ Users must be able to run the complete 6-gear workflow automatically without man
 
 **Progress Monitoring:**
 ```bash
-# Via state manager
-node plugin/scripts/state-manager.js progress
-
-# Via MCP resource
-stackshift://progress
+# Via state file
+cat .stackshift-state.json | jq '{currentStep, completedSteps}'
 ```
 
 **Use Cases:**
@@ -525,7 +516,6 @@ stackshift://progress
 - Integrates all 6 gears seamlessly
 
 **Files:**
-- `mcp-server/src/tools/cruise-control.ts` (144 lines)
 - `plugin/skills/cruise-control/SKILL.md` (298 lines)
 
 **Acceptance Criteria:**

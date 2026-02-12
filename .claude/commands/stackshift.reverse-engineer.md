@@ -4,24 +4,9 @@ description: Gear 2 - Extract comprehensive documentation from codebase
 
 # Gear 2: Reverse Engineering
 
-**IMPORTANT**: This uses cached AST analysis to enhance documentation extraction.
+**IMPORTANT**: This extracts comprehensive documentation from the codebase.
 
-## Step 1: Verify AST Analysis Cache Exists
-
-Check if AST analysis from Gear 1 is available:
-
-```bash
-~/stackshift/scripts/run-ast-analysis.mjs check .
-```
-
-If missing, run:
-```bash
-~/stackshift/scripts/run-ast-analysis.mjs analyze .
-```
-
-**Why**: AST analysis helps auto-extract API endpoints, business logic, and function signatures for more accurate documentation.
-
-## Step 2: Check Implementation Framework
+## Step 1: Check Implementation Framework
 
 Read the framework choice from Gear 1:
 
@@ -30,38 +15,50 @@ IMPL_FRAMEWORK=$(cat .stackshift-state.json 2>/dev/null | grep -o '"implementati
 echo "Implementation Framework: ${IMPL_FRAMEWORK:-speckit}"
 ```
 
-**Output format depends on framework:**
-- **speckit** (default): `docs/reverse-engineering/` (8 files)
-- **bmad**: `docs/` in BMAD structure (6 files)
+**Output is the same for all frameworks** — 11 docs in `docs/reverse-engineering/`.
 
-## Step 3: Extract Documentation
+## Step 2: Extract Documentation
 
 Use the Skill tool with skill="reverse-engineer".
 
-**For GitHub Spec Kit** (`implementation_framework: speckit`):
-- Creates 8 comprehensive documentation files
+**The skill will**:
+- Create 11 comprehensive documentation files
 - Saves to `docs/reverse-engineering/`
-- Ready for `/speckit.specify` in Gear 3
+- Includes 2 new inference docs: `business-context.md` and `decision-rationale.md`
+- All docs enriched with personas, domain boundaries, scalability strategy, migration matrix
 
-**For BMAD Method** (`implementation_framework: bmad`):
-- Creates BMAD-compatible documentation structure
-- Saves lean files to `docs/architecture/` (always-loaded by dev agent)
-- Saves full docs to `docs/`
-- Ready for `*workflow-init` handoff in Gear 6
-
-**BMAD Output Structure:**
+**11 Output Files:**
 ```
-docs/
-├── index.md                      # Navigation for BMAD agents
-├── architecture/
-│   ├── tech-stack.md            # Lean - loaded every dev session
-│   ├── coding-standards.md      # Lean - loaded every dev session
-│   └── project-structure.md     # Lean - loaded every dev session
-├── architecture.md              # Full architecture documentation
-└── prd.md                       # Product requirements document
+docs/reverse-engineering/
+├── functional-specification.md   # Business logic + personas + positioning
+├── integration-points.md         # External services, APIs, data flows
+├── configuration-reference.md    # All config options
+├── data-architecture.md          # Data models + domain boundaries
+├── operations-guide.md           # Deployment + scalability strategy
+├── technical-debt-analysis.md    # Issues + migration priority matrix
+├── observability-requirements.md # Monitoring, logging
+├── visual-design-system.md       # UI/UX patterns
+├── test-documentation.md         # Testing requirements
+├── business-context.md           # Product vision, personas, goals, market
+└── decision-rationale.md         # Tech selection, ADRs, design principles
 ```
 
-**Enhanced with AST** (if cache available):
-- API endpoints auto-extracted from routing code
+### Step 3: Run AST Analysis for Deep Extraction
+
+Run AST analysis for function-level code extraction:
+
+```bash
+node ~/stackshift/scripts/run-ast-analysis.mjs analyze .
+```
+
+**What AST analysis provides:**
+- Function signature verification (not just "exists")
+- Stub detection (functions returning placeholder text)
+- Missing parameters detection
+- API endpoints extracted from routing code
 - Function signatures documented accurately
-- Business logic patterns identified automatically
+- Business logic patterns identified through codebase exploration
+- Test coverage gaps
+- Confidence scoring (0-100%)
+
+Results are cached in `.stackshift-analysis/` and reused by all subsequent gears. AST analysis is the primary method for code inspection -- `/speckit.analyze` is a fallback if AST analysis is unavailable.

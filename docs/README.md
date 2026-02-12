@@ -18,7 +18,6 @@ Complete documentation for StackShift - organized for easy navigation.
 - **[Installation Guide](guides/INSTALLATION.md)** - Install on all platforms
   - Local plugin installation
   - Web (browser) usage
-  - MCP server setup for VSCode
   - Testing and verification
 
 ### Usage Guides
@@ -34,11 +33,6 @@ Complete documentation for StackShift - organized for easy navigation.
   - Orchestrator prompt usage
   - State persistence
   - Resume capability
-
-- **[MCP Guide](../mcp-server/README.md)** - MCP server for VSCode/Copilot
-  - 7 tools, 3 resources
-  - Configuration
-  - Usage examples
 
 ### Advanced Guides
 
@@ -83,9 +77,6 @@ Historical analysis and assessments:
 - **[Test Coverage Analysis](reviews/test-coverage-analysis.md)** - Testing metrics
 - **[Analysis Report](reviews/analysis-report.md)** - Feature analysis
 
-### Specifications
-- **[Production Readiness Specs](../production-readiness-specs/README.md)** - Detailed feature specifications
-
 ---
 
 ## 📁 Documentation Structure
@@ -108,20 +99,9 @@ stackshift/
 │   │   ├── IMPLEMENTATION_ROADMAP.md
 │   │   ├── FEATURE_GAP_ANALYSIS.md
 │   │   └── PROMPT_IMPROVEMENTS.md
-│   ├── reviews/                # Historical reviews
-│   │   ├── analysis-report.md
-│   │   ├── test-coverage-analysis.md
-│   │   └── DOCUMENTATION_*.md
 │   └── reverse-engineering/    # Sample outputs
-├── production-readiness-specs/ # Feature specifications
-│   └── README.md
-├── cli/                        # CLI tool
-│   ├── README.md
-│   └── QUICKSTART.md
 ├── web/
 │   └── README.md               # Web usage guide
-├── mcp-server/
-│   └── README.md               # MCP server guide
 └── scripts/
     └── BATCH_PROCESSING_GUIDE.md
 ```
@@ -135,7 +115,6 @@ stackshift/
 - [Installation](guides/INSTALLATION.md)
 - [Plugin Usage](guides/PLUGIN_GUIDE.md)
 - [Web Usage](../web/README.md)
-- [MCP Usage](../mcp-server/README.md)
 
 **For Contributors:**
 - [Development Docs](development/)

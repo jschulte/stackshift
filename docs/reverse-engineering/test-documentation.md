@@ -20,22 +20,7 @@ StackShift uses Vitest for testing with V8 coverage reporting. Current test cove
 **Assertions:** Vitest assertions (Jest-compatible)  
 **Mocking:** Vitest mocking utilities  
 
-**Configuration:** `mcp-server/vitest.config.ts`
-
-```typescript
-export default defineConfig({
-  test: {
-    globals: true,
-    environment: 'node',
-    include: ['src/**/*.test.ts'],
-    coverage: {
-      provider: 'v8',
-      reporter: ['text', 'json', 'html'],
-      exclude: ['node_modules/**', 'dist/**', '**/*.test.ts', '**/*.config.ts']
-    }
-  }
-});
-```
+**Testing:** Plugin skills are tested via the Claude Code plugin system.
 
 ---
 
@@ -94,27 +79,7 @@ export default defineConfig({
 
 ## Test Commands
 
-```bash
-cd mcp-server
-
-# Run all tests
-npm test
-
-# Watch mode
-npm run test:watch
-
-# Coverage report
-npm run test:coverage
-
-# Security tests only
-npm run test:security
-
-# Single test file
-npm test -- security.test.ts
-
-# Specific test
-npm test -- -t "prevents path traversal"
-```
+Testing is performed via the plugin skill system and manual validation.
 
 ---
 
@@ -339,23 +304,7 @@ describe('Concurrency: State Manager', () => {
 
 ## Test Data & Fixtures
 
-### Test Directory Structure
-
-```
-mcp-server/src/tools/__tests__/
-├── fixtures/
-│   ├── sample-project/
-│   │   ├── package.json
-│   │   ├── src/
-│   │   │   └── index.ts
-│   │   └── tests/
-│   │       └── index.test.ts
-│   └── state-samples/
-│       ├── initial.json
-│       ├── after-analyze.json
-│       └── complete.json
-└── *.test.ts
-```
+### Test Fixtures
 
 ### Sample State Files
 
@@ -429,11 +378,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
-      - run: cd mcp-server && npm install
-      - run: cd mcp-server && npm test
-      - run: cd mcp-server && npm run test:coverage
-      - name: Upload coverage
-        uses: codecov/codecov-action@v3
+      # Run validation checks
 ```
 
 ---

@@ -90,9 +90,6 @@ mapper_heuristic_match() {
   # Pattern 2: src/tools/analyze.ts → "analyze"
   elif [[ "$file" =~ /tools/([^/]+)\. ]]; then
     feature_name="${BASH_REMATCH[1]}"
-  # Pattern 3: mcp-server/src/tools/analyze.ts → "analyze"
-  elif [[ "$file" =~ /src/tools/([^/]+)\. ]]; then
-    feature_name="${BASH_REMATCH[1]}"
   fi
 
   # Search for specs containing this feature name

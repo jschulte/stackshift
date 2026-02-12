@@ -31,26 +31,7 @@ cd stackshift
 # Restart Claude Code
 ```
 
-### Option 2: MCP Server (VSCode/Copilot)
-
-**Install via npm:**
-```bash
-npm install -g stackshift-mcp
-```
-
-**Configure MCP:**
-Add to your MCP settings:
-```json
-{
-  "mcpServers": {
-    "stackshift": {
-      "command": "stackshift-mcp"
-    }
-  }
-}
-```
-
-### Option 3: Web (Claude Code in Browser)
+### Option 2: Web (Claude Code in Browser)
 
 1. Go to https://claude.ai/code
 2. Connect to GitHub
@@ -115,11 +96,8 @@ User: "Implement features"
 ### Cruise Control Mode
 
 **One Command:**
-```bash
-# Configure and run
-node plugin/scripts/state-manager.js config brownfield cruise defer p0_p1
-
-# Runs all 6 gears automatically
+```
+Use /stackshift:cruise-control to run all 6 gears automatically
 ```
 
 ---
@@ -128,18 +106,11 @@ node plugin/scripts/state-manager.js config brownfield cruise defer p0_p1
 
 ### Distribution Methods
 
-**1. npm Package (MCP Server)**
-```bash
-cd mcp-server
-npm run build
-npm publish  # Requires npm account
-```
-
-**2. Claude Code Plugin**
+**1. Claude Code Plugin**
 - Included in marketplace via `.claude-plugin/marketplace.json`
 - Auto-distributed on marketplace update
 
-**3. GitHub Releases**
+**2. GitHub Releases**
 ```bash
 git tag v1.0.1
 git push --tags
@@ -152,32 +123,12 @@ git push --tags
 
 ### Progress Tracking
 
-**Via State Manager:**
+**Via State File:**
 ```bash
-node plugin/scripts/state-manager.js progress
-```
-
-**Output:**
-```
-✅ analyze
-✅ reverse-engineer
-🔄 create-specs
-⏳ gap-analysis
-⏳ complete-spec
-⏳ implement
-```
-
-**Via MCP Resource:**
-```
-Read: stackshift://progress
+cat .stackshift-state.json | jq '{currentStep, completedSteps}'
 ```
 
 ### State Inspection
-
-**Check Current State:**
-```bash
-node plugin/scripts/state-manager.js status
-```
 
 **View State File:**
 ```bash
@@ -228,7 +179,7 @@ cd /path/to/project
 **Solution:**
 ```bash
 # Reset state
-node plugin/scripts/state-manager.js reset
+rm .stackshift-state.json
 
 # Start over from Gear 1
 ```
@@ -241,53 +192,15 @@ node plugin/scripts/state-manager.js reset
 ```bash
 # Check Node version
 node --version  # Should be >=18.0.0
-
-# Install dependencies
-cd mcp-server
-npm install
-
-# Run tests
-npm test
 ```
 
 ---
 
 ## Maintenance
 
-### Update Dependencies
+### Update Plugin
 
-**Check for Updates:**
-```bash
-cd mcp-server
-npm outdated
-```
-
-**Update:**
-```bash
-npm update
-npm audit fix
-```
-
-### Run Security Scan
-
-**npm audit:**
-```bash
-npm audit
-```
-
-**Security Tests:**
-```bash
-npm run test:security
-```
-
-### Clean Build
-
-```bash
-cd mcp-server
-rm -rf dist node_modules
-npm install
-npm run build
-```
+Update the plugin by pulling the latest version from the marketplace or repository.
 
 ---
 

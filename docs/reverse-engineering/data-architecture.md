@@ -142,26 +142,6 @@ specs/
 
 ---
 
-## MCP Resources
-
-### stackshift://state
-**Type:** application/json
-**Content:** Raw state from `.stackshift-state.json`
-
-### stackshift://progress
-**Type:** text/plain
-**Content:** Human-readable progress summary
-```
-# StackShift Progress
-**Route:** ⚙️ Brownfield (Manage Existing)
-**Progress:** 2/6 gears (33%)
-...
-```
-
-### stackshift://route
-**Type:** text/plain
-**Content:** Selected route with description
-
 ---
 
 ## Data Validation

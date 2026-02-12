@@ -42,17 +42,7 @@ StackShift v1.0.0 is production-ready with **zero critical vulnerabilities** and
 
 **Recommended Solution:**
 ```bash
-# Add unit tests for all MCP tools
-tests:
-- mcp-server/src/tools/__tests__/reverse-engineer.test.ts
-- mcp-server/src/tools/__tests__/create-specs.test.ts
-- mcp-server/src/tools/__tests__/gap-analysis.test.ts
-- mcp-server/src/tools/__tests__/complete-spec.test.ts
-- mcp-server/src/tools/__tests__/implement.test.ts
-- mcp-server/src/tools/__tests__/cruise-control.test.ts
-- mcp-server/src/utils/__tests__/file-utils.test.ts
-- mcp-server/src/utils/__tests__/skill-loader.test.ts
-
+# Add tests for all plugin skills
 # Target coverage: 80%
 ```
 
@@ -90,12 +80,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-      - run: cd mcp-server && npm install
-      - run: cd mcp-server && npm test
-      - run: cd mcp-server && npm run test:coverage
+      # Run validation checks
 
 # .github/workflows/release.yml
 # Automated releases with semantic versioning

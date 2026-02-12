@@ -236,7 +236,7 @@ your-project/
 1. Implement F002 (Automated Spec Generation)
    - Enhance Gear 3 to create actual Spec Kit specs
    - Test with StackShift's own reverse engineering docs
-   - Deploy to plugin and MCP server
+   - Deploy to plugin
 
 2. Implement F003 (TypeScript AST Utilities)
    - Add @typescript/compiler integration
@@ -304,12 +304,7 @@ Which should we implement first?
    - Should: Actually create `specs/F###/spec.md` files using template
    - Implementation: Use F002 spec
 
-2. **MCP Server Tools** - Update output format
-   - `stackshift_create_specs` tool
-   - Add Spec Kit template integration
-   - Generate files, not just instructions
-
-3. **Plugin Skills** - Update instructions
+2. **Plugin Skills** - Update instructions
    - All skills should reference Spec Kit format
    - Update examples to show proper structure
    - Link to templates
@@ -390,7 +385,7 @@ git checkout 007-roadmap-generation        # Strategic planning
 
 1. **Merge spec branches** (or keep separate for individual implementation)
 2. **Implement F002** (highest priority - fixes workflow)
-3. **Update Gear 3** in both plugin and MCP server
+3. **Update Gear 3** in plugin
 4. **Test full workflow** on a sample repository
 5. **Update all documentation** to reflect Spec Kit integration
 

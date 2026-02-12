@@ -33,7 +33,7 @@ StackShift presents an ambitious vision for reverse engineering codebases into s
 
 **Reality:**
 ```typescript
-// From mcp-server/src/tools/cruise-control.ts
+// From plugin/skills/cruise-control.ts
 export async function cruiseControlToolHandler(args: CruiseControlArgs) {
   // Only sets configuration flags
   const state = {
@@ -79,7 +79,7 @@ export async function cruiseControlToolHandler(args: CruiseControlArgs) {
 
 **Reality:**
 ```typescript
-// From mcp-server/src/tools/analyze.ts
+// From plugin/skills/analyze.ts
 async function detectTechStack(directory: string) {
   // Only checks for 4 languages:
   if (await fileExists('package.json')) { /* JavaScript/TypeScript */ }
@@ -121,7 +121,7 @@ async function assessCompleteness(directory: string) {
 
 **Reality:**
 ```typescript
-// From mcp-server/src/tools/reverse-engineer.ts
+// From plugin/skills/reverse-engineer.ts
 export async function reverseEngineerToolHandler(args: ReverseEngineerArgs) {
   // Creates directory
   await fs.mkdir(docsDir, { recursive: true });
@@ -166,7 +166,7 @@ It literally just creates an empty directory and returns instructions.
 
 **Reality:**
 ```typescript
-// From mcp-server/src/tools/create-specs.ts
+// From plugin/skills/create-specs.ts
 export async function createSpecsToolHandler(args: CreateSpecsArgs) {
   // Only returns guidance
   return {
@@ -197,7 +197,7 @@ export async function createSpecsToolHandler(args: CreateSpecsArgs) {
 
 **Reality:**
 ```typescript
-// From mcp-server/src/tools/gap-analysis.ts
+// From plugin/skills/gap-analysis.ts
 export async function gapAnalysisToolHandler(args: GapAnalysisArgs) {
   return {
     content: [{
@@ -226,7 +226,7 @@ export async function gapAnalysisToolHandler(args: GapAnalysisArgs) {
 
 **Reality:**
 ```typescript
-// From mcp-server/src/tools/complete-spec.ts
+// From plugin/skills/complete-spec.ts
 export async function completeSpecToolHandler(args: CompleteSpecArgs) {
   // Can receive clarifications but doesn't process them
   const clarifications = args.clarifications || [];
@@ -257,7 +257,7 @@ export async function completeSpecToolHandler(args: CompleteSpecArgs) {
 
 **Reality:**
 ```typescript
-// From mcp-server/src/tools/implement.ts
+// From plugin/skills/implement.ts
 export async function implementToolHandler(args: ImplementArgs) {
   return {
     content: [{
@@ -332,18 +332,14 @@ These files exist but are **wrappers** that load templates from `.speckit-templa
 **Promised:**
 ```bash
 # Check current gear
-node plugin/scripts/state-manager.js status
+cat .stackshift-state.json | jq .currentStep
 
 # Detailed progress
-node plugin/scripts/state-manager.js progress
-
-# Via MCP
-Read stackshift://progress
+cat .stackshift-state.json | jq '{currentStep, completedSteps}'
 ```
 
 **Reality:**
-- ✅ State manager script exists and works
-- ✅ MCP resources for state/progress exist
+- ✅ State file (.stackshift-state.json) exists and works
 - ❌ No visual progress bar
 - ❌ No ETA for long operations
 - ❌ No incremental progress within a gear
@@ -766,8 +762,7 @@ done
 # But most are from dependencies (zod, etc.)
 
 # StackShift-specific tests:
-mcp-server/src/tools/__tests/       # 7 test files
-mcp-server/src/utils/__tests/       # 4 test files
+plugin/skills/*/                    # 7 skill directories
 ```
 
 **Test Analysis:**
@@ -1026,8 +1021,7 @@ For StackShift to deliver on its promise, it needs **actual implementation** of 
 
 | Utility | Status | Notes |
 |---------|--------|-------|
-| state-manager.js | ✅ Complete | Works well |
-| state-manager.ts | ✅ Complete | MCP version |
+| .stackshift-state.json | ✅ Complete | JSON state file |
 | skill-loader.ts | ✅ Complete | Loads SKILL.md |
 | security.ts | ✅ Complete | Input validation |
 | file-utils.ts | ✅ Complete | Safe file ops |

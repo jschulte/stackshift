@@ -17,59 +17,44 @@ echo "Framework: ${IMPL_FRAMEWORK:-speckit}"
 
 ## Path A: GitHub Spec Kit (implementation_framework: speckit)
 
-**This reads from cached AST analysis files (no re-analysis needed).**
+**This analyzes the codebase to identify implementation gaps.**
 
-## Step 1: Read Cached AST Analysis (Deterministic - Reads Files)
+### Step 1: Run AST-Powered Analysis (PRIMARY METHOD)
 
-Use the Bash tool to display the cached roadmap:
+Run AST analysis as the primary gap analysis method:
 
 ```bash
-# Check if analysis exists and is fresh
-~/stackshift/scripts/run-ast-analysis.mjs check .
-
-# Display the roadmap (uses cache if < 1 hour old)
-~/stackshift/scripts/run-ast-analysis.mjs roadmap .
+# Run AST-powered roadmap generation (includes gap analysis)
+node ~/stackshift/scripts/run-ast-analysis.mjs roadmap . --format=markdown
 ```
 
-**What this does**:
-- Reads from `.stackshift-analysis/roadmap.md` (created in Gear 1)
-- If cache is stale (> 1 hour), automatically re-runs analysis
-- If cache missing, runs fresh analysis and saves it
-- Displays comprehensive gap analysis with priorities
+**What AST analysis provides** (primary capabilities):
+- Function signature verification (not just "exists")
+- Stub detection (functions returning placeholder text)
+- Missing parameters detection
+- Business logic pattern analysis
+- Test coverage gaps
+- Confidence scoring (0-100%)
+- Detailed roadmap with phases, priorities, and effort estimates
 
-**No re-parsing**: Uses cached AST results from Gear 1 for speed.
+### Step 2: Run /speckit.analyze (FALLBACK)
 
-## Step 2: Review Gap Analysis
+**Only if AST analysis fails or is unavailable**, fall back to `/speckit.analyze`:
+
+Use `/speckit.analyze` or the Skill tool with skill="gap-analysis" to analyze the codebase for gaps.
+
+### Step 3: Review Gap Analysis
 
 The roadmap shows:
-- All features with implementation status (✅/⚠️/❌)
+- All features with implementation status (check/partial/missing)
 - Confidence scores for each gap
 - Prioritized implementation phases
 - Effort estimates
 - Missing functions, stubs, incomplete features
 
-## Step 3: If Analysis Missing, Use Fallback
-
-If `.stackshift-analysis/` doesn't exist:
-
-Use the Skill tool with skill="gap-analysis" for manual analysis.
-
 ---
 
 ## Path B: BMAD Method (implementation_framework: bmad)
-
-### Optional: Review AST Gap Analysis
-
-For BMAD projects, you can optionally review the AST-generated gap analysis:
-
-```bash
-~/stackshift/scripts/run-ast-analysis.mjs roadmap .
-```
-
-This shows:
-- Implementation completeness from AST analysis
-- Missing/partial features detected
-- Prioritized implementation phases
 
 ### BMAD Handles Gap Analysis Differently
 

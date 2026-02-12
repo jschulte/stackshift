@@ -203,7 +203,7 @@ model User {
 ### Skills (4 updated)
 7. `plugin/skills/analyze/SKILL.md` - Added path selection question
 8. `plugin/skills/reverse-engineer/SKILL.md` - Path-aware extraction
-9. `plugin/scripts/state-manager.js` - Path tracking (setPath, getPath)
+9. `.stackshift-state.json` - Path tracking
 10. `README.md` - Comprehensive path comparison and guide
 
 **Total:** 2,429 insertions, 51 deletions
@@ -227,17 +227,10 @@ Path choice stored in `.stackshift-state.json`:
 }
 ```
 
-**CLI Commands:**
+**Check State:**
 ```bash
-# Set path
-node plugin/scripts/state-manager.js set-path greenfield
-node plugin/scripts/state-manager.js set-path brownfield
-
-# Get current path
-node plugin/scripts/state-manager.js get-path
-
-# Full status shows path
-node plugin/scripts/state-manager.js status
+# View current state including path
+cat .stackshift-state.json
 ```
 
 ---

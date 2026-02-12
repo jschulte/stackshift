@@ -26,6 +26,18 @@ if [ -z "$PROJECT_NAME" ] || [ -z "$ROUTE" ]; then
   exit 1
 fi
 
+# Validate project name (alphanumeric, hyphens, underscores only)
+if [[ ! "$PROJECT_NAME" =~ ^[a-zA-Z0-9_-]+$ ]]; then
+  echo "Error: project-name must contain only letters, numbers, hyphens, and underscores"
+  exit 1
+fi
+
+# Validate route
+if [[ "$ROUTE" != "greenfield" ]] && [[ "$ROUTE" != "brownfield" ]]; then
+  echo "Error: route must be 'greenfield' or 'brownfield'"
+  exit 1
+fi
+
 BRANCH_NAME="stackshift-web/${PROJECT_NAME}-$(date +%Y%m%d-%H%M%S)"
 
 echo "🚗 Preparing StackShift Web batch for: $PROJECT_NAME"

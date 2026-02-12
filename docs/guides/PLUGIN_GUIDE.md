@@ -128,29 +128,14 @@ Created in project root as `.stackshift-state.json`:
 }
 ```
 
-### State Manager CLI
+### Checking State
+
+State is tracked automatically via `.stackshift-state.json` in your project root. Skills automatically update state as you progress through the gears.
 
 ```bash
-# Initialize state tracking
-node plugin/scripts/state-manager.js init
-
-# Start a step
-node plugin/scripts/state-manager.js start analyze
-
-# Complete a step
-node plugin/scripts/state-manager.js complete analyze
-
-# Check current status
-node plugin/scripts/state-manager.js status
-
-# Show detailed progress
-node plugin/scripts/state-manager.js progress
-
-# Reset state (start over)
-node plugin/scripts/state-manager.js reset
+# Check current state
+cat .stackshift-state.json
 ```
-
-**Note:** Skills automatically update state, so manual CLI use is optional.
 
 ---
 
@@ -159,31 +144,24 @@ node plugin/scripts/state-manager.js reset
 ### Directory Structure
 
 ```
-plugin/
-├── .claude-plugin/
-│   └── plugin.json              # Plugin metadata
+stackshift/
+├── .claude-plugin/              # Plugin metadata
+├── .claude/
+│   ├── commands/                # Slash commands
+│   └── settings.json            # Plugin settings
+├── agents/                      # Agent definitions
 ├── skills/
 │   ├── analyze/
 │   │   ├── SKILL.md            # Skill definition with frontmatter
 │   │   └── operations/         # Sub-operations documentation
-│   │       ├── detect-stack.md
-│   │       ├── directory-analysis.md
-│   │       ├── documentation-scan.md
-│   │       ├── completeness-assessment.md
-│   │       └── generate-report.md
 │   ├── reverse-engineer/
-│   │   ├── SKILL.md
-│   │   └── operations/
 │   ├── create-specs/
 │   ├── gap-analysis/
 │   ├── complete-spec/
 │   └── implement/
-├── templates/                   # Spec templates
-│   ├── feature-spec-template.md
-│   ├── constitution-template.md
-│   └── implementation-status-template.md
-└── scripts/
-    └── state-manager.js        # Workflow state tracking
+├── docs/                        # Documentation
+├── scripts/                     # Utility scripts
+└── web/                         # Web resources
 ```
 
 ### Skill Definition Format
@@ -280,24 +258,6 @@ ln -s $(pwd) ~/.claude/plugins/local/reverse-engineering-toolkit
    - Restart Claude Code
    - Trigger skill via natural language
 
-### State Management Integration
-
-Skills can integrate with state manager:
-
-```javascript
-// In skill logic (conceptual)
-const StateManager = require('${CLAUDE_PLUGIN_ROOT}/scripts/state-manager.js');
-const manager = new StateManager();
-
-// When skill starts
-manager.startStep('my-skill');
-
-// When skill completes
-manager.completeStep('my-skill', {
-  filesCreated: ['output.md']
-});
-```
-
 ---
 
 ## Best Practices
@@ -331,7 +291,7 @@ manager.completeStep('my-skill', {
 ### Planned Features
 
 - [ ] **Hooks integration** - Auto-track file changes, update specs
-- [ ] **MCP integration** - Expose state and progress as MCP resources
+- [ ] **Extended integrations** - Expose state and progress to external tools
 - [ ] **Slash commands** - `/re-toolkit:status`, `/re-toolkit:next`
 - [ ] **Progress visualization** - Visual workflow diagram in Claude Code
 - [ ] **Multi-project support** - Track multiple projects simultaneously

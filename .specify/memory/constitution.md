@@ -29,15 +29,11 @@ StackShift is a reverse engineering toolkit that transforms codebases into fully
 - **Testing**: Vitest 1.0+ with V8 coverage
 - **Protocol**: Model Context Protocol (MCP) 1.0
 
-### Distribution Models
-1. **MCP Server**: npm package (`stackshift-mcp`)
-   - Entry point: `mcp-server/dist/index.js`
-   - Dependencies: @modelcontextprotocol/sdk@^1.0.0
-
-2. **Claude Code Plugin**: Skill-based system
-   - Location: `plugin/`
-   - Skills: 7 (analyze, reverse-engineer, create-specs, gap-analysis, complete-spec, implement, cruise-control)
-   - Agents: 2 (code-analyzer, technical-writer)
+### Distribution Model
+**Claude Code Plugin**: Skill-based system
+- Location: `plugin/`
+- Skills: 7 (analyze, reverse-engineer, create-specs, gap-analysis, complete-spec, implement, cruise-control)
+- Agents: 2 (code-analyzer, technical-writer)
 
 ### Architecture Patterns
 - **Modular Design**: 4 utility modules (security, state-manager, file-utils, skill-loader)
@@ -48,31 +44,6 @@ StackShift is a reverse engineering toolkit that transforms codebases into fully
 ---
 
 ## File Organization
-
-### MCP Server Structure
-```
-mcp-server/
-├── src/
-│   ├── index.ts              # Entry point, MCP server setup
-│   ├── tools/                # 7 MCP tools (gears)
-│   │   ├── analyze.ts        # Gear 1 (210 lines)
-│   │   ├── reverse-engineer.ts    # Gear 2 (115 lines)
-│   │   ├── create-specs.ts   # Gear 3 (140 lines)
-│   │   ├── gap-analysis.ts   # Gear 4 (103 lines)
-│   │   ├── complete-spec.ts  # Gear 5 (161 lines)
-│   │   ├── implement.ts      # Gear 6 (198 lines)
-│   │   └── cruise-control.ts # Auto mode (144 lines)
-│   ├── resources/            # MCP resources (state, progress, route)
-│   │   └── index.ts
-│   └── utils/                # Utilities
-│       ├── security.ts       # Path validation, CWE prevention (197 lines)
-│       ├── state-manager.ts  # Atomic state ops (370 lines)
-│       ├── file-utils.ts     # Safe file operations (154 lines)
-│       └── skill-loader.ts   # SKILL.md loader (79 lines)
-├── package.json
-├── tsconfig.json
-└── vitest.config.ts
-```
 
 ### Plugin Structure
 ```
@@ -92,8 +63,7 @@ plugin/
 │   └── stackshift-technical-writer/
 ├── templates/                # Constitution, feature spec templates
 ├── speckit-templates/        # Spec Kit command fallbacks
-├── scripts/
-│   └── state-manager.js     # State management CLI
+├── scripts/                  # Utility scripts
 └── .claude-plugin/
     └── plugin.json          # Plugin metadata
 ```
@@ -105,7 +75,7 @@ plugin/
 ### Decision 1: TypeScript Strict Mode
 **Choice**: Enable strict mode with comprehensive compiler checks
 **Rationale**: Catch type errors at compile-time, prevent runtime bugs
-**Files**: `mcp-server/tsconfig.json` (strict: true)
+**Files**: `tsconfig.json` (strict: true)
 **Impact**: Zero type-related bugs in production
 
 ### Decision 2: Native File APIs Over Shell Commands
@@ -175,7 +145,7 @@ plugin/
 ```
 
 Types: feat, fix, docs, test, refactor, chore
-Scopes: gear-1 through gear-6, mcp-server, plugin, security, tests
+Scopes: gear-1 through gear-6, plugin, security, tests
 
 ---
 

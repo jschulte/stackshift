@@ -43,72 +43,6 @@ Copilot will then:
 
 ---
 
-## Option 2: MCP Server (Advanced)
-
-**Note:** This requires the MCP tools integration from the separate `mcp-tools` repository.
-
-### Prerequisites
-
-1. Node.js 18+
-2. Access to `mcp-tools` repository
-
-### Installation
-
-```bash
-# Clone mcp-tools
-git clone git@ghe.coxautoinc.com:Jonah-Schulte/mcp-tools.git
-cd mcp-tools
-
-# Install dependencies
-npm install
-
-# Build
-npm run build
-```
-
-### Configure VSCode
-
-Add to your VSCode `settings.json`:
-
-```json
-{
-  "github.copilot.chat.codeGeneration.instructions": [
-    {
-      "text": "Use StackShift MCP tools for reverse engineering tasks"
-    }
-  ],
-  "mcp.servers": {
-    "cai-mcp": {
-      "command": "node",
-      "args": ["/path/to/mcp-tools/dist/index.js"]
-    }
-  }
-}
-```
-
-### Usage
-
-```
-@workspace Use the stackshift_analyze tool to analyze this codebase
-@workspace Use stackshift_cruise_control to run all 6 gears
-```
-
----
-
-## Comparison of Options
-
-| Feature | WEB_BOOTSTRAP | MCP Server |
-|---------|---------------|------------|
-| **Setup Time** | 1 minute | 10 minutes |
-| **Installation** | None (paste prompt) | Configure VSCode + MCP |
-| **Updates** | Manual paste | Git pull + rebuild |
-| **Team Sharing** | ❌ Manual | ⚠️ Requires setup |
-| **Works in Copilot** | ✅ Yes | ✅ Yes (if MCP supported) |
-| **Works in Claude Code** | ✅ Yes | ✅ Yes |
-| **Slash Commands** | ❌ No (natural language only) | ❌ No (tool calls only) |
-| **Batch Processing** | ✅ Yes | ✅ Yes |
-| **Auto-updates** | ❌ No | ✅ Via git pull |
-
 ---
 
 ## Recommended Approach
@@ -120,9 +54,6 @@ Add to your VSCode `settings.json`:
 
 ### For Claude Code Users
 **Install the plugin** - Full slash command support
-
-### For Power Users
-**MCP Server** - If you want programmatic tool invocation
 
 ---
 
@@ -184,19 +115,6 @@ git pull origin main
 
 # Use updated bootstrap (just paste new version)
 cat ~/stackshift/web/WEB_BOOTSTRAP.md
-```
-
-### MCP Server
-```bash
-# Pull latest version
-cd ~/mcp-tools
-git pull origin main
-
-# Rebuild
-npm install
-npm run build
-
-# Restart VSCode
 ```
 
 ---

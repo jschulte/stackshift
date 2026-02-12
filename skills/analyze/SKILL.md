@@ -89,6 +89,10 @@ This skill performs comprehensive initial analysis by:
 find_batch_session() {
   local current_dir="$(pwd)"
   while [[ "$current_dir" != "/" ]]; do
+    # Stop at git root to prevent path traversal
+    if [[ -d "$current_dir/.git" ]] && [[ ! -f "$current_dir/.stackshift-batch-session.json" ]]; then
+      return 1
+    fi
     if [[ -f "$current_dir/.stackshift-batch-session.json" ]]; then
       echo "$current_dir/.stackshift-batch-session.json"
       return 0
@@ -232,16 +236,30 @@ A) GitHub Spec Kit (Recommended for most projects)
    → Simpler, lightweight workflow
    → Best for: small-medium projects, focused features
 
-B) BMAD Method (For larger/enterprise projects)
-   → Uses same reverse-engineering docs as Spec Kit
+B) BMAD Auto-Pilot (Recommended for BMAD users)
+   → Auto-generates BMAD artifacts (PRD, Architecture, Epics) from reverse-eng docs
+   → Three modes: YOLO (fully automatic), Guided (ask on ambiguities), Interactive
+   → Optionally hand off to BMAD agents for collaborative refinement
+   → Best for: projects that want BMAD format without the full conversation
+
+C) BMAD Method (Full collaborative workflow)
+   → Uses same reverse-engineering docs as other frameworks
    → Hands off to BMAD's collaborative PM/Architect agents
    → BMAD creates PRD + Architecture through conversation
-   → Best for: large projects, multi-team, enterprise
+   → Best for: large projects needing deep collaborative refinement
+
+D) Architecture Only
+   → Generates architecture document with your constraints
+   → Asks about tech stack, cloud, scale, hard constraints
+   → Includes Mermaid diagrams, ADRs, infrastructure recommendations
+   → Best for: when you already know what to build, need architecture
 
 After StackShift extracts documentation (Gear 2):
-- Both frameworks get the same 9 docs in docs/reverse-engineering/
+- All frameworks get the same 11 docs in docs/reverse-engineering/
 - Spec Kit: Gears 3-6 create .specify/ specs, use /speckit.implement
+- BMAD Auto-Pilot: /stackshift.bmad-synthesize generates BMAD artifacts automatically
 - BMAD: Skip to Gear 6, hand off to *workflow-init with rich context
+- Architecture Only: /stackshift.architect generates architecture.md with your constraints
 ```
 
 **Question 3: Brownfield Mode** _(If Brownfield selected)_
@@ -432,7 +450,7 @@ All answers are stored in `.stackshift-state.json` and guide the entire workflow
 {
   "detection_type": "monorepo-service",  // What kind of app: monorepo-service, nx-app, generic, etc.
   "route": "greenfield",                  // How to spec it: greenfield or brownfield
-  "implementation_framework": "speckit",  // speckit or bmad
+  "implementation_framework": "speckit",  // speckit, bmad-autopilot, bmad, or architect-only
   "config": {
     "spec_output_location": "~/git/my-new-app",  // Where to write specs/docs
     "build_location": "~/git/my-new-app",         // Where to build new code (Gear 6)
@@ -468,67 +486,18 @@ All answers are stored in `.stackshift-state.json` and guide the entire workflow
 
 ### Implementing the Questionnaire
 
-Use the `AskUserQuestion` tool to collect all configuration upfront:
+Present the questions conversationally and collect answers through natural dialogue. Ask questions one at a time (or in small groups of related questions) and wait for the user to respond before continuing.
 
-```typescript
-// Example implementation
-AskUserQuestion({
-  questions: [
-    {
-      question: "Which route best aligns with your goals?",
-      header: "Route",
-      multiSelect: false,
-      options: [
-        {
-          label: "Greenfield",
-          description: "Shift to new tech stack - extract business logic only (tech-agnostic)"
-        },
-        {
-          label: "Brownfield",
-          description: "Manage existing code with specs - extract full implementation (tech-prescriptive)"
-        }
-      ]
-    },
-    {
-      question: "Which implementation framework do you want to use?",
-      header: "Framework",
-      multiSelect: false,
-      options: [
-        {
-          label: "GitHub Spec Kit (Recommended)",
-          description: "Feature specs in .specify/, task-driven, simpler workflow"
-        },
-        {
-          label: "BMAD Method",
-          description: "Handoff to BMAD agents for collaborative artifact creation"
-        }
-      ]
-    },
-    {
-      question: "How do you want to shift through the gears?",
-      header: "Transmission",
-      multiSelect: false,
-      options: [
-        {
-          label: "Manual",
-          description: "Review each gear before proceeding - you're in control"
-        },
-        {
-          label: "Cruise Control",
-          description: "Shift through all gears automatically - hands-free, unattended execution"
-        }
-      ]
-    }
-  ]
-});
-
-// Then based on answers, ask follow-up questions conditionally:
-// - If cruise control: Ask clarifications strategy, implementation scope
-// - If greenfield + implementing: Ask target stack
-// - If greenfield subfolder: Ask folder name (or accept default: greenfield/)
-// - If BMAD selected: Skip spec thoroughness question (BMAD handles its own planning)
-// - If BMAD + cruise control: Gear 6 hands off to BMAD instead of /speckit.implement
-```
+Based on answers, ask follow-up questions conditionally:
+- If cruise control: Ask clarifications strategy, implementation scope
+- If greenfield + implementing: Ask target stack
+- If greenfield subfolder: Ask folder name (or accept default: greenfield/)
+- If BMAD Auto-Pilot selected: Skip spec thoroughness question (BMAD Synthesize handles artifact creation)
+- If BMAD Auto-Pilot + cruise control: After Gear 2, runs /stackshift.bmad-synthesize in YOLO mode
+- If BMAD selected: Skip spec thoroughness question (BMAD handles its own planning)
+- If BMAD + cruise control: Gear 6 hands off to BMAD instead of /speckit.implement
+- If Architecture Only selected: Skip spec thoroughness, clarifications, implementation scope questions
+- If Architecture Only + cruise control: After Gear 2, runs /stackshift.architect
 
 **For custom folder name:** Use free-text input or accept default.
 
@@ -672,8 +641,6 @@ The analysis follows 5 steps:
 - Identify the primary technology stack
 - Extract version information
 
-See [operations/detect-stack.md](operations/detect-stack.md) for detailed instructions.
-
 ### Step 2: Extract Core Metadata
 - Application name from manifest or directory
 - Version number from package manifests
@@ -687,22 +654,16 @@ See [operations/detect-stack.md](operations/detect-stack.md) for detailed instru
 - Count source files by type
 - Map key components (backend, frontend, database, API, infrastructure)
 
-See [operations/directory-analysis.md](operations/directory-analysis.md) for detailed instructions.
-
 ### Step 4: Check for Existing Documentation
 - Scan for docs folders and markdown files
 - Assess documentation quality
 - Identify what's documented vs. what's missing
-
-See [operations/documentation-scan.md](operations/documentation-scan.md) for detailed instructions.
 
 ### Step 5: Assess Completeness
 - Look for placeholder files (TODO, WIP, etc.)
 - Check README for mentions of incomplete features
 - Count test files and estimate test coverage
 - Verify deployment/CI setup
-
-See [operations/completeness-assessment.md](operations/completeness-assessment.md) for detailed instructions.
 
 ---
 
@@ -718,8 +679,6 @@ This skill generates `analysis-report.md` in the project root with:
 - **Source Code Statistics** - File counts, lines of code estimates
 - **Recommended Next Steps** - Focus areas for reverse engineering
 - **Notes** - Additional observations
-
-See [operations/generate-report.md](operations/generate-report.md) for the complete template.
 
 ---
 
@@ -740,14 +699,6 @@ After running this skill, you should have:
 Once `analysis-report.md` is created and reviewed, proceed to:
 
 **Step 2: Reverse Engineer** - Use the reverse-engineer skill to generate comprehensive documentation.
-
----
-
-## Principles
-
-For guidance on performing effective initial analysis:
-- [principles/multi-language-detection.md](principles/multi-language-detection.md) - Detecting polyglot codebases
-- [principles/architecture-pattern-recognition.md](principles/architecture-pattern-recognition.md) - Identifying common patterns
 
 ---
 

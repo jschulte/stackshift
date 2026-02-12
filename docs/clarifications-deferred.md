@@ -96,14 +96,6 @@ git add .specify/ specs/
 git commit -m "clarify: resolve test coverage target to 90%"
 ```
 
-### Option 3: State File Update
-```bash
-# Update state with clarifications
-node plugin/scripts/state-manager.js clarify \
-  --question "Test coverage target?" \
-  --answer "90%"
-```
-
 ---
 
 ## Impact Assessment

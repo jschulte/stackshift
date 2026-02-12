@@ -1,6 +1,6 @@
 {
   "name": "stackshift",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "type": "module",
   "description": "Reverse engineering toolkit with manual control - shift gears in your codebase. Transform any application into a fully-specified, spec-driven project with GitHub Spec Kit. Dual workflow: extract business logic for rebuilds (Greenfield) or manage existing code with specs (Brownfield).",
   "keywords": [
@@ -28,32 +28,20 @@
   "bugs": {
     "url": "https://github.com/jschulte/stackshift/issues"
   },
-  "engines": {
-    "node": ">=18.0.0"
-  },
   "scripts": {
     "test": "echo \"No tests yet\" && exit 0",
-    "build:mcp": "cd mcp-server && npm install && npm run build",
-    "build:cli": "cd cli && go build -o stackshift",
-    "build:diagrams": "cd scripts && npx tsc",
-    "build": "npm run build:mcp && npm run build:cli",
-    "dev:mcp": "cd mcp-server && npm run dev",
-    "start:mcp": "cd mcp-server && npm start",
-    "generate-diagrams": "npm run build:diagrams && node scripts/dist/generate-diagrams/index.js",
-    "generate-diagrams:verbose": "npm run build:diagrams && node scripts/dist/generate-diagrams/index.js --verbose",
-    "prepare": "husky"
+    "build:ast": "cd scripts/ast-analysis && npm install && npm run build"
   },
   "files": [
-    "plugin/",
     ".claude-plugin/",
     ".claude/",
-    "templates/",
+    "skills/",
+    "agents/",
+    "commands/",
+    "scripts/",
+    "web/",
+    "docs/",
     "README.md",
     "LICENSE"
-  ],
-  "devDependencies": {
-    "@types/node": "^24.10.1",
-    "husky": "^9.1.7",
-    "typescript": "^5.9.3"
-  }
+  ]
 }

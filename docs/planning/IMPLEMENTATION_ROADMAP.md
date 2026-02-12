@@ -461,20 +461,11 @@ ${configs.find(c => c.file === 'package.json')?.scripts.map(([name, cmd]) =>
 
 ```
 stackshift/
-├── mcp-server/
-│   ├── src/
-│   │   ├── analyzers/          # NEW: Language-specific analyzers
-│   │   │   ├── javascript.ts
-│   │   │   ├── python.ts
-│   │   │   └── java.ts
-│   │   ├── generators/         # NEW: Document generators
-│   │   │   ├── functional-spec.ts
-│   │   │   ├── data-architecture.ts
-│   │   │   └── config-reference.ts
-│   │   ├── orchestrators/      # NEW: Workflow orchestration
-│   │   │   └── cruise-control.ts
-│   │   └── parsers/           # NEW: AST parsers
-│   │       └── index.ts
+├── plugin/
+│   ├── skills/                   # 7 skill definitions (gears)
+│   ├── agents/                   # Specialized agents
+│   ├── templates/                # Constitution, feature spec templates
+│   └── scripts/                  # Utility scripts
 ```
 
 ## Call to Action

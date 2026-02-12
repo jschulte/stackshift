@@ -14,7 +14,6 @@ Transform any application into a fully-specified, spec-driven project with compl
 <p>
   <a href="https://github.com/jschulte/stackshift/actions/workflows/ci.yml"><img src="https://github.com/jschulte/stackshift/actions/workflows/ci.yml/badge.svg" alt="CI Status"></a>
   <a href="https://github.com/jschulte/stackshift/blob/main/LICENSE"><img src="https://img.shields.io/badge/License-MIT-blue.svg" alt="License"></a>
-  <img src="https://img.shields.io/badge/Node.js-%3E%3D18.0.0-green" alt="Node.js">
   <img src="https://img.shields.io/badge/TypeScript-5.3.0-blue" alt="TypeScript">
 </p>
 
@@ -41,7 +40,6 @@ Transform any application into a fully-specified, spec-driven project with compl
 - **[Quick Start](QUICKSTART.md)** - Get started in 5 minutes!
 - **[Installation Guide](docs/guides/INSTALLATION.md)** - Detailed installation for all platforms
 - **[Plugin Guide](docs/guides/PLUGIN_GUIDE.md)** - Claude Code plugin usage
-- **[MCP Guide](mcp-server/README.md)** - MCP server for VSCode/Copilot
 - **[Web Guide](web/README.md)** - Using in Claude Code Web (browser)
 - **[Batch Processing](scripts/BATCH_PROCESSING_GUIDE.md)** - Process multiple projects efficiently
 
@@ -119,15 +117,13 @@ stateDiagram-v2
 ├─────────────────────────────────────────────────────────────┤
 │                                                              │
 │  Gear 1: Initial Analysis + Route + Framework Selection     │
-│  ├─ Run AST analysis (parse codebase, save to cache)        │
 │  ├─ Detect technology stack                                 │
 │  ├─ Choose route: Greenfield or Brownfield?                 │
 │  └─ Choose framework: GitHub Spec Kit or BMAD Method?       │
 │         │                                                    │
 │         ▼                                                    │
-│  Gear 2: Reverse Engineer (Reverse Gear! 🔄)                │
+│  Gear 2: Reverse Engineer (Reverse Gear!)                   │
 │  ├─ Extract business logic + tech details                   │
-│  ├─ Enhanced with AST: auto-extract APIs & logic            │
 │  └─ Generate 9 docs to docs/reverse-engineering/ (BOTH)     │
 │         │                                                    │
 │         ├─────────────────┬────────────────────┐            │
@@ -191,7 +187,6 @@ Just ask naturally: "Run initial analysis" or "Analyze this codebase"
 
 - Claude Code with plugin support
 - Git repository with existing codebase
-- Node.js 18+ (for state management scripts)
 - ~2-4 hours total time for complete process
 
 ### Run the Process
@@ -218,13 +213,6 @@ StackShift will ask a few questions upfront:
 5. (If Greenfield) Target tech stack
 
 All answers saved to `.stackshift-state.json` - configure once, use throughout!
-
-**Progress Tracking:**
-
-```bash
-# Check which gear you're in
-node ~/.claude/plugins/stackshift/plugin/scripts/state-manager.js progress
-```
 
 **Without Plugin (Manual):**
 
@@ -263,24 +251,6 @@ See [`web/README.md`](web/README.md) for complete instructions.
 - 🚀 No installation required
 - 🔄 Full cruise control support
 - 💾 Download specs when complete
-
-#### Option 3: MCP Server (VSCode, Copilot)
-
-**Recommended for:** VSCode users, GitHub Copilot users
-
-```bash
-# Configure in VSCode settings.json
-{
-  "mcp.servers": {
-    "stackshift": {
-      "command": "npx",
-      "args": ["-y", "stackshift-mcp"]
-    }
-  }
-}
-```
-
-See [`mcp-server/README.md`](mcp-server/README.md) for complete instructions.
 
 ---
 
@@ -406,43 +376,28 @@ docs/reverse-engineering/
 | **Artifact Creation** | Automated from docs | Collaborative with BMAD agents |
 | **Best For** | Task-driven teams | Agent-driven enterprise teams |
 
-**Note:** StackShift's reverse engineering (Gear 2) replaces BMAD's Phase 0 (`document-project`) with deeper AST-powered analysis. Both frameworks get the same rich context.
+**Note:** StackShift's reverse engineering (Gear 2) replaces BMAD's Phase 0 (`document-project`) with deeper analysis. Both frameworks get the same rich context.
 
 ---
 
 ## 📁 StackShift Structure
 
-### Plugin Structure (Recommended)
+### Plugin Structure
 
 ```
 stackshift/
-├── README.md                           ← You are here
-├── .claude-plugin/
-│   └── marketplace.json               ← Plugin marketplace config
-├── plugin/
-│   ├── .claude-plugin/
-│   │   └── plugin.json                ← Plugin metadata
-│   ├── skills/
-│   │   ├── analyze/                   ← Step 1: Initial Analysis
-│   │   │   ├── SKILL.md               ← Skill definition
-│   │   │   └── operations/            ← Sub-operations
-│   │   ├── reverse-engineer/          ← Step 2: Reverse Engineer
-│   │   ├── create-specs/              ← Step 3: Create Specifications
-│   │   ├── gap-analysis/              ← Step 4: Gap Analysis
-│   │   ├── complete-spec/             ← Step 5: Complete Specification
-│   │   └── implement/                 ← Step 6: Implement from Spec
-│   ├── templates/                     ← Spec templates
-│   │   ├── feature-spec-template.md
-│   │   ├── constitution-agnostic-template.md
-│   │   ├── constitution-prescriptive-template.md
-│   │   └── implementation-status-template.md
-│   └── scripts/
-│       └── state-manager.js           ← Progress tracking
-├── web/                               ← Web prompts (for manual use)
-│   ├── WEB_BOOTSTRAP.md               ← Bootstrap for claude.ai
-│   └── convert-reverse-engineering-to-speckit.md
-└── legacy/
-    └── original-prompts/              ← Legacy manual prompts (archived)
+├── .claude-plugin/       # Plugin metadata
+├── .claude/              # Settings and commands
+│   ├── commands/         # Slash commands
+│   └── settings.json     # Plugin settings
+├── agents/               # Agent definitions
+├── docs/                 # Documentation
+├── public/               # Public assets
+├── scripts/              # Utility scripts
+├── skills/               # Skill definitions (6 gears + extras)
+├── web/                  # Web resources
+├── package.json          # Plugin metadata
+└── README.md
 ```
 
 ### Plugin Benefits
@@ -464,7 +419,6 @@ stackshift/
 ### Step 1: Initial Analysis (5 minutes)
 
 **What it does:**
-- **Runs AST analysis** - Parses codebase with Babel, saves to `.stackshift-analysis/`
 - Detects programming language and framework
 - Identifies application type (web, mobile, API, etc.)
 - Maps directory structure
@@ -473,17 +427,7 @@ stackshift/
 
 **Output:**
 - `analysis-report.md` with tech stack summary
-- **`.stackshift-analysis/`** cache directory:
-  - `roadmap.md` - Gap analysis with confidence scores
-  - `raw-analysis.json` - Full AST data (functions, classes, APIs)
-  - `summary.json` - Metadata and timestamps
 - Quick assessment of what exists
-
-**AST Cache Benefits:**
-- ✅ Parse codebase ONCE in Gear 1
-- ✅ All other gears read from cache (instant)
-- ✅ Auto-refresh if stale (> 1 hour)
-- ✅ 50-90% performance improvement
 
 **Plugin Skill:** `/stackshift:analyze`
 **Manual:** Use `web/WEB_BOOTSTRAP.md` (Gear 1)
@@ -494,7 +438,6 @@ stackshift/
 
 **What it does:**
 - Deep codebase analysis using specialized agents
-- **Enhanced with AST cache** - Auto-extracts APIs, business logic from parsed code
 - Extracts all data models, API endpoints, components
 - Documents configuration, infrastructure, operations
 - Analyzes technical debt and test coverage

@@ -4,33 +4,11 @@ description: Gear 1 - Analyze codebase and detect tech stack
 
 # Gear 1: Analysis
 
-**IMPORTANT**: This command runs AST analysis ONCE and saves results for all gears.
+**IMPORTANT**: This command detects the tech stack and configures the project for all gears.
 
-## Step 1: Run Full AST Analysis (Deterministic - Saves to Files)
+## Step 1: Detect Tech Stack, Route, and Framework
 
-First, use the Bash tool to execute comprehensive AST analysis:
-
-```bash
-~/stackshift/scripts/run-ast-analysis.mjs analyze .
-```
-
-**This will**:
-- Parse entire codebase with Babel AST
-- Analyze APIs, functions, classes, imports
-- Detect stubs, business logic, patterns
-- Save results to `.stackshift-analysis/` directory
-- Generate roadmap.md, raw-analysis.json, summary.json
-
-**Files created** (used by all other gears):
-- `.stackshift-analysis/roadmap.md` - Human-readable gap analysis
-- `.stackshift-analysis/raw-analysis.json` - Full AST data
-- `.stackshift-analysis/summary.json` - Metadata & timestamps
-
-**Cache duration**: 1 hour (auto-refreshes if stale)
-
-## Step 2: Detect Tech Stack, Route, and Framework
-
-After AST analysis completes, use the Skill tool to detect tech stack:
+Use the Skill tool to detect tech stack:
 
 Use the Skill tool with skill="analyze".
 
@@ -38,11 +16,31 @@ Use the Skill tool with skill="analyze".
 - Read file structure
 - Detect frameworks from package.json
 - Choose route (Greenfield/Brownfield)
-- Choose implementation framework (GitHub Spec Kit / BMAD Method)
+- Choose implementation framework (GitHub Spec Kit / BMAD Auto-Pilot / BMAD Method / Architecture Only)
 - Auto-detect app type (monorepo, Nx, etc.)
 - Create analysis-report.md
 - Save to .stackshift-state.json
 
-**Framework choice determines output format**:
-- **GitHub Spec Kit**: Creates `.specify/` structure, uses `/speckit.*` commands
-- **BMAD Method**: Creates `docs/` structure, hands off to `*workflow-init`
+**Framework choice determines workflow after Gear 2**:
+- **GitHub Spec Kit**: Gears 3-6 create `.specify/` specs, use `/speckit.implement`
+- **BMAD Auto-Pilot**: `/stackshift.bmad-synthesize` auto-generates BMAD artifacts (PRD, Architecture, Epics)
+- **BMAD Method**: Hands off to `*workflow-init` for collaborative BMAD workflow
+- **Architecture Only**: `/stackshift.architect` generates architecture.md with user constraints
+
+### Step 2: Run AST Analysis
+
+Run AST analysis for deep, function-level code inspection:
+
+```bash
+node ~/stackshift/scripts/run-ast-analysis.mjs analyze .
+```
+
+**What AST analysis provides:**
+- Function signature verification (not just "exists")
+- Stub detection (functions returning placeholder text)
+- Missing parameters detection
+- Business logic pattern analysis
+- Test coverage gaps
+- Confidence scoring (0-100%)
+
+Results are cached in `.stackshift-analysis/` and reused by all subsequent gears. This is the primary method for code inspection -- `/speckit.analyze` is a fallback if AST analysis is unavailable.

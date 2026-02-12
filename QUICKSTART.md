@@ -45,30 +45,6 @@ cd stackshift
 
 ---
 
-### 🔧 VSCode/Copilot (MCP Server)
-
-**Best for:** VSCode users, GitHub Copilot integration
-
-**Add to VSCode settings.json:**
-```json
-{
-  "mcp.servers": {
-    "stackshift": {
-      "command": "npx",
-      "args": ["-y", "stackshift-mcp"]
-    }
-  }
-}
-```
-
-**Usage:**
-```
-@claude use stackshift_analyze with brownfield route
-@claude use stackshift_cruise_control
-```
-
----
-
 ## First Run
 
 ### Configuration Questions
@@ -211,21 +187,8 @@ You have:
 ### Check Progress
 
 ```bash
-# See which gear you're in
-node plugin/scripts/state-manager.js progress
-
-# Or read state file
+# Read state file
 cat .stackshift-state.json
-```
-
-### Switch Modes
-
-```bash
-# Enable cruise control mid-process
-node plugin/scripts/state-manager.js cruise
-
-# Switch to manual
-node plugin/scripts/state-manager.js manual
 ```
 
 ### Resume Interrupted

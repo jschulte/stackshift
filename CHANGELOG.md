@@ -5,40 +5,32 @@ All notable changes to StackShift will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.9.0] - 2025-12-01
+## [2.0.0] - 2026-02-12
 
 ### Added
-- **File-Based AST Architecture**: Run AST analysis once in Gear 1, all other gears read from cached files (50-90% performance improvement)
-- **Deterministic AST Execution**: All slash commands now explicitly invoke Bash tool for guaranteed AST execution (no interpretation needed)
-- **Smart Caching**: AST results cached in `.stackshift-analysis/` directory with 1-hour TTL and auto-refresh
-- **Complete Gear Integration**: AST analysis now integrated across all 6 gears deterministically
-- New command: `analyze` - Run full AST analysis and save to cache
-- New command: `check` - Verify cache exists and is fresh
-- New command: `status` - Show implementation status from cache
+- **BMAD Auto-Pilot**: New `/stackshift.bmad-synthesize` skill that auto-generates BMAD artifacts (PRD, Architecture, Epics, UX Design) directly from reverse-engineering docs. Three modes:
+  - **YOLO**: Fully automatic, no user input (~10 min)
+  - **Guided**: Auto-fill + 5-10 targeted questions (~15-20 min)
+  - **Interactive**: Section-by-section review with pre-loaded context (~25-30 min)
+- **Architecture Generator**: New `/stackshift.architect` skill that generates complete architecture documents from reverse-eng docs + user constraints. Includes Mermaid diagrams (C4 context, component, data flow, infrastructure), ADRs, cost estimation, and migration paths
+- **Reimagine**: New `/stackshift.reimagine` skill for multi-repo synthesis. Loads reverse-engineering docs from multiple repos, extracts a unified capability map, identifies duplication/overlap, runs a brainstorming session, and generates new specifications for a reimagined system
+- **business-context.md**: New reverse-engineering doc (#10) capturing product vision, personas, business goals, competitive landscape, stakeholder map, and business constraints. Uses `[INFERRED]` and `[NEEDS USER INPUT]` confidence markers
+- **decision-rationale.md**: New reverse-engineering doc (#11) capturing technology selection rationale, ADRs in standard format, design principles inferred from code patterns, trade-offs made, and historical context from git archaeology
+- **integration-points.md**: Fully specified with detailed sections for external services, internal dependencies, data flow diagrams (Mermaid), auth flows, third-party SDK usage, and webhook integrations (was listed but underspecified previously)
+- New framework options in Gear 1: BMAD Auto-Pilot and Architecture Only join existing Spec Kit and BMAD Method
+- Cruise control paths for BMAD Auto-Pilot and Architecture Only workflows
+- **Refresh Docs**: New `/stackshift.refresh-docs` skill for incremental doc updates. Pins docs to a git commit hash at generation time, then diffs against HEAD to surgically update only affected docs — no costly full regeneration needed. Tracks refresh history in `.stackshift-docs-meta.json`
 
 ### Changed
-- **Gear 1**: Now runs comprehensive AST analysis upfront and saves to `.stackshift-analysis/`
-- **Gear 2**: Enhanced documentation extraction using cached AST data
-- **Gear 3**: Auto-detects implementation status (✅/⚠️/❌) from cached AST analysis
-- **Gear 4**: Reads cached roadmap instead of re-running analysis (10x faster)
-- **Gear 5**: Provides evidence-based clarifications using cached AST data
-- **Gear 6**: Verifies implementations against cached AST analysis
-- **Cruise Control**: Runs AST upfront, all gears use cache throughout workflow
-- Enhanced `scripts/run-ast-analysis.mjs` with caching and multiple commands
-- Updated all slash commands (`.claude/commands/*.md`) for deterministic execution
-- Updated README.md with AST integration details in gear descriptions
-
-### Fixed
-- AST analysis no longer depends on Claude interpreting skill instructions (deterministic)
-- Eliminated duplicate AST parsing across gears (run once, cache to files)
-- Cache automatically refreshes when stale (> 1 hour old)
-- Graceful fallback to manual analysis if Node.js unavailable
-
-### Documentation
-- Created 9 comprehensive AST integration documents
-- Added test suite with 8 test cases
-- Documented performance benchmarks and success metrics
-- Added comparison to other AST tools (Tree-sitter, TypeScript API, SonarQube)
+- Reverse engineering now generates **11 docs** (up from 9) in `docs/reverse-engineering/`
+- **functional-specification.md** enriched with User Personas and Product Positioning sections
+- **data-architecture.md** enriched with Domain Model / Bounded Contexts section
+- **operations-guide.md** enriched with Scalability & Growth Strategy section
+- **technical-debt-analysis.md** enriched with Migration Priority Matrix (Impact x Effort quadrants)
+- Reverse engineering Phase 1 expanded with Business Context Analysis (1.5) and Decision Archaeology (1.6)
+- Gear 1 analyze skill now offers 4 implementation framework choices (was 2)
+- Cruise control updated with execution flows for all 4 framework paths
+- All slash commands updated to reflect 11-doc output and new framework options
 
 ## [1.8.0] - 2025-11-29
 

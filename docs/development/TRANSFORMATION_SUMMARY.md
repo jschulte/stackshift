@@ -51,15 +51,8 @@ Each of the 6 steps is now an interactive skill:
 
 ### 3. Workflow State Management ✅
 
-**Created:**
-- `plugin/scripts/state-manager.js` - Full state tracking system
-  - Initialize, start, complete, status, progress, reset
-  - JSON state file (`.stackshift-state.json`)
-  - CLI interface for manual control
-  - Auto-tracking integration for skills
-
 **Features:**
-- Tracks current step
+- Tracks current step via `.stackshift-state.json`
 - Records completed steps
 - Timestamps for each step
 - Project metadata
@@ -137,9 +130,6 @@ Skills activate based on:
 # Link plugin locally
 ln -s $(pwd) ~/.claude/plugins/local/reverse-engineering-toolkit
 
-# Make state manager executable
-chmod +x plugin/scripts/state-manager.js
-
 # Restart Claude Code
 
 # Test
@@ -172,8 +162,7 @@ chmod +x plugin/scripts/state-manager.js
 These can be added as needed:
 
 1. **Hooks** - Auto-update specs when code changes
-2. **MCP Integration** - Expose state as MCP resources
-3. **Slash Commands** - `/re-toolkit:status`, `/re-toolkit:next`
+2. **Slash Commands** - `/re-toolkit:status`, `/re-toolkit:next`
 4. **Remaining Operations** - Add operations/ docs for steps 2-6
 5. **Visual Progress** - UI-based workflow diagram
 6. **Multi-project** - Track multiple projects
@@ -201,8 +190,7 @@ reverse-engineering-toolkit/
 │   │   ├── complete-spec/        ← ✅ SKILL.md ready
 │   │   └── implement/            ← ✅ SKILL.md ready
 │   ├── templates/ (3 files)      ← ✅ Templates copied
-│   └── scripts/
-│       └── state-manager.js      ← ✅ Full state tracking
+│   └── scripts/                  ← Utility scripts
 ├── .claude/
 │   └── settings.json             ← ✅ Permissions
 ├── prompts/ (6 files)            ← Original prompts (kept for reference)
@@ -250,8 +238,7 @@ reverse-engineering-toolkit/
 ### Future Enhancements
 
 1. Add hooks for auto-spec updates
-2. MCP integration for state exposure
-3. Slash commands for quick access
+2. Slash commands for quick access
 4. Visual progress UI
 5. Team collaboration features
 

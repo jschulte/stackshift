@@ -17,30 +17,23 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20.x'
-          registry-url: 'https://registry.npmjs.org'
-
-      - name: Install dependencies
-        working-directory: ./mcp-server
-        run: npm ci
-
-      - name: Run tests
-        working-directory: ./mcp-server
-        run: npm test
-
-      - name: Build
-        working-directory: ./mcp-server
-        run: npm run build
-
       - name: Extract version from tag
         id: get_version
         run: echo "VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
 
+      - name: Package Plugin
+        run: |
+          mkdir -p dist/stackshift/.claude-plugin dist/stackshift/.claude/commands
+          cp -r .claude-plugin/* dist/stackshift/.claude-plugin/
+          cp -r skills dist/stackshift/
+          cp -r agents dist/stackshift/
+          cp .claude/commands/stackshift*.md dist/stackshift/.claude/commands/
+          cp .claude/commands/speckit*.md dist/stackshift/.claude/commands/
+          cp README.md LICENSE dist/stackshift/
+          tar -czf stackshift-plugin-v${{ steps.get_version.outputs.VERSION }}.tar.gz -C dist stackshift/
+
       - name: Create GitHub Release
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         with:
           name: Release v${{ steps.get_version.outputs.VERSION }}
           body: |
@@ -51,87 +44,18 @@ jobs:
 
             ### Installation
 
-            **MCP Server:**
-            ```bash
-            npm install -g stackshift-mcp@${{ steps.get_version.outputs.VERSION }}
-            ```
-
             **Claude Code Plugin:**
             ```bash
-            # Copy plugin directory to your Claude Code workspace
-            cp -r plugin/ ~/.claude/plugins/stackshift/
+            /install-plugin https://github.com/${{ github.repository }}
             ```
 
             ### Verification
             ```bash
-            # Verify installation
-            stackshift --version
-
-            # Or check via Claude Code
             /stackshift.analyze
             ```
           draft: false
           prerelease: false
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Publish to npm (deferred)
-        run: |
-          echo "npm publication deferred per project clarifications"
-          echo "To publish manually later: npm publish --access public"
-        # Uncomment to enable npm publishing:
-        # working-directory: ./mcp-server
-        # run: npm publish --access public
-        # env:
-        #   NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-
-  build-assets:
-    name: Build Distribution Assets
-    runs-on: ubuntu-latest
-    needs: release
-
-    permissions:
-      contents: write
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20.x'
-
-      - name: Build MCP Server
-        working-directory: ./mcp-server
-        run: |
-          npm ci
-          npm run build
-
-      - name: Package Plugin
-        run: |
-          # Build plugin directory from root-level files
-          mkdir -p plugin/.claude-plugin plugin/.claude/commands
-          cp -r .claude-plugin/* plugin/.claude-plugin/
-          cp -r skills plugin/
-          cp -r agents plugin/
-          cp .claude/commands/stackshift*.md plugin/.claude/commands/
-          cp .claude/commands/speckit*.md plugin/.claude/commands/
-
-          # Create tarball
-          tar -czf stackshift-plugin-${{ github.ref_name }}.tar.gz plugin/
-
-      - name: Package MCP Server
-        working-directory: ./mcp-server
-        run: |
-          npm pack
-          mv stackshift-mcp-*.tgz ../stackshift-mcp-${{ github.ref_name }}.tgz
-
-      - name: Upload Release Assets
-        uses: softprops/action-gh-release@v1
-        with:
           files: |
-            stackshift-plugin-${{ github.ref_name }}.tar.gz
-            stackshift-mcp-${{ github.ref_name }}.tgz
+            stackshift-plugin-v${{ steps.get_version.outputs.VERSION }}.tar.gz
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
