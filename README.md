@@ -50,6 +50,7 @@ Transform any application into a fully-specified, spec-driven project with compl
 
 **Reverse Engineering Meets Manual Control** - StackShift provides a **systematic, 6-gear process** to:
 
+0. **🗺️ Pre-Gear:** Discover - Auto-discover the entire ecosystem from one repo *(optional)*
 1. **🔍 First Gear:** Analyze - Detect tech stack and assess completeness
 2. **🔄 Second Gear (Reverse!):** Reverse Engineer - Extract comprehensive documentation
 3. **📋 Third Gear:** Create Specifications - Transform into GitHub Spec Kit format
@@ -64,7 +65,11 @@ Transform any application into a fully-specified, spec-driven project with compl
 
 ```mermaid
 stateDiagram-v2
+    [*] --> Discover: optional pre-step
     [*] --> Analyze
+    Discover --> Batch: ecosystem map
+    Discover --> Reimagine: capability synthesis
+    Batch --> Analyze: per-repo
     Analyze --> ReverseEngineer: Gear 2
     ReverseEngineer --> CreateSpecs: Gear 3
     CreateSpecs --> GapAnalysis: Gear 4
@@ -73,9 +78,10 @@ stateDiagram-v2
     Analyze --> CruiseControl: auto mode
     Implement --> [*]
     CruiseControl --> [*]
+    Reimagine --> [*]
 ```
 
-*Last generated: 2025-11-17T17:24:53.600Z*
+*Last generated: 2026-02-12*
 <!-- DIAGRAM: workflow-end -->
 
 
@@ -617,28 +623,93 @@ When reverse-engineering a large system, the hardest part is figuring out *which
 /stackshift.discover
 ```
 
-**What it does:**
-1. Scans your starting repo for 10 categories of integration signals (npm packages, Docker Compose, env vars, API calls, CI/CD triggers, workspace configs, message queues, infrastructure refs, and more)
-2. Auto-detects the GitHub org from your git remote
-3. Searches GitHub for related repos in the same org
-4. Scans your local filesystem for matching repos
-5. Merges everything, deduplicates, and scores confidence (CONFIRMED / HIGH / MEDIUM / LOW)
-6. Presents an ecosystem map with a Mermaid dependency graph
-7. Hands off to `/stackshift.batch` or `/stackshift.reimagine`
+### How It Works
 
-**Example workflow:**
+```mermaid
+flowchart LR
+    A[Starting Repo] --> B[Scan 10 Signal Types]
+    B --> C{GitHub org detected?}
+    C -->|Yes| D[Search GitHub Org]
+    C -->|No| E[Skip]
+    D --> F[Scan Local Filesystem]
+    E --> F
+    F --> G[Merge & Score Confidence]
+    G --> H[Present Ecosystem Map]
+    H --> I{User confirms}
+    I -->|Add/Remove| H
+    I -->|Looks good| J{Next step?}
+    J --> K["/stackshift.batch"]
+    J --> L["/stackshift.reimagine"]
+    J --> M[Export map only]
+```
+
+### The Full Pipeline
+
+```mermaid
+flowchart TD
+    D["/stackshift.discover"] -->|ecosystem map| B["/stackshift.batch"]
+    D -->|ecosystem map| R["/stackshift.reimagine"]
+    B -->|per repo| G1["Gear 1: Analyze"]
+    G1 --> G2["Gear 2: Reverse Engineer"]
+    G2 --> G3["Gear 3: Create Specs"]
+    G3 --> G4["Gear 4: Gap Analysis"]
+    G4 --> G5["Gear 5: Complete Spec"]
+    G5 --> G6["Gear 6: Implement"]
+    B -->|all docs| R
+    R --> V["Reimagined Vision + New Specs"]
+```
+
+### 10 Signal Categories
+
+| # | Signal | Where It Looks | Example |
+|---|--------|---------------|---------|
+| 1 | Scoped npm packages | `package.json` | `@myorg/shared-utils` |
+| 2 | Docker Compose services | `docker-compose*.yml` | `depends_on: [auth-api]` |
+| 3 | Environment variables | `.env*`, config files | `USER_SERVICE_URL` |
+| 4 | API client calls | Source code | `fetch('http://auth-service')` |
+| 5 | Shared databases | Connection strings | Same DB in multiple configs |
+| 6 | CI/CD triggers | `.github/workflows/` | `repository_dispatch` |
+| 7 | Workspace configs | `pnpm-workspace.yaml`, `turbo.json`, `nx.json` | Monorepo packages |
+| 8 | Message queues | Source code, config | SQS queues, Kafka topics |
+| 9 | Infrastructure refs | `terraform/`, `k8s/` | Shared VPCs, ALBs |
+| 10 | Language-specific deps | `go.mod`, `requirements.txt` | `replace ../shared` |
+
+### Confidence Scoring
+
+Each discovered repo gets a confidence level:
+
+| Level | Meaning | Example |
+|-------|---------|---------|
+| **CONFIRMED** | User-listed or workspace config | Found in `pnpm-workspace.yaml` |
+| **HIGH** | 2+ independent signals | Docker Compose + env var + API call |
+| **MEDIUM** | 1 strong signal | Scoped npm package dep |
+| **LOW** | Naming pattern or GitHub search only | Repo name matches org convention |
+
+### Key Features
+
+- **Auto-detects GitHub org** from `git remote` (SSH and HTTPS, GitHub and GitLab)
+- **Monorepo-aware** — workspace packages are auto-CONFIRMED, intra-monorepo deps mapped
+- **Seamless batch handoff** — `/stackshift.batch` reads the discovered repo list automatically
+- **Graceful degradation** — works without GitHub access (local scan only), handles rate limits
+- **Large ecosystem support** — Mermaid diagrams auto-simplify for 20+ repos
+
+### Example Session
+
 ```
 You: /stackshift.discover
-StackShift: "Scanning user-service... Found 12 related repos!"
+StackShift: "Auto-detected GitHub org: myorg (from git remote)"
+StackShift: "Scanning user-service for integration signals..."
+StackShift: "Found 12 related repos!"
 
   CONFIRMED: user-service, shared-utils, auth-service
   HIGH:      inventory-api, notification-hub, billing-api, order-service
   MEDIUM:    admin-dashboard, reporting-service, config-repo
   LOW:       legacy-gateway, monitoring-stack
 
-StackShift: "Run batch on all 12 repos?"
-You: "Yes"
+StackShift: "Does this look right? (add/remove/proceed)"
+You: "Looks good, run batch"
 → /stackshift.batch picks up the discovered repo list automatically
+→ All 12 repos analyzed in parallel batches of 5
 ```
 
 ---
