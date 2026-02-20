@@ -16,7 +16,7 @@ Use the Skill tool with skill="analyze".
 - Read file structure
 - Detect frameworks from package.json
 - Choose route (Greenfield/Brownfield)
-- Choose implementation framework (GitHub Spec Kit / BMAD Auto-Pilot / BMAD Method / Architecture Only)
+- Choose implementation framework (GitHub Spec Kit / BMAD Auto-Pilot / BMAD Method / Architecture Only / Portable Extraction)
 - Auto-detect app type (monorepo, Nx, etc.)
 - Create analysis-report.md
 - Save to .stackshift-state.json
@@ -26,6 +26,7 @@ Use the Skill tool with skill="analyze".
 - **BMAD Auto-Pilot**: `/stackshift.bmad-synthesize` auto-generates BMAD artifacts (PRD, Architecture, Epics)
 - **BMAD Method**: Hands off to `*workflow-init` for collaborative BMAD workflow
 - **Architecture Only**: `/stackshift.architect` generates architecture.md with user constraints
+- **Portable Extraction**: `/stackshift.portable-extract` generates portable epics + component spec
 
 ### Step 2: Run AST Analysis
 

@@ -82,13 +82,13 @@ The full coverage map includes:
 ### ASCII Box Diagrams
 ```
 ┌─────────────────────────────────┐
-│  001-vehicle-details            │ Status: ✅ COMPLETE
+│  001-property-details           │ Status: ✅ COMPLETE
 ├─────────────────────────────────┤
 │ Backend:                        │
-│  ├─ api/handlers/vehicle.ts     │
+│  ├─ api/handlers/property.ts    │
 │  └─ api/services/data.ts        │
 │ Frontend:                       │
-│  └─ site/pages/Vehicle.tsx      │
+│  └─ site/pages/Property.tsx     │
 └─────────────────────────────────┘
 ```
 

@@ -218,7 +218,7 @@ Show how repos depend on each other:
 
 ```mermaid
 graph LR
-    US[User Service] --> DB1[(User DB)]
+    US[Identity Service] --> DB1[(Identity DB)]
     BA[Billing API] --> DB2[(Billing DB)]
     BA --> US
     NH[Notification Hub] --> US

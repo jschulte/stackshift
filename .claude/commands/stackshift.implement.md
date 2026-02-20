@@ -141,6 +141,28 @@ If you ran `/stackshift.architect` (or cruise control did it automatically), the
 
 ---
 
+## Path E: Portable Extraction (implementation_framework: portable-extract)
+
+### Portable Artifacts Generated
+
+If you ran `/stackshift.portable-extract` (or cruise control did it automatically), portable component specs are ready:
+
+```
+_portable-extract/
+├── epics.md              # BMAD-format epics with abstract personas
+└── component-spec.md     # Business rules, data contracts, edge cases
+```
+
+### Next Steps
+
+1. **Copy to target project**: Copy `_portable-extract/` to your new project
+2. **Adapt personas**: Map [User]/[Admin]/[System] to your target domain's personas
+3. **Use with BMAD**: Feed epics.md into `*create-epics-stories` or `*workflow-init`
+4. **Use with Spec Kit**: Convert component-spec.md into `.specify/` feature specs
+5. **Use directly**: Artifacts are self-contained for implementation in any stack
+
+---
+
 ### Why StackShift + BMAD Works
 
 **StackShift provides rich context, BMAD provides collaborative refinement:**

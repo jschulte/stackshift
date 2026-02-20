@@ -14,7 +14,7 @@ For VSCode/Copilot users, use the web bootstrap prompt instead.
 
 ```bash
 # Clone StackShift
-git clone git@ghe.coxautoinc.com:DDC-WebPlatform/stackshift.git ~/stackshift
+git clone git@github.com:jschulte/stackshift.git ~/stackshift
 ```
 
 ### Usage

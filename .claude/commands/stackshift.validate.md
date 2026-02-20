@@ -19,7 +19,7 @@ Comprehensive validation of implementation against specifications with automatic
 /stackshift.validate --fix
 
 # Focus on specific feature
-/stackshift.validate --feature=vehicle-details
+/stackshift.validate --feature=property-details
 
 # TypeScript check only
 /stackshift.validate --type-check-only

@@ -233,7 +233,7 @@ graph TB
     MOBILE[Mobile App]
   end
   subgraph "API Layer"
-    GW[API Gateway]
+    GW[Gateway]
     AUTH[Auth Service]
   end
   subgraph "Business Logic"

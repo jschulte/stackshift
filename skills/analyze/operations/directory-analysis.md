@@ -294,7 +294,7 @@ After analysis, summarize key components:
 
 - **Infrastructure:** AWS Serverless
   - IaC: Terraform (`infrastructure/terraform/`)
-  - Services: Lambda, API Gateway, RDS, S3
+  - Services: Lambda, API GW, RDS, S3
   - CI/CD: GitHub Actions (`.github/workflows/`)
 ```
 

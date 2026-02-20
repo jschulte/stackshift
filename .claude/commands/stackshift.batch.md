@@ -97,26 +97,38 @@ I'll ask you:
 - C) Force greenfield for all
 - D) Force brownfield for all
 
-**Question 4: Brownfield mode?** _(If route = brownfield)_
+**Question 4: Implementation framework?**
+- A) GitHub Spec Kit (default) - Feature specs in .specify/, /speckit.* commands
+- B) BMAD Auto-Pilot - Auto-generate BMAD artifacts from reverse-eng docs
+- C) BMAD Method - Hands off to BMAD's collaborative agents
+- D) Architecture Only - Generate architecture.md with constraints
+- E) Portable Extraction - Tech-agnostic epics + component spec for reuse
+
+**Question 5: Also generate portable extraction?** _(If framework != portable-extract)_
+- A) No (default) - Just the framework output
+- B) Yes - Also generate `_portable-extract/` alongside normal output
+   Good for: extracting reusable specs while also managing the codebase
+
+**Question 6: Brownfield mode?** _(If route = brownfield)_
 - A) Standard - Just create specs for current state
 - B) Upgrade - Create specs + upgrade all dependencies
 
-**Question 5: Transmission?**
+**Question 7: Transmission?**
 - A) Manual - Review each gear before proceeding
 - B) Cruise Control - Shift through all gears automatically
 
-**Question 6: Clarifications strategy?** _(If transmission = cruise control)_
+**Question 8: Clarifications strategy?** _(If transmission = cruise control AND framework = speckit)_
 - A) Defer - Mark them, continue around them
 - B) Prompt - Stop and ask questions
 - C) Skip - Only implement fully-specified features
 
-**Question 7: Implementation scope?** _(If transmission = cruise control)_
+**Question 9: Implementation scope?** _(If transmission = cruise control AND framework = speckit)_
 - A) None - Stop after specs are ready
 - B) P0 only - Critical features only
 - C) P0 + P1 - Critical + high-value features
 - D) All - Every feature
 
-**Question 8: Spec output location?** _(If route = greenfield)_
+**Question 10: Spec output location?** _(If route = greenfield)_
 - A) Current repository (default)
 - B) New application repository
 - C) Separate documentation repository
@@ -161,6 +173,8 @@ cat > .stackshift-batch-session.json <<EOF
   "batchSize": ${BATCH_SIZE},
   "answers": {
     "route": "${ROUTE}",
+    "implementation_framework": "${FRAMEWORK}",
+    "also_portable_extract": ${ALSO_PORTABLE},
     "transmission": "${TRANSMISSION}",
     "spec_output_location": "${SPEC_OUTPUT}",
     "target_stack": "${TARGET_STACK}",
@@ -326,7 +340,7 @@ cat ~/git/stackshift-batch-results/BATCH_SUMMARY.md
 │           ├── constitution.md
 │           └── specifications/
 │               ├── pricing-display.md
-│               ├── incentive-logic.md
+│               ├── pricing-rules.md
 │               └── [more specs]
 │
 ├── service-inventory/
@@ -441,7 +455,7 @@ I'll ask you to configure:
 ## Example Session
 
 ```
-You: "I want to analyze all Osiris services in ~/git/my-monorepo/services"
+You: "I want to analyze all services in ~/git/my-monorepo/services"
 
 Me: "Found 92 services! Let me configure batch processing..."
 

@@ -203,7 +203,7 @@ If you want to process multiple repositories at once, I can orchestrate batch pr
 **Example: Analyze 30 monorepo services**
 
 ```bash
-cd ~/git/osiris
+cd ~/git/my-platform
 
 # I'll discover all ws-* repos
 find . -maxdepth 1 -type d -name "ws-*"

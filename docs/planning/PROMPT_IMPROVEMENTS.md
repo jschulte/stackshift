@@ -128,7 +128,7 @@ Create `analysis-report.md` with ACTIONABLE insights:
 
 ### Architecture Assessment
 - **Pattern:** [e.g., Component-based SPA with REST API]
-- **Layers:** [Frontend, API Gateway, Services, Database]
+- **Layers:** [Frontend, Gateway, Services, Database]
 - **Key Directories:**
   - `/src/components` - React components (47 files)
   - `/src/services` - Business logic (12 files)
@@ -395,7 +395,7 @@ CREATE TABLE users (
 
 2. Check for API gateway or proxy:
    - nginx.conf, apache configs
-   - API Gateway configurations
+   - Gateway / proxy configurations
 
 ### Issue: "Too many files to analyze"
 **Solutions:**

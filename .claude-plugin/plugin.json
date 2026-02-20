@@ -1,7 +1,7 @@
 {
   "name": "stackshift",
-  "version": "2.1.0",
-  "description": "Reverse engineering toolkit with manual control — shift gears in your codebase. Analyze, document, and spec-drive any project through a 6-gear process. Dual workflow: Greenfield (extract for rebuild) or Brownfield (manage existing). Includes BMAD synthesis, architecture generation, multi-repo reimagine, and incremental doc refresh.",
+  "version": "2.3.0",
+  "description": "Reverse engineering toolkit with manual control — shift gears in your codebase. Analyze, document, and spec-drive any project through a 6-gear process. Dual workflow: Greenfield (extract for rebuild) or Brownfield (manage existing). Includes BMAD synthesis, architecture generation, multi-repo reimagine, incremental doc refresh, portable component extraction, and cross-system integration analysis.",
   "author": {
     "name": "Jonah Schulte"
   },
@@ -23,6 +23,8 @@
     "modernization",
     "validation",
     "code-review",
-    "ecosystem-discovery"
+    "ecosystem-discovery",
+    "integration-analysis",
+    "portable-components"
   ]
 }

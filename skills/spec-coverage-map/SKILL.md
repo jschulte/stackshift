@@ -51,7 +51,7 @@ For each spec, look for file references in these sections:
 ```bash
 # Common file reference patterns in specs
 - src/handlers/foo.js
-- api/handlers/vehicle-details.ts
+- api/handlers/property-details.ts
 - site/pages/Home.tsx
 - infrastructure/terraform/main.tf
 - .github/workflows/deploy.yml
@@ -109,9 +109,9 @@ Build a table showing which spec(s) cover each file:
 
 | File | Covered By | Count |
 |------|------------|-------|
-| api/handlers/vehicle.ts | 001-vehicle-details, 003-pricing | 2 |
+| api/handlers/property.ts | 001-property-details, 003-pricing | 2 |
 | site/pages/Home.tsx | 001-homepage | 1 |
-| lib/utils/format.ts | 001-vehicle, 002-search, 004-pricing | 3 |
+| lib/utils/format.ts | 001-property, 002-search, 004-pricing | 3 |
 ```
 
 **Highlight:**
@@ -176,7 +176,7 @@ Files not covered by any specification:
 |------|-------|-------|------|
 | lib/utils/pricing.ts | 001, 003, 004, 007, 009 | 5 | 🔴 HIGH |
 | lib/api/client.ts | 002, 005, 006, 008 | 4 | 🔴 HIGH |
-| lib/types/vehicle.ts | 001, 002, 011 | 3 | 🟡 MEDIUM |
+| lib/types/property.ts | 001, 002, 011 | 3 | 🟡 MEDIUM |
 
 **High-risk files** (4+ specs):
 - Changes affect multiple features
@@ -324,18 +324,18 @@ Overall Coverage: 91%
 ## Coverage by Spec
 
 ┌─────────────────────────────────────────────┐
-│  001-vehicle-details-display                │ Status: ✅ COMPLETE
+│  001-property-details-display               │ Status: ✅ COMPLETE
 ├─────────────────────────────────────────────┤
 │ Backend (3 files):                          │
-│  ├─ api/handlers/vehicle-details.ts         │
-│  ├─ api/services/vehicle-data.ts            │
-│  └─ lib/validators/vin.ts                   │
+│  ├─ api/handlers/property-details.ts        │
+│  ├─ api/services/property-data.ts           │
+│  └─ lib/validators/mls-id.ts               │
 │ Frontend (2 files):                         │
-│  ├─ site/pages/VehicleDetails.tsx           │
-│  └─ site/components/VehicleCard.tsx         │
+│  ├─ site/pages/PropertyDetails.tsx          │
+│  └─ site/components/PropertyCard.tsx        │
 │ Tests (2 files):                            │
-│  ├─ api/handlers/vehicle-details.test.ts    │
-│  └─ site/pages/VehicleDetails.test.tsx      │
+│  ├─ api/handlers/property-details.test.ts   │
+│  └─ site/pages/PropertyDetails.test.tsx     │
 └─────────────────────────────────────────────┘
 
 ┌─────────────────────────────────────────────┐
@@ -345,7 +345,7 @@ Overall Coverage: 91%
 │  ├─ api/handlers/search.ts                  │
 │  ├─ api/services/elasticsearch.ts           │
 │  ├─ lib/query-builder.ts                    │
-│  └─ lib/filters/vehicle-filters.ts          │
+│  └─ lib/filters/property-filters.ts         │
 │ Frontend (3 files):                         │
 │  ├─ site/pages/Search.tsx                   │
 │  ├─ site/components/SearchBar.tsx           │
@@ -362,9 +362,9 @@ Overall Coverage: 91%
 |------|------------------|-------|------|
 | lib/utils/pricing.ts | 001, 003, 004, 007, 009 | 5 | 🔴 HIGH |
 | lib/api/client.ts | 002, 005, 006, 008 | 4 | 🔴 HIGH |
-| api/handlers/vehicle-details.ts | 001 | 1 | 🟢 LOW |
+| api/handlers/property-details.ts | 001 | 1 | 🟢 LOW |
 | site/pages/Home.tsx | 003 | 1 | 🟢 LOW |
-| lib/types/vehicle.ts | 001, 002, 011 | 3 | 🟡 MEDIUM |
+| lib/types/property.ts | 001, 002, 011 | 3 | 🟡 MEDIUM |
 
 ... [99 files total]
 
@@ -430,7 +430,7 @@ Files not covered by any specification:
 |------|---------------|-------|------------|
 | lib/utils/pricing.ts | 001, 003, 004, 007, 009 | 5 | 🔴 HIGH |
 | lib/api/client.ts | 002, 005, 006, 008 | 4 | 🔴 HIGH |
-| lib/types/vehicle.ts | 001, 002, 011 | 3 | 🟡 MEDIUM |
+| lib/types/property.ts | 001, 002, 011 | 3 | 🟡 MEDIUM |
 | lib/validators/input.ts | 001, 002, 005 | 3 | 🟡 MEDIUM |
 
 ### Risk Assessment:
@@ -498,7 +498,7 @@ Look for these patterns in spec markdown:
 
 # In lists:
 ## Backend Components
-- Vehicle handler: `api/handlers/vehicle.ts`
+- Property handler: `api/handlers/property.ts`
 - Pricing service: `api/services/pricing.ts`
 ```
 

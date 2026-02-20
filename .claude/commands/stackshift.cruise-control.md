@@ -26,6 +26,12 @@ Use the Skill tool with skill="cruise-control".
 3-5. **Skipped**: BMAD agents handle specs/gaps/clarifications
 6. **Gear 6**: Handoff to BMAD `*workflow-init`
 
+### Portable Extraction Path
+1. **Gear 1**: Detect tech stack + route + framework
+2. **Gear 2**: Extract all 11 documentation files
+3-5. **Replaced**: Portable extraction generates abstract epics + component spec
+6. **Done**: Portable artifacts in `_portable-extract/`
+
 ### Step 0: Run AST Analysis
 
 Run AST analysis before starting the gear sequence:

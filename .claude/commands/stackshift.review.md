@@ -297,7 +297,7 @@ rm -f changed-files.txt debug-statements.log todos.log security-issues.log \
 /stackshift.review
 
 # After implementing feature
-/stackshift.review "vehicle details feature"
+/stackshift.review "property details feature"
 
 # Before deployment
 /stackshift.review "all changes since last release"
